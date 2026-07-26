@@ -98,7 +98,7 @@
   /* ---------- scroll area ---------- */
   .scroll-area{flex:1;overflow-y:auto;padding:22px 28px 64px;}
   .section{scroll-margin-top:14px;}
-  .section + .section{margin-top:22px;}
+  .section + .section,.section + .filter-panel-slot,.filter-panel-slot + .section{margin-top:22px;}
 
   /* ---------- hero ---------- */
   .hero{
@@ -139,7 +139,7 @@
   /* ---------- filter bar ---------- */
   .filterbar{
     background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-card);
-    padding:14px 18px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px;position:relative;z-index:100;
+    padding:14px 18px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px;position:relative;
   }
   .filter-field{position:relative;display:flex;flex-direction:column;gap:6px;min-width:184px;}
   .filter-field > label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
@@ -155,13 +155,12 @@
   .ms-trigger .chev{color:var(--text-muted);flex:none;transition:transform .15s ease;}
   .ms-trigger-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
+  .filter-panel-slot{width:100%;}
   .ms-panel{
-    position:absolute;top:calc(100% + 6px);left:0;z-index:1000;width:272px;max-width:80vw;
+    position:relative;width:100%;box-sizing:border-box;
     background:#323130;border:1px solid var(--border-strong);border-radius:var(--radius-card);
     box-shadow:0 8px 24px rgba(0,0,0,.5);padding:10px;
-    animation:msIn .16s cubic-bezier(.16,1,.3,1);
   }
-  @keyframes msIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
   .ms-search input{
     width:100%;background:var(--bg-field);border:1px solid var(--border-strong);color:var(--text-primary);
     padding:7px 10px;border-radius:var(--radius-btn);font-size:13px;outline:none;
@@ -482,6 +481,8 @@
             Đặt lại bộ lọc
           </button>
         </section>
+
+        <div class="filter-panel-slot" id="filter-panel-slot"></div>
 
         <section class="section kpi-grid">
           <div class="kpi-tile">
@@ -844,6 +845,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     var optionsBox = containerEl.querySelector('.ms-options');
     var btnClear = containerEl.querySelector('.ms-clear');
     var searchTerm = '';
+    panel._portalHost = containerEl;
+    panel._portalTrigger = trigger;
 
     function renderOptions() {
       var options = getOptions();
@@ -891,7 +894,12 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     trigger.addEventListener('click', function () {
       var wasOpen = !panel.hidden;
       closeAllMultiSelects();
-      if (!wasOpen) { panel.hidden = false; renderOptions(); searchInput.focus(); }
+      if (!wasOpen) {
+        document.getElementById('filter-panel-slot').appendChild(panel);
+        panel.hidden = false;
+        renderOptions();
+        searchInput.focus();
+      }
     });
     searchInput.addEventListener('input', function (e) { searchTerm = e.target.value; renderOptions(); });
     btnClear.addEventListener('click', function () { getSelectedSet().clear(); onChange(); renderOptions(); });
@@ -900,18 +908,23 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     renderOptions();
   }
 
+  function closeMultiSelectPanel(panel) {
+    panel.hidden = true;
+    if (panel._portalHost && panel.parentNode !== panel._portalHost) {
+      panel._portalHost.appendChild(panel);
+    }
+  }
+
   function closeAllMultiSelects() {
-    document.querySelectorAll('.ms-panel').forEach(function (p) { p.hidden = true; });
+    document.querySelectorAll('.ms-panel').forEach(closeMultiSelectPanel);
   }
   document.addEventListener('click', function (e) {
-    document.querySelectorAll('.filter-field').forEach(function (f) {
-      if (!f.contains(e.target)) {
-        var p = f.querySelector('.ms-panel');
-        if (p) p.hidden = true;
+    document.querySelectorAll('.ms-panel').forEach(function (p) {
+      if (!p.contains(e.target) && !(p._portalTrigger && p._portalTrigger.contains(e.target))) {
+        closeMultiSelectPanel(p);
       }
     });
   });
-
   function initFilterFields() {
     buildMultiSelect(document.getElementById('filter-project'), 'project', 'Dự án',
       computeProjectOptions, function () { return state.filters.projects; }, function (v) { return v; }, handleProjectChange);
