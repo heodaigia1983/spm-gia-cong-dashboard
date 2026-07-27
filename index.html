@@ -192,7 +192,7 @@
   .btn-reset{margin-left:auto;align-self:center;}
 
   /* ---------- KPI tiles ---------- */
-  .kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
   .kpi-tile{
     background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-card);
     padding:16px 18px;box-shadow:var(--shadow-card);
@@ -510,6 +510,12 @@
             <div class="kpi-value" id="kpi-hangmuc-count">0</div>
             <div class="kpi-unit">hạng mục</div>
           </div>
+          <div class="kpi-tile">
+            <div class="kpi-label">Tổng Phân bổ (tấn)</div>
+            <div class="kpi-value" id="kpi-total-phanbo">0</div>
+            <div class="kpi-unit"><span id="kpi-phanbo-pct">0%</span> % đạt tổng</div>
+            <div class="kpi-meter"><div class="kpi-meter-fill" id="kpi-phanbo-bar"></div></div>
+          </div>
         </section>
 
         <section class="section" id="section-hangmuc">
@@ -564,6 +570,8 @@
                   <th data-sort="zone">Zone</th>
                   <th data-sort="count" class="num">Số CK</th>
                   <th data-sort="ton" class="num sorted-desc">Tấn</th>
+                  <th data-sort="phanBo" class="num">Phân bổ (tấn)</th>
+                  <th data-sort="pctAchieved" class="num">% đạt</th>
                   <th data-sort="pctHold" class="num">% Hold</th>
                 </tr>
               </thead>
@@ -710,7 +718,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       hold: f.hold == null ? '' : String(f.hold).trim(),
       bienPhap: f.bienPhap === true,
       tan: toNum(f.tan),
-      soCK: toNum(f.soCK)
+      soCK: toNum(f.soCK),
+      phanBo: (f.phanBo == null) ? null : toNum(f.phanBo)
     };
   }
 
@@ -1040,6 +1049,28 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     animateValue(document.getElementById('kpi-hold-pct-ck'), pctHoldCK, function (v) { return fmtPct.format(v) + '%'; });
     animateValue(document.getElementById('kpi-hangmuc-count'), hmSet.size, function (v) { return fmtInt.format(Math.round(v)); });
 
+    // Tính Tổng Phân bổ và % đạt tổng (chỉ tính các hạng mục có phanBo)
+    var allocMap = new Map();
+    for (var i = 0; i < facts.length; i++) {
+      var r = facts[i];
+      var pkey = (r.project == null ? '' : r.project) + '|||' + r.hangMuc;
+      if (r.phanBo != null && !allocMap.has(pkey)) allocMap.set(pkey, r.phanBo);
+    }
+    var totalAlloc = 0;
+    allocMap.forEach(function (v) { totalAlloc += v; });
+    var achievedForAlloc = 0;
+    for (var i2 = 0; i2 < facts.length; i2++) {
+      var rr = facts[i2];
+      var k2 = (rr.project == null ? '' : rr.project) + '|||' + rr.hangMuc;
+      if (allocMap.has(k2)) achievedForAlloc += rr.tan;
+    }
+    var pctAlloc = totalAlloc > 0 ? (achievedForAlloc / totalAlloc * 100) : 0;
+
+    animateValue(document.getElementById('kpi-total-phanbo'), totalAlloc, function (v) { return fmtTon.format(v); });
+    animateValue(document.getElementById('kpi-phanbo-pct'), pctAlloc, function (v) { return fmtPct.format(v) + '%'; });
+    var barPB = document.getElementById('kpi-phanbo-bar');
+    if (barPB) barPB.style.width = Math.min(100, pctAlloc).toFixed(1) + '%';
+
     var barTon = document.getElementById('kpi-hold-bar-ton');
     if (barTon) barTon.style.width = Math.min(100, pctHoldTon).toFixed(1) + '%';
     var barCk = document.getElementById('kpi-hold-bar-ck');
@@ -1259,13 +1290,27 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       var r = facts[i];
       var key = r.hangMuc + '|||' + r.zone;
       var agg = map.get(key);
-      if (!agg) { agg = { hangMuc: r.hangMuc, zone: r.zone, count: 0, ton: 0, holdTon: 0 }; map.set(key, agg); }
+      if (!agg) { agg = { hangMuc: r.hangMuc, zone: r.zone, count: 0, ton: 0, holdTon: 0, phanBo: 0, _seenPh: new Set() }; map.set(key, agg); }
       agg.count += r.soCK; agg.ton += r.tan;
       if (r.hold === 'Checked') agg.holdTon += r.tan;
+      // cộng phanBo chỉ 1 lần cho mỗi (project, hangMuc)
+      try {
+        var proj = r.project == null ? '' : String(r.project);
+        var phKey = proj + '|||' + r.hangMuc;
+        if (r.phanBo != null && !agg._seenPh.has(phKey)) {
+          agg._seenPh.add(phKey);
+          agg.phanBo += r.phanBo;
+        }
+      } catch (e) {
+        // ignore
+      }
     }
     return Array.from(map.values()).map(function (a) {
+      var ph = a.phanBo > 0 ? a.phanBo : null;
       return {
         hang_muc: hmLabel(a.hangMuc), zone: a.zone, count: a.count, ton: a.ton,
+        phanBo: ph,
+        pctAchieved: (ph && ph > 0) ? (a.ton / ph * 100) : null,
         pctHold: a.ton > 0 ? (a.holdTon / a.ton * 100) : 0
       };
     });
@@ -1299,11 +1344,15 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     var frag = document.createDocumentFragment();
     data.forEach(function (r) {
       var tr = document.createElement('tr');
+      var phDisplay = (r.phanBo == null) ? '—' : fmtTon.format(r.phanBo);
+      var pctDisplay = (r.phanBo == null || r.phanBo === 0) ? '—' : (fmtPct.format(r.pctAchieved) + '%');
       tr.innerHTML =
         '<td>' + escapeHtml(r.hang_muc) + '</td>' +
         '<td>' + escapeHtml(r.zone) + '</td>' +
         '<td class="num">' + fmtInt.format(r.count) + '</td>' +
         '<td class="num">' + fmtTon.format(r.ton) + '</td>' +
+        '<td class="num">' + phDisplay + '</td>' +
+        '<td class="num">' + pctDisplay + '</td>' +
         '<td class="num">' + fmtPct.format(r.pctHold) + '%</td>';
       frag.appendChild(tr);
     });
