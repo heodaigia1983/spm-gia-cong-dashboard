@@ -253,6 +253,95 @@
   .zone-mini-charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px;}
   .zone-mini-chart{height:180px;min-width:0;}
   .zone-panel-empty{padding:18px;color:var(--text-muted);font-size:13px;}
+
+  /* ---------- ZDP: panel chi tiết hạng mục (2 theme) ---------- */
+  .zdp{
+    --zdp-bg:linear-gradient(160deg,rgba(20,32,60,.86),rgba(11,19,40,.92));
+    --zdp-border:rgba(166,204,255,.16);
+    --zdp-card-bg:rgba(11,21,44,.62);
+    --zdp-card-border:rgba(166,204,255,.13);
+    --zdp-card-shadow:0 10px 26px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.04);
+    --zdp-num:#f4f8ff; --zdp-sub:#8293b2; --zdp-head:#e8f2ff;
+    --zdp-c1:#5cb6ff; --zdp-c2:#ff9b57;
+    --zdp-hold:#ff7a7a; --zdp-hold-bg:rgba(255,107,107,.10); --zdp-hold-bd:rgba(255,107,107,.30);
+    --zdp-track:rgba(255,255,255,.09);
+    position:relative;padding:20px 20px 22px;border-radius:var(--radius-card);
+    background:var(--zdp-bg);border:1px solid var(--zdp-border);
+    box-shadow:var(--shadow-card);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  }
+  .zdp[data-theme="light"]{
+    --zdp-bg:#ffffff;
+    --zdp-border:#dfe5ee;
+    --zdp-card-bg:#ffffff;
+    --zdp-card-border:#e2e8f0;
+    --zdp-card-shadow:0 1px 2px rgba(16,24,40,.06),0 4px 14px rgba(16,24,40,.07);
+    --zdp-num:#0f1729; --zdp-sub:#64748b; --zdp-head:#0b2a6b;
+    --zdp-c1:#1d4ed8; --zdp-c2:#e2571f;
+    --zdp-hold:#dc2626; --zdp-hold-bg:#fef2f2; --zdp-hold-bd:#fecaca;
+    --zdp-track:#eef2f7;
+    backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 18px 44px rgba(0,0,0,.30);
+  }
+  .zdp-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
+  .zdp-head-main{flex:1 1 320px;min-width:0;}
+  .zdp-title{margin:0;font-size:17px;font-weight:800;letter-spacing:.01em;color:var(--zdp-head);
+    text-transform:uppercase;line-height:1.3;}
+  .zdp-subtitle{margin:4px 0 0;font-size:12px;color:var(--zdp-sub);}
+  .zdp-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .zdp-seg{display:inline-flex;background:var(--zdp-track);border:1px solid var(--zdp-card-border);
+    border-radius:8px;padding:2px;gap:2px;}
+  .zdp-seg button{background:none;border:none;cursor:pointer;font:inherit;font-size:11.5px;font-weight:700;
+    color:var(--zdp-sub);padding:5px 11px;border-radius:6px;line-height:1;transition:.16s;}
+  .zdp-seg button:hover{color:var(--zdp-num);}
+  .zdp-seg button.active{background:var(--zdp-c1);color:#fff;}
+  .zdp[data-theme="light"] .zdp-seg button.active{background:var(--zdp-c1);color:#fff;}
+  .zdp-btn{background:none;border:1px solid var(--zdp-card-border);color:var(--zdp-sub);cursor:pointer;
+    font:inherit;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:8px;transition:.16s;}
+  .zdp-btn:hover{color:var(--zdp-num);border-color:var(--zdp-c1);}
+
+  .zdp-summary{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:14px;margin-bottom:18px;}
+  .zdp-total,.zdp-hold{border-radius:12px;padding:14px 18px;background:var(--zdp-card-bg);
+    border:1px solid var(--zdp-card-border);box-shadow:var(--zdp-card-shadow);}
+  .zdp-total{text-align:center;}
+  .zdp-cap{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--zdp-head);}
+  .zdp-total-main{margin-top:8px;font-size:32px;font-weight:800;line-height:1.05;color:var(--zdp-num);
+    font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .zdp-total-sub{margin-top:6px;font-size:11.5px;color:var(--zdp-sub);}
+  .zdp-hold{background:var(--zdp-hold-bg);border-color:var(--zdp-hold-bd);display:flex;
+    flex-direction:column;justify-content:center;text-align:center;}
+  .zdp-hold-main{font-size:20px;font-weight:800;color:var(--zdp-hold);font-variant-numeric:tabular-nums;line-height:1.15;}
+  .zdp-hold-sub{margin-top:5px;font-size:11.5px;color:var(--zdp-sub);}
+
+  .zdp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:13px;}
+  .zdp-card{position:relative;overflow:hidden;padding:13px 15px 16px;border-radius:12px;
+    background:var(--zdp-card-bg);border:1px solid var(--zdp-card-border);box-shadow:var(--zdp-card-shadow);
+    transition:transform .16s ease,box-shadow .16s ease;}
+  .zdp-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.20);}
+  .zdp-card-title{font-size:12.5px;font-weight:800;line-height:1.25;color:var(--zdp-c1);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .zdp-card.alt .zdp-card-title{color:var(--zdp-c2);}
+  .zdp-card-zone{margin-top:2px;font-size:10.5px;font-weight:600;color:var(--zdp-sub);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .zdp-card-main{margin-top:9px;font-size:21px;font-weight:800;line-height:1.18;color:var(--zdp-num);
+    font-variant-numeric:tabular-nums;letter-spacing:-.015em;}
+  .zdp-card-main .sep{color:var(--zdp-sub);font-weight:600;margin:0 1px;}
+  .zdp-card-main .pct{white-space:nowrap;}
+  .zdp-card.s-good .zdp-card-main .pct{color:#16c79a;}
+  .zdp-card.s-warn .zdp-card-main .pct{color:#f0a132;}
+  .zdp-card.s-bad  .zdp-card-main .pct{color:#ef4444;}
+  .zdp-card-sub{margin-top:5px;font-size:10.5px;color:var(--zdp-sub);}
+  .zdp-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--zdp-track);}
+  .zdp-bar-fill{height:100%;width:0;transition:width .3s ease;}
+  .zdp-card.s-good .zdp-bar-fill{background:#16c79a;}
+  .zdp-card.s-warn .zdp-bar-fill{background:#f0a132;}
+  .zdp-card.s-bad  .zdp-bar-fill{background:#ef4444;}
+  .zdp-card.s-none .zdp-bar-fill{background:#94a3b8;}
+  .zdp-card.s-none .zdp-card-main{color:var(--zdp-sub);}
+  .zdp-empty{padding:22px;text-align:center;color:var(--zdp-sub);font-size:13px;}
+  @media (max-width:760px){
+    .zdp-summary{grid-template-columns:1fr;}
+    .zdp-grid{grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;}
+    .zdp-total-main{font-size:26px;}
+  }
   @media (max-width:760px){.zone-detail-head{align-items:stretch;flex-direction:column;}.zone-detail-actions{justify-content:flex-start;}.zone-mini-charts{grid-template-columns:1fr;}.zone-mini-chart{height:170px;}}
   .ms-panel{
     position:relative;width:100%;box-sizing:border-box;
@@ -2265,14 +2354,17 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     document.body.removeChild(a); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
 
+  // Theme của panel chi tiết: 'dark' | 'light'
+  var zdpTheme = (function () {
+    try { return localStorage.getItem('spm.zdpTheme') === 'light' ? 'light' : 'dark'; } catch (e) { return 'dark'; }
+  })();
+
   function renderZoneDetailPanel(facts) {
     disposeZoneCharts();
     var slot = document.getElementById('filter-panel-slot');
     if (!slot) return;
     var hms = Array.from(state.filters.hangmucs);
-    // Chỉ hiện panel khi view có filterbar (đã handle bằng moveFilterChromeTo) và người dùng đã chọn HM.
     var viewNeedsFilter = !slot.hidden || (function () {
-      // phòng trường hợp người dùng switch view sang lịch-sử / phan-bo rồi quay lại
       var route = parseHash();
       return ROUTES[route] && ROUTES[route].needsFilter;
     })();
@@ -2282,72 +2374,155 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     }
 
     var projectSet = new Set();
-    var projectOf = null; // null = all projects
     hms.forEach(function (hm) {
       facts.filter(function (f) { return f.hangMuc === hm; }).forEach(function (f) {
         if (f.project) projectSet.add(f.project);
       });
     });
-    if (projectSet.size === 1) projectOf = Array.from(projectSet)[0];
+    var projectOf = projectSet.size === 1 ? Array.from(projectSet)[0] : null;
 
-    var unitToggle = '<div class="zone-unit-toggle" role="tablist">' +
-      '<button type="button" class="zone-unit-btn ' + (zonePanelUnit === 'tan' ? 'active' : '') + '" data-unit="tan">Tấn</button>' +
-      '<button type="button" class="zone-unit-btn ' + (zonePanelUnit === 'ck'  ? 'active' : '') + '" data-unit="ck">Số CK</button>' +
-      '</div>';
+    var unit = zonePanelUnit;
+    var isCK = unit === 'ck';
+    var fmtVal = function (v) { return isCK ? fmtInt.format(v) : fmtTon.format(v); };
 
-    var head = '<div class="zone-detail-head">' +
-      '<div class="zone-detail-title">' +
-        '<h2>Chi tiết hạng mục: ' + (hms.length === 1
-          ? escapeHtml(hmLabel(hms[0]))
-          : (hms.length + ' hạng mục đã chọn')) + '</h2>' +
-        '<p>' + (projectOf
-          ? escapeHtml(projectOf)
-          : escapeHtml(Array.from(projectSet).join(' · ') || projectOf || '')) + '</p>' +
-      '</div>' +
-      '<div class="zone-detail-actions">' +
-        unitToggle +
-        '<button type="button" class="btn btn-secondary" id="zone-btn-export">Xuất Excel</button>' +
-        '<button type="button" class="btn btn-secondary" id="zone-btn-close">✕ Bỏ lọc</button>' +
-      '</div>' +
-    '</div>';
+    // ---- Gom card: mỗi (dự án × hạng mục) = 1 card. Phân bổ nằm ở cấp hạng mục
+    //      nên KHÔNG tách theo zone, tránh mẫu số rỗng và chia nhỏ sai. ----
+    var byKey = new Map();
+    facts.forEach(function (f) {
+      if (!state.filters.hangmucs.has(f.hangMuc)) return;
+      var k = f.project + ' ' + f.hangMuc;
+      var c = byKey.get(k);
+      if (!c) {
+        c = { project: f.project, hm: f.hangMuc, shopTon: 0, shopCK: 0, holdTon: 0, holdCK: 0 };
+        byKey.set(k, c);
+      }
+      c.shopTon += f.tan; c.shopCK += f.soCK;
+      if (f.hold === 'Checked') { c.holdTon += f.tan; c.holdCK += f.soCK; }
+    });
 
-    var accordions = hms.map(function (hm, idx) {
-      return buildZonePanelContent(facts, projectOf, hm, idx === 0).html;
-    }).join('');
+    var hmOrder = {};
+    hms.forEach(function (hm, i) { hmOrder[hm] = i; });
 
-    slot.innerHTML = '<section class="card zone-detail-panel">' + head + accordions + '</section>';
+    var cards = [];
+    var totalPB = 0, totalShop = 0, totalHold = 0, anyPB = false;
+    Array.from(byKey.values()).forEach(function (c) {
+      var pbTan = getScopedPhanBoFor(c.project, c.hm);
+      var pb;
+      if (isCK) {
+        // Khi lọc zone, phân bổ CK chỉ có ở cấp hạng mục -> chỉ dùng khi không lọc zone.
+        pb = state.filters.zones.size ? null : getPhanBoCKFor(c.project, c.hm);
+      } else {
+        pb = pbTan;
+      }
+      var shop = isCK ? c.shopCK : c.shopTon;
+      var hold = isCK ? c.holdCK : c.holdTon;
+      if (pb != null) { totalPB += pb; anyPB = true; }
+      totalShop += shop; totalHold += hold;
+      cards.push({
+        hm: c.hm, project: c.project, pb: pb, shop: shop,
+        pct: (pb && pb > 0) ? (shop / pb * 100) : null,
+        alt: (hmOrder[c.hm] || 0) % 2 === 1
+      });
+    });
+    cards.sort(function (a, b) {
+      var d = (hmOrder[a.hm] || 0) - (hmOrder[b.hm] || 0);
+      return d !== 0 ? d : String(a.project).localeCompare(String(b.project), 'vi');
+    });
 
-    // Bind handlers
-    slot.querySelectorAll('.zone-unit-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        zonePanelUnit = btn.dataset.unit;
+    // Chỉ hiện dòng phụ (zone / dự án) khi có card trùng tên hiển thị — tránh nhầm lẫn.
+    var labelCount = {};
+    cards.forEach(function (c) {
+      var k = hmLabel(c.hm);
+      labelCount[k] = (labelCount[k] || 0) + 1;
+    });
+
+    var cardsHtml = cards.length ? cards.map(function (c) {
+      var pctTxt = (c.pct == null || isNaN(c.pct)) ? '—' : (fmtPct.format(c.pct) + '%');
+      var pbTxt = c.pb == null ? '—' : fmtVal(c.pb);
+      var st = c.pct == null ? 's-none' : (c.pct >= 95 ? 's-good' : (c.pct >= 60 ? 's-warn' : 's-bad'));
+      var w = (c.pct == null || isNaN(c.pct)) ? 0 : Math.max(0, Math.min(100, c.pct));
+      var lbl = hmLabel(c.hm);
+      var subTxt = (labelCount[lbl] > 1 && c.project) ? c.project : '';
+      return '<div class="zdp-card ' + st + (c.alt ? ' alt' : '') + '">' +
+          '<div class="zdp-card-title" title="' + escapeHtml(lbl) + '">' + escapeHtml(lbl) + '</div>' +
+          (subTxt ? '<div class="zdp-card-zone" title="' + escapeHtml(subTxt) + '">' + escapeHtml(subTxt) + '</div>' : '') +
+          '<div class="zdp-card-main">' + pbTxt + '<span class="sep"> / </span>' + fmtVal(c.shop) +
+            '<span class="sep"> | </span><span class="pct">' + pctTxt + '</span></div>' +
+          '<div class="zdp-card-sub">Phân bổ / Shop / % đạt</div>' +
+          '<div class="zdp-bar"><div class="zdp-bar-fill" style="width:' + w.toFixed(1) + '%"></div></div>' +
+        '</div>';
+    }).join('') : '<div class="zdp-empty">Hạng mục đã chọn chưa có dữ liệu shop.</div>';
+
+    var totalPct = (anyPB && totalPB > 0) ? (totalShop / totalPB * 100) : null;
+    var holdPct = totalShop > 0 ? (totalHold / totalShop * 100) : 0;
+    var unitLabel = isCK ? 'cấu kiện' : 'tấn';
+
+    var title = projectOf
+      ? projectOf + ' — Tổng quan ban hành Shop'
+      : (projectSet.size ? Array.from(projectSet).join(' · ') : 'Tổng quan ban hành Shop');
+
+    var html =
+      '<section class="zdp" data-theme="' + zdpTheme + '">' +
+        '<div class="zdp-head">' +
+          '<div class="zdp-head-main">' +
+            '<h2 class="zdp-title">' + escapeHtml(title) + '</h2>' +
+            '<p class="zdp-subtitle">' + hms.length + ' hạng mục · ' + cards.length + ' thẻ · đơn vị ' + unitLabel +
+              ' · ngày báo cáo ' + escapeHtml(state.meta.snapshotDate || '—') + '</p>' +
+          '</div>' +
+          '<div class="zdp-actions">' +
+            '<div class="zdp-seg" id="zdp-unit">' +
+              '<button type="button" data-unit="tan" class="' + (isCK ? '' : 'active') + '">Tấn</button>' +
+              '<button type="button" data-unit="ck" class="' + (isCK ? 'active' : '') + '">Số CK</button>' +
+            '</div>' +
+            '<div class="zdp-seg" id="zdp-theme">' +
+              '<button type="button" data-theme="dark" class="' + (zdpTheme === 'dark' ? 'active' : '') + '">Tối</button>' +
+              '<button type="button" data-theme="light" class="' + (zdpTheme === 'light' ? 'active' : '') + '">Sáng</button>' +
+            '</div>' +
+            '<button type="button" class="zdp-btn" id="zone-btn-export">Xuất Excel</button>' +
+            '<button type="button" class="zdp-btn" id="zone-btn-close">✕ Bỏ lọc</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="zdp-summary">' +
+          '<div class="zdp-total">' +
+            '<div class="zdp-cap">Tổng quan Shop toàn bộ hệ</div>' +
+            '<div class="zdp-total-main">' + (anyPB ? fmtVal(totalPB) : '—') + ' / ' + fmtVal(totalShop) +
+              ' | ' + (totalPct == null ? '—' : fmtPct.format(totalPct) + '%') + '</div>' +
+            '<div class="zdp-total-sub">Tổng phân bổ / Tổng Shop ban hành / % đạt</div>' +
+          '</div>' +
+          '<div class="zdp-hold">' +
+            '<div class="zdp-hold-main">' + fmtVal(totalHold) + ' | ' + fmtPct.format(holdPct) + '%</div>' +
+            '<div class="zdp-hold-sub">Klg Shop đang bị Hold</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="zdp-grid">' + cardsHtml + '</div>' +
+      '</section>';
+
+    slot.innerHTML = html;
+
+    slot.querySelectorAll('#zdp-unit button').forEach(function (b) {
+      b.addEventListener('click', function () { zonePanelUnit = b.dataset.unit; renderZoneDetailPanel(facts); });
+    });
+    slot.querySelectorAll('#zdp-theme button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        zdpTheme = b.dataset.theme;
+        try { localStorage.setItem('spm.zdpTheme', zdpTheme); } catch (e) {}
         renderZoneDetailPanel(facts);
       });
     });
-    var exportBtn = document.getElementById('zone-btn-export');
+    var exportBtn = slot.querySelector('#zone-btn-export');
     if (exportBtn) exportBtn.addEventListener('click', function () { exportZoneDetailCSV(facts); });
-    var closeBtn = document.getElementById('zone-btn-close');
+    var closeBtn = slot.querySelector('#zone-btn-close');
     if (closeBtn) closeBtn.addEventListener('click', function () {
       state.filters.hangmucs.clear();
       refreshAllFilterPanels();
       renderAll();
     });
 
-    // Wire up tables & charts for each accordion
-    var accordionsList = slot.querySelectorAll('.zone-accordion');
-    hms.forEach(function (hm, idx) {
-      var acc = accordionsList[idx];
-      if (!acc) return;
-      var host = acc.querySelector('[data-zone-table-host]');
+    // Verification giữ nguyên: chỉ chạy khi lọc đúng 1 hạng mục
+    hms.forEach(function (hm) {
       var agg = aggregateZoneForHM(facts, projectOf, hm);
-      // Khởi tạo bảng với khả năng sort; cập nhật verification mỗi lần sort
-      setupZoneTableSort(host, projectOf, hm, agg.zones, zonePanelUnit, function (fresh) {
-        verifyZonePanelTotal(facts, hm, agg, fresh.totalShop);
-      });
-      // Lần render đầu: verify
-      var firstRender = renderZoneTable(agg.zones, projectOf, hm, zonePanelUnit, 'zone', 'asc');
-      verifyZonePanelTotal(facts, hm, agg, firstRender.totalShop);
-      setupZoneCharts(agg.zones, projectOf, hm, zonePanelUnit, acc);
+      var sum = agg.zones.reduce(function (s, z) { return s + z.shopTon; }, 0);
+      verifyZonePanelTotal(facts, hm, agg, sum);
     });
   }
 
