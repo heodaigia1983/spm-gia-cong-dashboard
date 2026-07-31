@@ -6,27 +6,28 @@
 <title>SPM · Tổng quan tiến độ gia công</title>
 <link rel="icon" href="data:,">
 <style>
+  /* Bộ design token glass-dark duy nhất cho toàn dashboard. */
   :root{
-    --bg-rail:#1b1a19;
-    --bg-app:#201f1e;
-    --bg-card:#2d2c2b;
-    --bg-card-hover:#323130;
-    --bg-field:#3b3a39;
-    --border:rgba(255,255,255,.08);
-    --border-strong:rgba(255,255,255,.14);
-    --text-primary:#ffffff;
-    --text-secondary:#c8c6c4;
-    --text-muted:#a19f9d;
-    --accent:#0078d4;
-    --accent-hover:#2b88d8;
-    --accent-light:#4ca3ff;
-    --accent-soft:rgba(0,120,212,.16);
-    --warn:#f7630c;
-    --warn-soft:rgba(247,99,12,.16);
-    --radius-card:8px;
-    --radius-btn:4px;
-    --shadow-card:0 1.6px 3.6px rgba(0,0,0,.4), 0 0.3px 0.9px rgba(0,0,0,.3);
-    --shadow-card-hover:0 6.4px 14.4px rgba(0,0,0,.42), 0 1.2px 3.6px rgba(0,0,0,.32);
+    --bg-rail:rgba(7,12,26,.72);
+    --bg-app:#080d1a;
+    --bg-card:rgba(18,28,52,.68);
+    --bg-card-hover:rgba(26,40,72,.82);
+    --bg-field:rgba(8,16,34,.66);
+    --border:rgba(166,204,255,.14);
+    --border-strong:rgba(166,204,255,.28);
+    --text-primary:#f4f8ff;
+    --text-secondary:#c0cee5;
+    --text-muted:#8293b2;
+    --accent:#35a4ff;
+    --accent-hover:#6bc3ff;
+    --accent-light:#9ad8ff;
+    --accent-soft:rgba(53,164,255,.18);
+    --warn:#ffac5e;
+    --warn-soft:rgba(255,172,94,.16);
+    --radius-card:14px;
+    --radius-btn:8px;
+    --shadow-card:0 16px 38px rgba(0,0,0,.26),0 2px 8px rgba(1,8,22,.38),inset 0 1px 0 rgba(255,255,255,.035);
+    --shadow-card-hover:0 24px 56px rgba(0,0,0,.36),0 0 26px rgba(53,164,255,.09),inset 0 1px 0 rgba(255,255,255,.06);
   }
   *{box-sizing:border-box;}
   [hidden]{display:none !important;}
@@ -46,31 +47,87 @@
   /* ---------- shell layout ---------- */
   .shell{display:flex;height:100vh;}
 
-  .nav-rail{
-    width:72px;flex:none;background:var(--bg-rail);
-    display:flex;flex-direction:column;align-items:center;
-    padding:14px 0;gap:4px;border-right:1px solid var(--border);
+  .sidebar{
+    width:240px;flex:none;background:var(--bg-rail);
+    display:flex;flex-direction:column;
+    border-right:1px solid var(--border);
+    transition:width .22s ease;overflow:hidden;
   }
-  .nav-logo{
-    width:36px;height:36px;border-radius:6px;margin-bottom:14px;
+  .sidebar[data-state="collapsed"]{width:64px;}
+
+  .sidebar-brand{
+    display:flex;align-items:center;gap:10px;
+    padding:14px 14px 12px;border-bottom:1px solid var(--border);
+  }
+  .sidebar-logo{
+    width:34px;height:34px;border-radius:8px;flex:none;
     background:linear-gradient(135deg,#0b4fbf,#2b88d8);
     display:flex;align-items:center;justify-content:center;
-    font-size:12px;font-weight:800;color:#fff;letter-spacing:.02em;
+    color:#fff;font-weight:800;font-size:12px;letter-spacing:.02em;
   }
+  .sidebar-brand-text{min-width:0;}
+  .sidebar-brand-title{font-size:14px;font-weight:700;color:var(--text-primary);line-height:1.1;}
+  .sidebar-brand-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+  .sidebar-nav{flex:1;padding:10px 8px;overflow-y:auto;}
+  .sidebar-group + .sidebar-group{margin-top:14px;}
+  .sidebar-group-title{
+    font-size:10px;color:var(--text-muted);font-weight:700;
+    text-transform:uppercase;letter-spacing:.08em;
+    padding:6px 10px 4px;
+  }
+  .sidebar[data-state="collapsed"] .sidebar-group-title{display:none;}
+
   .nav-item{
-    position:relative;width:64px;padding:9px 4px 8px;
-    display:flex;flex-direction:column;align-items:center;gap:5px;
+    position:relative;display:flex;align-items:center;gap:11px;
+    width:100%;height:38px;padding:0 10px;margin:2px 0;
     background:none;border:none;color:var(--text-muted);cursor:pointer;
-    border-radius:4px;transition:background .15s ease,color .15s ease;
+    border-radius:8px;text-align:left;
+    transition:background .15s ease,color .15s ease;
   }
-  .nav-item:hover{background:rgba(255,255,255,.05);color:var(--text-primary);}
-  .nav-item svg{width:19px;height:19px;flex:none;}
-  .nav-item span{font-size:10.5px;font-weight:600;letter-spacing:.01em;line-height:1.2;text-align:center;}
+  .nav-item:hover{background:rgba(130,192,255,.09);color:var(--text-primary);}
+  .nav-item svg{width:18px;height:18px;flex:none;}
+  .nav-label{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
   .nav-item.active{color:#fff;}
   .nav-item.active::before{
-    content:"";position:absolute;left:-1px;top:6px;bottom:6px;width:3px;
+    content:"";position:absolute;left:-8px;top:6px;bottom:6px;width:3px;
     background:var(--accent-hover);border-radius:0 3px 3px 0;
   }
+
+  /* collapsed: ẩn nhãn, icon căn giữa */
+  .sidebar[data-state="collapsed"] .nav-label,
+  .sidebar[data-state="collapsed"] .collapse-label,
+  .sidebar[data-state="collapsed"] .sidebar-version{display:none;}
+  .sidebar[data-state="collapsed"] .nav-item{
+    justify-content:center;padding:0;margin:2px 6px;width:auto;
+  }
+  .sidebar[data-state="collapsed"] .sidebar-brand{justify-content:center;padding:14px 0 12px;}
+  .sidebar[data-state="collapsed"] .sidebar-brand-text{display:none;}
+
+  /* tooltip khi thu gọn */
+  .sidebar[data-state="collapsed"] .nav-item::after{
+    content:attr(data-tooltip);position:absolute;left:calc(100% + 8px);top:50%;
+    transform:translateY(-50%);
+    background:#1f2937;color:#fff;font-size:12px;font-weight:600;
+    padding:6px 9px;border-radius:6px;white-space:nowrap;
+    box-shadow:0 6px 18px rgba(0,0,0,.5);
+    opacity:0;pointer-events:none;transition:opacity .15s ease;z-index:50;
+  }
+  .sidebar[data-state="collapsed"] .nav-item:hover::after{opacity:1;}
+
+  .sidebar-footer{padding:8px;border-top:1px solid var(--border);}
+  .sidebar-collapse{
+    display:flex;align-items:center;gap:10px;
+    width:100%;height:36px;padding:0 10px;
+    background:none;border:none;color:var(--text-secondary);cursor:pointer;
+    border-radius:8px;font-size:12.5px;font-weight:600;
+  }
+  .sidebar-collapse:hover{background:rgba(130,192,255,.09);color:var(--text-primary);}
+  .sidebar-collapse .chev-right{display:none;}
+  .sidebar[data-state="collapsed"] .sidebar-collapse{justify-content:center;padding:0;}
+  .sidebar[data-state="collapsed"] .sidebar-collapse .chev-left{display:none;}
+  .sidebar[data-state="collapsed"] .sidebar-collapse .chev-right{display:block;}
 
   .app-main{flex:1;min-width:0;display:flex;flex-direction:column;height:100vh;}
 
@@ -156,6 +213,45 @@
   .ms-trigger-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
   .filter-panel-slot{width:100%;}
+
+  /* ---------- Zone detail panel ---------- */
+  .zone-detail-panel{padding:18px 20px 20px;}
+  .zone-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;}
+  .zone-detail-title{min-width:0;}
+  .zone-detail-title h2{margin:0;color:var(--text-primary);font-size:17px;line-height:1.3;}
+  .zone-detail-title p{margin:5px 0 0;color:var(--text-muted);font-size:12px;}
+  .zone-detail-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap;}
+  .zone-unit-toggle{display:inline-flex;background:var(--bg-field);border:1px solid var(--border-strong);border-radius:var(--radius-btn);padding:2px;gap:2px;}
+  .zone-unit-btn{border:0;background:transparent;color:var(--text-secondary);font-size:12px;font-weight:700;padding:6px 10px;border-radius:4px;cursor:pointer;}
+  .zone-unit-btn.active{background:var(--accent);color:#fff;}
+  .zone-accordion + .zone-accordion{margin-top:14px;}
+  .zone-accordion summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;color:var(--text-primary);font-size:14px;font-weight:700;padding:2px 0 12px;}
+  .zone-accordion summary::-webkit-details-marker{display:none;}
+  .zone-accordion summary::before{content:'›';color:var(--text-muted);font-size:20px;line-height:12px;transition:transform .15s ease;}
+  .zone-accordion[open] summary::before{transform:rotate(90deg);}
+  .zone-zone-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;}
+  .zone-card{position:relative;overflow:hidden;padding:14px 15px 18px;min-height:120px;}
+  .zone-card-title{color:var(--text-secondary);font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .zone-card-main{margin-top:12px;color:var(--text-primary);font-size:26px;font-weight:750;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .zone-card-sub{margin-top:6px;color:var(--text-muted);font-size:11px;}
+  .zone-progress{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.08);}
+  .zone-progress-fill{height:100%;width:0;transition:width .25s ease;}
+  .zone-card.status-good .zone-progress-fill{background:#00c896;}
+  .zone-card.status-warn .zone-progress-fill{background:#ffac5e;}
+  .zone-card.status-bad .zone-progress-fill{background:#ff6b6b;}
+  .zone-card.status-none .zone-progress-fill{background:#6f7d93;}
+  .zone-card.status-none .zone-card-main{color:var(--text-muted);}
+  .zone-detail-table-wrap{max-height:320px;overflow:auto;border:1px solid var(--border);border-radius:var(--radius-btn);margin-top:15px;}
+  .zone-detail-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .zone-detail-table th{position:sticky;top:0;z-index:1;background:#0f1c37;color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;padding:9px 10px;text-align:left;cursor:pointer;}
+  .zone-detail-table th.num,.zone-detail-table td.num{text-align:right;}
+  .zone-detail-table td{padding:8px 10px;border-top:1px solid rgba(159,207,255,.07);color:var(--text-secondary);font-variant-numeric:tabular-nums;}
+  .zone-detail-table tr.total-row{position:sticky;bottom:0;background:rgba(22,39,72,.98);font-weight:750;}
+  .zone-detail-table tr.total-row td{color:var(--text-primary);border-top:1px solid var(--border-strong);}
+  .zone-mini-charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px;}
+  .zone-mini-chart{height:180px;min-width:0;}
+  .zone-panel-empty{padding:18px;color:var(--text-muted);font-size:13px;}
+  @media (max-width:760px){.zone-detail-head{align-items:stretch;flex-direction:column;}.zone-detail-actions{justify-content:flex-start;}.zone-mini-charts{grid-template-columns:1fr;}.zone-mini-chart{height:170px;}}
   .ms-panel{
     position:relative;width:100%;box-sizing:border-box;
     background:#323130;border:1px solid var(--border-strong);border-radius:var(--radius-card);
@@ -229,12 +325,19 @@
   .table-card{padding:16px 18px;}
   .table-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap;}
   .table-head h3{font-size:14px;font-weight:700;margin:0;}
+  .table-head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
   #table-search{
     background:var(--bg-field);border:1px solid var(--border-strong);color:var(--text-primary);
     padding:7px 12px;border-radius:var(--radius-btn);font-size:13px;min-width:230px;outline:none;
   }
   #table-search:focus{border-color:var(--accent-light);}
   .table-scroll{max-height:460px;overflow:auto;border-radius:6px;border:1px solid var(--border);}
+  /* Sticky TỔNG row when searching/sorting */
+  #detail-table tbody tr.total-row td{
+    position:sticky;bottom:0;z-index:2;background:rgba(14,22,46,.97);
+    backdrop-filter:blur(10px);font-weight:700;color:var(--text-primary);
+    border-top:1px solid var(--border-strong);
+  }
   table{width:100%;border-collapse:collapse;font-size:13px;}
   thead th{
     position:sticky;top:0;z-index:2;background:#323130;text-align:left;padding:9px 14px;font-size:11px;
@@ -255,14 +358,31 @@
   ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-radius:999px;border:2px solid transparent;background-clip:padding-box;}
   ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.26);background-clip:padding-box;}
 
+  .view{display:block;}
+  .section-slot{}.section-slot:empty{display:none;}
+  .section-slot > .section{margin-top:0;}
+  .view-placeholder{
+    min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,rgba(29,43,75,.72),rgba(13,22,43,.64));
+    border:1px solid rgba(159,207,255,.17);border-radius:var(--radius-card);
+    color:var(--text-muted);text-align:center;
+  }
+  .view-placeholder h2{margin:0 0 8px;color:var(--text-primary);font-size:18px;}
+  .view-placeholder p{margin:0;font-size:13px;}
+
   @media (max-width: 1100px){
+    .sidebar{width:64px;}
+    .sidebar .nav-label,.sidebar .sidebar-group-title,.sidebar .collapse-label,.sidebar .sidebar-brand-text{display:none;}
+    .sidebar .sidebar-brand{justify-content:center;padding:14px 0 12px;}
+    .sidebar .nav-item{justify-content:center;padding:0;margin:2px 6px;width:auto;}
+    .sidebar .sidebar-collapse{justify-content:center;padding:0;}
+    .sidebar .sidebar-collapse .chev-left{display:none;}
+    .sidebar .sidebar-collapse .chev-right{display:block;}
     .kpi-grid{grid-template-columns:repeat(3,1fr);}
     .charts-grid-2{grid-template-columns:1fr;}
   }
   @media (max-width: 680px){
     .kpi-grid{grid-template-columns:repeat(2,1fr);}
-    .nav-rail{width:56px;}
-    .nav-item{width:48px;}
     .hero{flex-direction:column;align-items:flex-start;}
   }
 
@@ -270,29 +390,42 @@
   .fade-refresh{animation:fadeRefresh .18s ease;}
   @keyframes fadeRefresh{from{opacity:.45;transform:translateY(2px);}to{opacity:1;transform:translateY(0);}}
 
+  /* ---------- Phân bổ view ---------- */
+  .phanbo-warnings{background:rgba(255,172,94,.12);border:1px solid rgba(255,172,94,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12.5px;color:var(--warn);}
+  .phanbo-warnings .warn-item{padding:3px 0;display:flex;align-items:center;gap:6px;}
+  .phanbo-toolbar{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-card);margin-bottom:14px;flex-wrap:wrap;}
+  .phanbo-toolbar-left{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;}
+  .phanbo-toolbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .phanbo-checkbox-label{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-secondary);cursor:pointer;white-space:nowrap;}
+  .phanbo-dirty-badge{font-size:12px;font-weight:600;color:var(--warn);white-space:nowrap;}
+  .phanbo-search-input{background:var(--bg-field);border:1px solid var(--border-strong);color:var(--text-primary);padding:8px 12px;border-radius:var(--radius-btn);font-size:13px;outline:none;min-width:180px;}
+  .phanbo-search-input:focus{border-color:var(--accent-light);}
+  .phanbo-select{background:var(--bg-field);border:1px solid var(--border-strong);color:var(--text-primary);padding:8px 11px;border-radius:var(--radius-btn);font-size:13px;outline:none;min-width:170px;}
+  .phanbo-select:focus{border-color:var(--accent-light);}
+  .phanbo-toolbar .filter-field{min-width:160px;}
+  .phanbo-grid-wrap{overflow:auto;max-height:calc(100vh - 260px);border-radius:var(--radius-card);border:1px solid var(--border);}
+  .phanbo-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .phanbo-table thead th{position:sticky;top:0;z-index:2;background:rgba(15,28,55,.96);backdrop-filter:blur(12px);padding:9px 12px;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;font-weight:700;border-bottom:1px solid var(--border-strong);white-space:nowrap;text-align:left;}
+  .phanbo-table thead th.num{text-align:right;}
+  .phanbo-table td{padding:0;border-bottom:1px solid rgba(159,207,255,.07);vertical-align:middle;}
+  .phanbo-table td.readonly{padding:9px 12px;color:var(--text-secondary);font-weight:500;}
+  .phanbo-table td.num-cell{text-align:right;}
+  .phanbo-table tr.category-row{opacity:.55;}
+  .phanbo-table tr.category-row td.cell-editable{opacity:.7;}
+  .phanbo-table tr.draft-diff td.cell-editable{box-shadow:inset 2px 0 0 var(--warn);}
+  .cell-editable{padding:9px 12px;cursor:text;border-radius:2px;transition:background .1s;min-width:70px;outline:none;}
+  .cell-editable:hover{background:rgba(130,192,255,.06);}
+  .cell-editable:focus,.cell-editable[contenteditable="true"]{outline:2px solid var(--accent);outline-offset:-2px;background:rgba(53,164,255,.08);}
+  .cell-editable.is-dirty{color:var(--text-primary);font-weight:600;}
+  .phanbo-empty{padding:36px;text-align:center;color:var(--text-muted);font-size:13px;}
+  .phanbo-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--warn);color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:999px;padding:0 4px;margin-left:6px;vertical-align:middle;line-height:16px;}
+  .phanbo-topbar-warning{color:var(--warn);font-weight:600;}
+  .phanbo-topbar-warning .dot{background:var(--warn);box-shadow:0 0 8px rgba(255,172,94,.7);}
+  @keyframes toastIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  .phanbo-toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,rgba(29,43,75,.92),rgba(13,22,43,.88));border:1px solid rgba(154,216,255,.22);border-radius:8px;padding:10px 16px;font-size:13px;color:var(--text-primary);box-shadow:0 12px 28px rgba(0,0,0,.4);z-index:9999;backdrop-filter:blur(14px);opacity:0;transform:translateY(12px);transition:opacity .25s ease,transform .25s ease;}
+  .phanbo-toast.show{opacity:1;transform:translateY(0);}
+
   /* ---------- high-tech glass visual system ---------- */
-  :root{
-    --bg-rail:rgba(7,12,26,.72);
-    --bg-app:#080d1a;
-    --bg-card:rgba(18,28,52,.68);
-    --bg-card-hover:rgba(26,40,72,.82);
-    --bg-field:rgba(8,16,34,.66);
-    --border:rgba(166,204,255,.14);
-    --border-strong:rgba(166,204,255,.28);
-    --text-primary:#f4f8ff;
-    --text-secondary:#c0cee5;
-    --text-muted:#8293b2;
-    --accent:#35a4ff;
-    --accent-hover:#6bc3ff;
-    --accent-light:#9ad8ff;
-    --accent-soft:rgba(53,164,255,.18);
-    --warn:#ffac5e;
-    --warn-soft:rgba(255,172,94,.16);
-    --radius-card:14px;
-    --radius-btn:8px;
-    --shadow-card:0 16px 38px rgba(0,0,0,.26),0 2px 8px rgba(1,8,22,.38),inset 0 1px 0 rgba(255,255,255,.035);
-    --shadow-card-hover:0 24px 56px rgba(0,0,0,.36),0 0 26px rgba(53,164,255,.09),inset 0 1px 0 rgba(255,255,255,.06);
-  }
   html{background:#080d1a;}
   body{
     background:
@@ -310,12 +443,14 @@
     background:radial-gradient(circle,rgba(75,179,255,.75),transparent 66%);
   }
   .shell{position:relative;isolation:isolate;}
-  .nav-rail{
-    position:relative;z-index:2;background:linear-gradient(180deg,rgba(10,18,38,.84),rgba(5,10,23,.75));
-    border-right-color:rgba(154,216,255,.14);backdrop-filter:blur(22px) saturate(135%);-webkit-backdrop-filter:blur(22px) saturate(135%);
+  .sidebar{
+    position:relative;z-index:2;
+    background:linear-gradient(180deg,rgba(10,18,38,.84),rgba(5,10,23,.75));
+    border-right-color:rgba(154,216,255,.14);
+    backdrop-filter:blur(22px) saturate(135%);-webkit-backdrop-filter:blur(22px) saturate(135%);
   }
-  .nav-rail::after{content:"";position:absolute;right:-1px;top:24px;bottom:24px;width:1px;background:linear-gradient(transparent,rgba(111,196,255,.48),transparent);}
-  .nav-logo{
+  .sidebar::after{content:"";position:absolute;right:-1px;top:24px;bottom:24px;width:1px;background:linear-gradient(transparent,rgba(111,196,255,.48),transparent);}
+  .sidebar-logo{
     border-radius:11px;background:linear-gradient(135deg,#2069df 0%,#38bbff 55%,#b6ecff 160%);
     box-shadow:0 8px 20px rgba(34,137,255,.35),inset 0 1px 1px rgba(255,255,255,.34);
   }
@@ -323,6 +458,8 @@
   .nav-item:hover{background:rgba(130,192,255,.09);transform:translateY(-1px);}
   .nav-item.active{background:linear-gradient(90deg,rgba(53,164,255,.16),rgba(53,164,255,.025));color:#e8f6ff;}
   .nav-item.active::before{left:0;top:8px;bottom:8px;width:3px;background:linear-gradient(#a6e0ff,#3aa7ff);box-shadow:0 0 12px rgba(72,181,255,.85);}
+  .sidebar-collapse{color:#aac4e3;}
+  .sidebar-version{font-size:10.5px;color:var(--text-muted);font-weight:600;text-align:center;padding:6px 0 2px;letter-spacing:.04em;}
   .topbar{
     position:relative;z-index:1;background:rgba(8,14,29,.56);border-bottom-color:rgba(154,216,255,.12);
     backdrop-filter:blur(18px) saturate(125%);-webkit-backdrop-filter:blur(18px) saturate(125%);
@@ -380,31 +517,150 @@
   ::-webkit-scrollbar-thumb:hover{background:rgba(128,197,255,.42);}
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto !important;animation-duration:.01ms !important;transition-duration:.01ms !important;}}
   @media (max-width:680px){.scroll-area{padding:18px 14px 52px;}.topbar{padding:0 14px;}.topbar-status{display:none;}.hero{padding:24px;}.hero-title{font-size:22px;}}
+
+  /* ===================== [V2] Auth gate client-side ===================== */
+  #auth-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#060d1d;background:linear-gradient(175deg,#060d1d 0%,#0b1c38 100%);overflow:hidden;}
+  #auth-overlay::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 18% 20%,rgba(53,164,255,.10),transparent),radial-gradient(ellipse 60% 50% at 80% 72%,rgba(0,200,150,.08),transparent);pointer-events:none;}
+  #auth-overlay::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(154,216,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(154,216,255,.035) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;}
+  #auth-overlay.hidden{display:none;}
+  #auth-overlay.fade-out{animation:authFadeOut .3s ease forwards;}
+  @keyframes authFadeOut{from{opacity:1;}to{opacity:0;visibility:hidden;}}
+  @keyframes authCardIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  .auth-card{position:relative;z-index:1;width:400px;max-width:92vw;padding:36px 32px 28px;background:rgba(12,23,47,.72);backdrop-filter:blur(18px) saturate(130%);-webkit-backdrop-filter:blur(18px) saturate(130%);border:1px solid rgba(154,216,255,.18);border-radius:16px;box-shadow:0 40px 88px rgba(0,0,0,.56),0 0 0 1px rgba(154,216,255,.04),inset 0 1px 0 rgba(255,255,255,.08);animation:authCardIn .4s cubic-bezier(.2,.7,.3,1) both;}
+  .auth-card::before{content:"";position:absolute;top:0;left:20px;right:20px;height:1px;background:linear-gradient(90deg,transparent,rgba(142,221,255,.55),transparent);pointer-events:none;}
+  .auth-logo{display:block;width:52px;height:52px;margin:0 auto 14px;border-radius:12px;background:linear-gradient(135deg,#0b4fbf,#35a4ff);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;letter-spacing:.04em;color:#fff;box-shadow:0 10px 28px rgba(53,164,255,.32),0 0 14px rgba(53,164,255,.18);text-align:center;line-height:52px;}
+  .auth-title{text-align:center;font-size:21px;font-weight:600;color:#f4f8ff;margin:0 0 4px;letter-spacing:.02em;}
+  .auth-sub{text-align:center;font-size:12.5px;color:rgba(192,206,229,.72);margin:0 0 22px;letter-spacing:.01em;}
+  .auth-field{position:relative;margin-bottom:14px;}
+  .auth-field-icon{position:absolute;top:50%;left:12px;width:17px;height:17px;color:#8aa3c3;pointer-events:none;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;}
+  .auth-field-icon svg{display:block;}
+  .auth-field input[type="email"],.auth-field input[type="password"]{width:100%;padding:11px 14px 11px 36px;background:rgba(5,14,32,.58);border:1px solid rgba(154,216,255,.16);border-radius:10px;font-size:14px;color:#f4f8ff;outline:none;transition:border-color .18s,box-shadow .18s;box-sizing:border-box;}
+  .auth-field input::placeholder{color:rgba(143,156,175,.55);}
+  .auth-field input:focus{border-color:rgba(121,207,255,.55);box-shadow:0 0 0 3px rgba(53,164,255,.12);}
+  .auth-eye{position:absolute;top:50%;right:10px;transform:translateY(-50%);background:none;border:none;padding:5px;cursor:pointer;color:#8aa3c3;transition:color .15s;outline:none;}
+  .auth-eye:hover{color:#b3d3ff;}
+  .auth-eye svg{display:block;width:18px;height:18px;}
+  .auth-remember{display:flex;align-items:center;gap:9px;margin:18px 0 0;color:#c0cee5;font-size:13px;cursor:pointer;user-select:none;-webkit-user-select:none;}
+  .auth-remember input[type="checkbox"]{width:16px;height:16px;border-radius:5px;border:1px solid rgba(154,216,255,.28);background:rgba(6,14,31,.52);accent-color:#35a4ff;cursor:pointer;}
+  .auth-submit{display:block;width:100%;padding:12px 0;margin-top:20px;border:none;border-radius:10px;background:linear-gradient(135deg,#0b4fbf,#35a4ff);color:#fff;font-size:14.5px;font-weight:600;letter-spacing:.02em;cursor:pointer;transition:background .18s,box-shadow .22s,transform .1s;box-shadow:0 10px 26px rgba(37,155,255,.28);}
+  .auth-submit:hover{background:linear-gradient(135deg,#1f6ed9,#48b2ff);box-shadow:0 14px 34px rgba(37,155,255,.36);}
+  .auth-submit:active{transform:scale(.98);}
+  .auth-submit:disabled{opacity:.52;cursor:not-allowed;}
+  .auth-error{margin-top:12px;color:#ff5f5f;font-size:12.5px;min-height:16px;text-align:center;opacity:0;transition:opacity .18s;}
+  .auth-error.visible{opacity:1;}
+  @keyframes authShake{0%,100%{transform:translateX(0);}15%,55%{transform:translateX(-7px);}35%,75%{transform:translateX(7px);}}
+  .auth-card.shake{animation:authShake .4s ease;}
+  .auth-user-chip{position:relative;margin-left:auto;margin-right:8px;display:flex;align-items:center;gap:7px;padding:3px 11px 3px 4px;border-radius:999px;background:rgba(53,164,255,.08);border:1px solid rgba(154,216,255,.18);cursor:pointer;transition:background .15s;color:#e3edf9;font-size:12.5px;user-select:none;-webkit-user-select:none;white-space:nowrap;}
+  .auth-user-chip:hover{background:rgba(53,164,255,.16);}
+  .auth-user-chip .chip-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0b4fbf,#35a4ff);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11.5px;color:#fff;text-transform:uppercase;line-height:26px;flex-shrink:0;}
+  .auth-dropdown{position:absolute;top:calc(100% + 7px);right:0;min-width:168px;background:rgba(17,29,57,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(154,216,255,.22);border-radius:11px;box-shadow:0 18px 42px rgba(0,0,0,.48);padding:5px;display:none;z-index:10001;}
+  .auth-dropdown.open{display:block;}
+  .auth-dropdown button{display:block;width:100%;padding:9px 13px;background:none;border:none;border-radius:7px;text-align:left;color:#e3edf9;font-size:13px;cursor:pointer;transition:background .12s;}
+  .auth-dropdown button:hover{background:rgba(53,164,255,.14);}
 </style>
 </head>
 <body>
+
+<!-- ===================== [V2] Auth gate client-side ===================== -->
+<!-- rào cản hình thức, KHÔNG phải bảo mật thật. Dữ liệu report_data.json vẫn tải công khai.
+     Muốn chặn thật: Cloudflare Access. -->
+<div id="auth-overlay">
+  <div class="auth-card" id="auth-card">
+    <div class="auth-logo">SPM</div>
+    <div class="auth-title">SPM · Tiến độ gia công</div>
+    <div class="auth-sub">Hệ thống báo cáo nội bộ — Đại Dũng</div>
+    <form id="auth-form" autocomplete="off" novalidate>
+      <div class="auth-field">
+        <span class="auth-field-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </span>
+        <input type="email" id="auth-email" placeholder="email@congty.com" required>
+      </div>
+      <div class="auth-field">
+        <span class="auth-field-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </span>
+        <input type="password" id="auth-pw" placeholder="Mật khẩu" required>
+        <button type="button" class="auth-eye" id="auth-eye" aria-label="Hiện mật khẩu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <label class="auth-remember"><input type="checkbox" id="auth-remember" checked> Ghi nhớ đăng nhập 8 giờ</label>
+      <button type="submit" class="auth-submit" id="auth-submit">Đăng nhập</button>
+      <div class="auth-error" id="auth-error"></div>
+    </form>
+  </div>
+</div>
+<!-- [/V2] End auth gate overlay -->
+
 <div class="shell">
 
-  <nav class="nav-rail">
-    <div class="nav-logo">SPM</div>
-    <button type="button" class="nav-item active" data-target="section-overview">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      <span>Tổng quan</span>
-    </button>
-    <button type="button" class="nav-item" data-target="section-hangmuc">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-      <span>Hạng mục</span>
-    </button>
-    <button type="button" class="nav-item" data-target="section-detail">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1.5"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg>
-      <span>Chi tiết</span>
-    </button>
-  </nav>
+  <aside class="sidebar" id="sidebar" data-state="expanded">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">SPM</div>
+      <div class="sidebar-brand-text">
+        <div class="sidebar-brand-title">SPM</div>
+        <div class="sidebar-brand-sub">Tiến độ gia công</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-group">
+        <div class="sidebar-group-title">Báo cáo</div>
+        <button type="button" class="nav-item active" data-route="tong-quan" data-tooltip="Tổng quan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <span class="nav-label">Tổng quan</span>
+        </button>
+        <button type="button" class="nav-item" data-route="hang-muc" data-tooltip="Hạng mục &amp; Zone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          <span class="nav-label">Hạng mục &amp; Zone</span>
+        </button>
+        <button type="button" class="nav-item" data-route="chi-tiet" data-tooltip="Chi tiết">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1.5"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg>
+          <span class="nav-label">Chi tiết</span>
+        </button>
+        <button type="button" class="nav-item" data-route="lich-su" data-tooltip="Lịch sử">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+          <span class="nav-label">Lịch sử</span>
+        </button>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-group-title">Quản trị</div>
+        <button type="button" class="nav-item" data-route="phan-bo" data-tooltip="Phân bổ kế hoạch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+          <span class="nav-label">Phân bổ kế hoạch</span><span class="phanbo-badge" hidden></span>
+        </button>
+        <button type="button" class="nav-item" id="nav-settings" data-tooltip="Thiết đặt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="nav-label">Thiết đặt</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button type="button" class="sidebar-collapse" id="btn-sidebar-toggle" aria-label="Thu gọn thanh bên">
+        <svg class="chev-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        <svg class="chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="collapse-label">Thu gọn</span>
+      </button>
+      <div class="sidebar-version">v2 · 28.07.2026</div>
+    </div>
+  </aside>
 
   <div class="app-main">
     <header class="topbar">
       <div class="app-title">SPM · Tiến độ khối lượng gia công</div>
       <div class="topbar-status" id="topbar-status" hidden><span class="dot"></span><span id="topbar-status-text"></span></div>
+      <div class="topbar-status phanbo-topbar-warning" id="topbar-phanbo-warning" hidden><span class="dot"></span><span>Chưa có dữ liệu phân bổ</span></div>
+      <!-- [V2] User chip + dropdown — ẩn直到登录后由 JS 填充 -->
+      <div id="auth-user-area" class="auth-user-chip" style="display:none;" tabindex="0">
+        <span class="chip-avatar" id="auth-avatar"></span>
+        <span id="auth-email-label"></span>
+        <div class="auth-dropdown" id="auth-dropdown">
+          <button type="button" id="auth-logout">Đăng xuất</button>
+        </div>
+      </div>
       <button type="button" class="btn btn-secondary" id="btn-settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         Thiết đặt
@@ -416,23 +672,6 @@
     </header>
 
     <div class="scroll-area">
-
-      <section class="section" id="section-overview">
-        <div class="hero">
-          <div class="hero-text">
-            <h1 class="hero-title">Tổng quan tiến độ gia công</h1>
-            <p class="hero-sub" id="hero-sub">Khối lượng cấu kiện theo Hạng mục &amp; Zone — Sân bay Phú Quốc · PVF Hưng Yên · Hùng Vương. Dữ liệu đọc trực tiếp từ report_data.json.</p>
-          </div>
-          <svg class="hero-pattern" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice">
-            <circle cx="360" cy="10" r="140" fill="rgba(255,255,255,.06)"/>
-            <circle cx="300" cy="170" r="70" fill="rgba(255,255,255,.07)"/>
-            <g stroke="rgba(255,255,255,.14)" stroke-width="1.4" fill="none">
-              <path d="M180 30 L400 30"/><path d="M200 70 L400 70"/><path d="M220 110 L400 110"/>
-              <path d="M240 150 L400 150"/><path d="M260 190 L400 190"/>
-            </g>
-          </svg>
-        </div>
-      </section>
 
       <section class="section" id="loading-state">
         <div class="state-card">
@@ -455,7 +694,8 @@
 
       <div id="dashboard-content" hidden>
 
-        <section class="section filterbar" id="filterbar">
+        <!-- shared filterbar — moved by JS into the active view's filter-slot -->
+        <section class="section filterbar" id="filterbar" hidden>
           <div class="filter-field" id="filter-project"></div>
           <div class="filter-field" id="filter-zone"></div>
           <div class="filter-field" id="filter-hangmuc"></div>
@@ -482,104 +722,188 @@
           </button>
         </section>
 
-        <div class="filter-panel-slot" id="filter-panel-slot"></div>
+        <div class="filter-panel-slot" id="filter-panel-slot" hidden></div>
 
-        <section class="section kpi-grid">
-          <div class="kpi-tile">
-            <div class="kpi-label">Tổng khối lượng</div>
-            <div class="kpi-value" id="kpi-total-ton">0</div>
-            <div class="kpi-unit">tấn</div>
-          </div>
-          <div class="kpi-tile">
-            <div class="kpi-label">Tổng số cấu kiện</div>
-            <div class="kpi-value" id="kpi-total-ck">0</div>
-            <div class="kpi-unit">cấu kiện</div>
-          </div>
-          <div class="kpi-tile">
-            <div class="kpi-label">% Hold theo tấn</div>
-            <div class="kpi-value" id="kpi-hold-pct-ton">0%</div>
-            <div class="kpi-meter"><div class="kpi-meter-fill" id="kpi-hold-bar-ton"></div></div>
-          </div>
-          <div class="kpi-tile">
-            <div class="kpi-label">% Hold theo cấu kiện</div>
-            <div class="kpi-value" id="kpi-hold-pct-ck">0%</div>
-            <div class="kpi-meter"><div class="kpi-meter-fill" id="kpi-hold-bar-ck"></div></div>
-          </div>
-          <div class="kpi-tile">
-            <div class="kpi-label">Số hạng mục</div>
-            <div class="kpi-value" id="kpi-hangmuc-count">0</div>
-            <div class="kpi-unit">hạng mục</div>
-          </div>
-          <div class="kpi-tile">
-            <div class="kpi-label">Tổng Phân bổ (tấn)</div>
-            <div class="kpi-value" id="kpi-total-phanbo">0</div>
-            <div class="kpi-unit"><span id="kpi-phanbo-pct">0%</span> % đạt tổng</div>
-            <div class="kpi-meter"><div class="kpi-meter-fill" id="kpi-phanbo-bar"></div></div>
-          </div>
-        </section>
+        <!-- ======= View: Tổng quan ======= -->
+        <div class="view" data-view="tong-quan">
+          <section class="section" id="section-overview">
+            <div class="hero">
+              <div class="hero-text">
+                <h1 class="hero-title">Tổng quan tiến độ gia công</h1>
+                <p class="hero-sub" id="hero-sub">Khối lượng cấu kiện theo Hạng mục &amp; Zone — Sân bay Phú Quốc · PVF Hưng Yên · Hùng Vương. Dữ liệu đọc trực tiếp từ report_data.json.</p>
+              </div>
+              <svg class="hero-pattern" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice">
+                <circle cx="360" cy="10" r="140" fill="rgba(255,255,255,.06)"/>
+                <circle cx="300" cy="170" r="70" fill="rgba(255,255,255,.07)"/>
+                <g stroke="rgba(255,255,255,.14)" stroke-width="1.4" fill="none">
+                  <path d="M180 30 L400 30"/><path d="M200 70 L400 70"/><path d="M220 110 L400 110"/>
+                  <path d="M240 150 L400 150"/><path d="M260 190 L400 190"/>
+                </g>
+              </svg>
+            </div>
+          </section>
+          <div class="section-slot" id="filter-slot-tong-quan"></div>
+          <section class="section kpi-grid">
+            <div class="kpi-tile">
+              <div class="kpi-label">Tổng khối lượng</div>
+              <div class="kpi-value" id="kpi-total-ton">0</div>
+              <div class="kpi-unit">tấn</div>
+            </div>
+            <div class="kpi-tile">
+              <div class="kpi-label">Tổng số cấu kiện</div>
+              <div class="kpi-value" id="kpi-total-ck">0</div>
+              <div class="kpi-unit">cấu kiện</div>
+            </div>
+            <div class="kpi-tile">
+              <div class="kpi-label">% Hold theo tấn</div>
+              <div class="kpi-value" id="kpi-hold-pct-ton">0%</div>
+              <div class="kpi-meter"><div class="kpi-meter-fill" id="kpi-hold-bar-ton"></div></div>
+            </div>
+            <div class="kpi-tile">
+              <div class="kpi-label">% Hold theo cấu kiện</div>
+              <div class="kpi-value" id="kpi-hold-pct-ck">0%</div>
+              <div class="kpi-meter"><div class="kpi-meter-fill" id="kpi-hold-bar-ck"></div></div>
+            </div>
+            <div class="kpi-tile">
+              <div class="kpi-label">Số hạng mục</div>
+              <div class="kpi-value" id="kpi-hangmuc-count">0</div>
+              <div class="kpi-unit">hạng mục</div>
+            </div>
+            <div class="kpi-tile">
+              <div class="kpi-label">Tổng Phân bổ (tấn)</div>
+              <div class="kpi-value" id="kpi-total-phanbo">0</div>
+              <div class="kpi-unit"><span id="kpi-phanbo-pct">0%</span> % đạt tổng</div>
+              <div class="kpi-meter"><div class="kpi-meter-fill" id="kpi-phanbo-bar"></div></div>
+            </div>
+          </section>
+        </div>
 
-        <section class="section" id="section-hangmuc">
-          <div class="charts-grid-2">
+        <!-- ======= View: Hạng mục & Zone ======= -->
+        <div class="view" data-view="hang-muc" hidden>
+          <div class="section-slot" id="filter-slot-hang-muc"></div>
+          <section class="section" id="section-hangmuc">
+            <div class="charts-grid-2">
+              <div class="card chart-card">
+                <div class="chart-head">
+                  <h3>Top hạng mục theo khối lượng</h3>
+                  <span class="chart-sub" id="chart1-sub"></span>
+                </div>
+                <div class="chart-body" id="chart-top-hangmuc"></div>
+              </div>
+              <div class="card chart-card">
+                <div class="chart-head"><h3>Khối lượng theo dự án</h3></div>
+                <div class="chart-body" id="chart-project-donut"></div>
+              </div>
+            </div>
+          </section>
+          <section class="section">
             <div class="card chart-card">
               <div class="chart-head">
-                <h3>Top hạng mục theo khối lượng</h3>
-                <span class="chart-sub" id="chart1-sub"></span>
+                <h3>Khối lượng Hold theo Zone</h3>
+                <div class="legend-inline">
+                  <span><span class="legend-dot" style="background:var(--accent-hover)"></span>Đã Hold</span>
+                  <span><span class="legend-dot" style="background:var(--warn)"></span>Chưa Hold</span>
+                </div>
               </div>
-              <div class="chart-body" id="chart-top-hangmuc"></div>
+              <div class="chart-body chart-body-tall" id="chart-zone-hold"></div>
             </div>
+          </section>
+        </div>
+
+        <!-- ======= View: Chi tiết ======= -->
+        <div class="view" data-view="chi-tiet" hidden>
+          <div class="section-slot" id="filter-slot-chi-tiet"></div>
+          <section class="section card table-card" id="section-detail">
+            <div class="table-head">
+              <h3>Bảng chi tiết theo Hạng mục / Zone</h3>
+              <div class="table-head-actions">
+                <input type="text" id="table-search" placeholder="Tìm hạng mục hoặc zone...">
+                <button type="button" class="btn btn-secondary" id="btn-detail-export">Xuất Excel</button>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table id="detail-table">
+                <thead>
+                  <tr>
+                    <th data-sort="hang_muc">Hạng mục</th>
+                    <th data-sort="zone">Zone</th>
+                    <th data-sort="count" class="num">Số CK</th>
+                    <th data-sort="ton" class="num sorted-desc">Tấn</th>
+                    <th data-sort="phanBo" class="num">Phân bổ (tấn)</th>
+                    <th data-sort="pctAchieved" class="num">% đạt</th>
+                    <th data-sort="pctHold" class="num">% Hold</th>
+                  </tr>
+                </thead>
+                <tbody id="detail-table-body"></tbody>
+              </table>
+            </div>
+            <div class="table-empty" id="table-empty" hidden>Không có dữ liệu phù hợp bộ lọc / tìm kiếm hiện tại</div>
+          </section>
+        </div>
+
+        <!-- ======= View: Lịch sử ======= -->
+        <div class="view" data-view="lich-su" hidden>
+          <section class="section" id="card-history" hidden>
             <div class="card chart-card">
-              <div class="chart-head"><h3>Khối lượng theo dự án</h3></div>
-              <div class="chart-body" id="chart-project-donut"></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="card chart-card">
-            <div class="chart-head">
-              <h3>Khối lượng Hold theo Zone</h3>
-              <div class="legend-inline">
-                <span><span class="legend-dot" style="background:var(--accent-hover)"></span>Đã Hold</span>
-                <span><span class="legend-dot" style="background:var(--warn)"></span>Chưa Hold</span>
+              <div class="chart-head">
+                <h3>S-curve khối lượng theo ngày</h3>
+                <span class="chart-sub" id="history-sub"></span>
               </div>
+              <div class="chart-body chart-body-flat" id="chart-history"></div>
             </div>
-            <div class="chart-body chart-body-tall" id="chart-zone-hold"></div>
-          </div>
-        </section>
+          </section>
+        </div>
 
-        <section class="section" id="card-history" hidden>
-          <div class="card chart-card">
-            <div class="chart-head">
-              <h3>S-curve khối lượng theo ngày</h3>
-              <span class="chart-sub" id="history-sub"></span>
+        <!-- ======= View: Phân bổ kế hoạch ======= -->
+        <div class="view" data-view="phan-bo" hidden>
+          <!-- Integrity warnings -->
+          <div id="phanbo-warnings" class="phanbo-warnings" hidden></div>
+
+          <!-- Toolbar -->
+          <div class="phanbo-toolbar">
+            <div class="phanbo-toolbar-left">
+              <div class="filter-field">
+                <label>Dự án</label>
+                <select class="phanbo-select" id="phanbo-filter-project"><option value="">Tất cả</option></select>
+              </div>
+              <div class="filter-field">
+                <label>Hạng mục</label>
+                <select class="phanbo-select" id="phanbo-filter-hangmuc"><option value="">Tất cả</option></select>
+              </div>
+              <input type="text" id="phanbo-search" class="phanbo-search-input" placeholder="🔍 Tìm dự án/hạng mục/zone...">
+              <label class="phanbo-checkbox-label">
+                <input type="checkbox" id="phanbo-only-unfilled"> Chỉ dòng chưa điền
+              </label>
             </div>
-            <div class="chart-body chart-body-flat" id="chart-history"></div>
+            <div class="phanbo-toolbar-right">
+              <span class="phanbo-dirty-badge" id="phanbo-dirty-badge" hidden>● 0 thay đổi</span>
+              <button type="button" class="btn btn-secondary" id="phanbo-btn-download">Tải phanbo.json</button>
+              <button type="button" class="btn btn-secondary" id="phanbo-btn-copy">Copy JSON</button>
+              <button type="button" class="btn btn-secondary" id="phanbo-btn-excel">Xuất Excel</button>
+              <button type="button" class="btn btn-secondary" id="phanbo-btn-discard" style="color:var(--warn)">Bỏ nháp</button>
+            </div>
           </div>
-        </section>
 
-        <section class="section card table-card" id="section-detail">
-          <div class="table-head">
-            <h3>Bảng chi tiết theo Hạng mục / Zone</h3>
-            <input type="text" id="table-search" placeholder="Tìm hạng mục hoặc zone...">
-          </div>
-          <div class="table-scroll">
-            <table id="detail-table">
+          <!-- Spreadsheet grid -->
+          <div class="phanbo-grid-wrap">
+            <table class="phanbo-table" id="phanbo-table">
               <thead>
                 <tr>
-                  <th data-sort="hang_muc">Hạng mục</th>
-                  <th data-sort="zone">Zone</th>
-                  <th data-sort="count" class="num">Số CK</th>
-                  <th data-sort="ton" class="num sorted-desc">Tấn</th>
-                  <th data-sort="phanBo" class="num">Phân bổ (tấn)</th>
-                  <th data-sort="pctAchieved" class="num">% đạt</th>
-                  <th data-sort="pctHold" class="num">% Hold</th>
+                  <th>Dự án</th>
+                  <th>Hạng mục</th>
+                  <th>Zone</th>
+                  <th class="num">Phân bổ (tấn)</th>
+                  <th class="num">Phân bổ (CK)</th>
+                  <th class="num">Shop hiện tại</th>
+                  <th class="num">% đạt</th>
+                  <th>Ghi chú</th>
                 </tr>
               </thead>
-              <tbody id="detail-table-body"></tbody>
+              <tbody id="phanbo-table-body"></tbody>
             </table>
+            <div class="phanbo-empty" id="phanbo-empty" hidden>Chưa có dữ liệu shop (report_data.json trống)</div>
           </div>
-          <div class="table-empty" id="table-empty" hidden>Không có dữ liệu phù hợp bộ lọc / tìm kiếm hiện tại</div>
-        </section>
+        </div>
 
       </div>
     </div>
@@ -638,6 +962,171 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
 (function(){
   'use strict';
 
+  // [V2] Auth gate client-side — rào cản hình thức, KHÔNG phải bảo mật thật.
+  // Dữ liệu report_data.json vẫn tải công khai. Muốn chặn thật: Cloudflare Access.
+  // ===================== [V2] Auth gate client-side =====================
+  var AUTH_HASH = 'a8c4e50027555f6861100fe9784e7566113a6cb7df7df6e8b3257c414cbe5b93';
+  var AUTH_KEY = 'spm.auth';
+  var AUTH_TTL = 8 * 60 * 60 * 1000;
+  var authAttempts = 0;
+  var authLockTimer = null;
+  var authExpiryTimer = null;
+  var authDashboardStarted = false;
+
+  function authGetSession() {
+    var stores = [window.localStorage, window.sessionStorage];
+    for (var i = 0; i < stores.length; i++) {
+      try {
+        var raw = stores[i].getItem(AUTH_KEY);
+        if (!raw) continue;
+        var session = JSON.parse(raw);
+        if (session && session.email && Number(session.expiresAt) > Date.now()) return session;
+        stores[i].removeItem(AUTH_KEY);
+      } catch (e) { /* storage không khả dụng hoặc dữ liệu phiên hỏng */ }
+    }
+    return null;
+  }
+
+  function authSetSession(email, remember) {
+    var session = { email: email, expiresAt: Date.now() + AUTH_TTL };
+    var target = remember ? window.localStorage : window.sessionStorage;
+    var other = remember ? window.sessionStorage : window.localStorage;
+    try { other.removeItem(AUTH_KEY); target.setItem(AUTH_KEY, JSON.stringify(session)); } catch (e) { /* bỏ qua lỗi storage */ }
+    return session;
+  }
+
+  function authSetUser(session) {
+    var area = document.getElementById('auth-user-area');
+    var avatar = document.getElementById('auth-avatar');
+    var label = document.getElementById('auth-email-label');
+    if (!area || !session) return;
+    var email = String(session.email);
+    avatar.textContent = email.charAt(0).toUpperCase();
+    label.textContent = email.length > 27 ? email.slice(0, 24) + '…' : email;
+    label.title = email;
+    area.style.display = 'flex';
+    if (authExpiryTimer) clearTimeout(authExpiryTimer);
+    authExpiryTimer = setTimeout(function () {
+      try { window.localStorage.removeItem(AUTH_KEY); window.sessionStorage.removeItem(AUTH_KEY); } catch (e) {}
+      window.location.reload();
+    }, Math.max(0, Number(session.expiresAt) - Date.now()));
+  }
+
+  function authShowOverlay() {
+    var overlay = document.getElementById('auth-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('fade-out', 'hidden');
+    overlay.style.display = 'flex';
+    var email = document.getElementById('auth-email');
+    if (email) email.focus();
+  }
+
+  function authHideOverlay() {
+    var overlay = document.getElementById('auth-overlay');
+    if (!overlay) return;
+    overlay.classList.add('fade-out');
+    setTimeout(function () { overlay.classList.add('hidden'); overlay.style.display = 'none'; }, 300);
+  }
+
+  function authSetError(message) {
+    var error = document.getElementById('auth-error');
+    if (!error) return;
+    error.textContent = message || '';
+    error.classList.toggle('visible', !!message);
+  }
+
+  function authLockButton() {
+    var button = document.getElementById('auth-submit');
+    var remaining = 30;
+    if (!button) return;
+    button.disabled = true;
+    button.textContent = 'Thử lại sau ' + remaining + ' giây';
+    if (authLockTimer) clearInterval(authLockTimer);
+    authLockTimer = setInterval(function () {
+      remaining -= 1;
+      if (remaining <= 0) {
+        clearInterval(authLockTimer);
+        authLockTimer = null;
+        authAttempts = 0;
+        button.disabled = false;
+        button.textContent = 'Đăng nhập';
+      } else button.textContent = 'Thử lại sau ' + remaining + ' giây';
+    }, 1000);
+  }
+
+  function authDigest(value) {
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)).then(function (buffer) {
+      return Array.from(new Uint8Array(buffer)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+    });
+  }
+
+  function authStartDashboard() {
+    if (authDashboardStarted) return;
+    authDashboardStarted = true;
+    loadHistory();
+    loadMainData();
+    loadPhanBo();
+  }
+
+  function authComplete(email) {
+    var remember = document.getElementById('auth-remember').checked;
+    var session = authSetSession(email, remember);
+    authAttempts = 0;
+    authSetUser(session);
+    authHideOverlay();
+    authStartDashboard();
+  }
+
+  function initAuth() {
+    var form = document.getElementById('auth-form');
+    var eye = document.getElementById('auth-eye');
+    var password = document.getElementById('auth-pw');
+    var area = document.getElementById('auth-user-area');
+    var dropdown = document.getElementById('auth-dropdown');
+    var logout = document.getElementById('auth-logout');
+    var session = authGetSession();
+    if (session) { authSetUser(session); authHideOverlay(); authStartDashboard(); }
+    else authShowOverlay();
+    if (eye) eye.addEventListener('click', function () {
+      var shown = password.type === 'text';
+      password.type = shown ? 'password' : 'text';
+      eye.setAttribute('aria-label', shown ? 'Hiện mật khẩu' : 'Ẩn mật khẩu');
+    });
+    if (form) form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (authLockTimer) return;
+      var email = document.getElementById('auth-email').value.trim();
+      var value = password.value;
+      authSetError('');
+      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+        authSetError('Vui lòng nhập email hợp lệ');
+        return;
+      }
+      authDigest(value).then(function (digest) {
+        if (digest === AUTH_HASH) authComplete(email);
+        else {
+          authAttempts += 1;
+          var card = document.getElementById('auth-card');
+          card.classList.remove('shake');
+          void card.offsetWidth;
+          card.classList.add('shake');
+          authSetError('Email hoặc mật khẩu không đúng');
+          if (authAttempts >= 5) authLockButton();
+        }
+      }).catch(function () { authSetError('Trình duyệt không hỗ trợ xác thực mật khẩu'); });
+    });
+    if (area) area.addEventListener('click', function (event) {
+      event.stopPropagation();
+      dropdown.classList.toggle('open');
+    });
+    if (logout) logout.addEventListener('click', function (event) {
+      event.stopPropagation();
+      try { window.localStorage.removeItem(AUTH_KEY); window.sessionStorage.removeItem(AUTH_KEY); } catch (e) {}
+      window.location.reload();
+    });
+    document.addEventListener('click', function () { if (dropdown) dropdown.classList.remove('open'); });
+  }
+
   // ===================== Cấu hình / hằng số =====================
   var NULL_KEY = '__UNCLASSIFIED__';
   var NULL_LABEL = '— Chưa phân loại —';
@@ -683,7 +1172,11 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       lifeState: 'ALL'         // 'ALL' | 'N' | 'L'
     },
     sort: { key: 'ton', dir: 'desc' },
-    search: ''
+    search: '',
+    // Phân bổ tách riêng từ report_data.json
+    phanBoItems: [],        // items hiện tại đang dùng (server hoặc draft)
+    phanBoServer: null,     // bản gốc từ phanbo.json (server)
+    phanBoDraft: null       // bản nháp từ localStorage (null = không có draft)
   };
 
   var chartTopHangMuc, chartDonutProject, chartZoneHold, chartHistory;
@@ -780,6 +1273,1128 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     });
   }
 
+  var PHANBO_DRAFT_KEY = 'spm.phanbo.draft';
+
+  function getPhanBoWarningEl() {
+    return document.getElementById('topbar-phanbo-warning');
+  }
+
+  function setPhanBoWarning(visible) {
+    var el = getPhanBoWarningEl();
+    if (el) el.hidden = !visible;
+  }
+
+  function mergePhanBoDraft() {
+    state.phanBoDraft = null;
+    var raw = null;
+    try { raw = localStorage.getItem(PHANBO_DRAFT_KEY); } catch (e) {}
+    if (!raw) return;
+    try {
+      var draft = JSON.parse(raw);
+      if (draft && Array.isArray(draft.items)) {
+        state.phanBoDraft = draft;
+        state.phanBoItems = draft.items.slice();
+      }
+    } catch (e) {
+      try { localStorage.removeItem(PHANBO_DRAFT_KEY); } catch (ignore) {}
+    }
+  }
+
+  // phanbo.json là nguồn tùy chọn: thiếu/lỗi chỉ cảnh báo, không chặn dashboard.
+  function loadPhanBo() {
+    return fetch('./phanbo.json').then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function (data) {
+      state.phanBoServer = data && Array.isArray(data.items) ? data : { meta: {}, items: [] };
+      state.phanBoItems = state.phanBoServer.items.slice();
+      setPhanBoWarning(state.phanBoItems.length === 0);
+      mergePhanBoDraft();
+      if (state.facts.length) {
+        renderAll();
+        renderPhanBoGrid();
+      }
+    }).catch(function (err) {
+      console.warn('Không tải được phanbo.json:', err.message);
+      state.phanBoServer = null;
+      state.phanBoItems = [];
+      setPhanBoWarning(true);
+      mergePhanBoDraft();
+      if (state.facts.length) {
+        renderAll();
+        renderPhanBoGrid();
+      }
+    });
+  }
+
+  // ===================== Phân bổ helpers =====================
+  // Lookup phanBoTan từ phanbo.json items. Quy tắc chống đếm đôi:
+  // Nếu (project,hangMuc) có >=1 item zone!=null → sum zone items, BỎ QUA item zone:null.
+  // Nếu chỉ có zone:null → dùng giá trị đó.
+  function getPhanBoFor(project, hangMuc) {
+    var items = state.phanBoItems.filter(function (it) {
+      return it.project === project && it.hangMuc === hangMuc;
+    });
+    if (!items.length) return null;
+    var zoneItems = items.filter(function (it) { return it.zone != null; });
+    if (zoneItems.length > 0) {
+      return zoneItems.reduce(function (sum, it) { return sum + (it.phanBoTan || 0); }, 0);
+    }
+    return items[0].phanBoTan != null ? items[0].phanBoTan : null;
+  }
+  // Exact allocation lookup for a filtered detail row. Zone-level data is preferred;
+  // a category-level item is only a fallback when no exact zone item exists.
+  function getPhanBoForZone(project, hangMuc, zone) {
+    var exact = findPhanBoItem(project, hangMuc, zone);
+    if (exact) return exact.phanBoTan != null ? exact.phanBoTan : null;
+    return getPhanBoFor(project, hangMuc);
+  }
+
+  // Phân bổ theo đúng scope zone hiện tại. Khi đang lọc zone, chỉ các item
+  // exact-match mới được tính; không đưa tổng phân bổ toàn hạng mục vào mẫu số.
+  function getScopedPhanBoFor(project, hangMuc) {
+    var zones = state.filters.zones;
+    if (!zones.size) return getPhanBoFor(project, hangMuc);
+    var total = 0, found = false;
+    zones.forEach(function (zone) {
+      var exact = findPhanBoItem(project, hangMuc, zone);
+      if (exact && exact.phanBoTan != null) {
+        total += exact.phanBoTan;
+        found = true;
+      }
+    });
+    return found ? total : null;
+  }
+
+  function getScopedPhanBoForRow(project, hangMuc, zone) {
+    if (state.filters.zones.size) {
+      var exact = findPhanBoItem(project, hangMuc, zone);
+      return exact && exact.phanBoTan != null ? exact.phanBoTan : null;
+    }
+    return getPhanBoForZone(project, hangMuc, zone);
+  }
+
+  function getPhanBoCKFor(project, hangMuc) {
+    var items = state.phanBoItems.filter(function (it) {
+      return it.project === project && it.hangMuc === hangMuc;
+    });
+    if (!items.length) return null;
+    var zoneItems = items.filter(function (it) { return it.zone != null; });
+    if (zoneItems.length > 0) {
+      return zoneItems.reduce(function (sum, it) { return sum + (it.phanBoCK || 0); }, 0);
+    }
+    return items[0].phanBoCK != null ? items[0].phanBoCK : null;
+  }
+  function findPhanBoItem(project, hangMuc, zone) {
+    for (var i = 0; i < state.phanBoItems.length; i++) {
+      var it = state.phanBoItems[i];
+      if (it.project === project && it.hangMuc === hangMuc && it.zone === zone) return it;
+    }
+    return null;
+  }
+
+  // ===================== Phân bổ grid =====================
+  function getUserEmail() {
+    try { var s = authGetSession(); return s ? s.email : 'unknown'; } catch (e) { return 'unknown'; }
+  }
+
+  function buildPhanBoRows() {
+    // Unique (project, hangMuc) groups từ facts
+    var seen = new Map();
+    state.facts.forEach(function (f) {
+      var k = f.project + '|||' + f.hangMuc;
+      if (!seen.has(k)) seen.set(k, { project: f.project, hangMuc: f.hangMuc, zones: new Map(), totalTon: 0 });
+      var agg = seen.get(k);
+      agg.totalTon += f.tan;
+      if (f.zone) agg.zones.set(f.zone, (agg.zones.get(f.zone) || 0) + f.tan);
+    });
+
+    var rows = [];
+    seen.forEach(function (agg) {
+      // Zone detail rows (nếu zone exist trong facts)
+      if (agg.zones.size > 0) {
+        agg.zones.forEach(function (ton, zone) {
+          var pbItem = findPhanBoItem(agg.project, agg.hangMuc, zone);
+          rows.push({
+            project: agg.project, hangMuc: agg.hangMuc, zone: zone,
+            shopTon: ton, phanBoTan: pbItem ? pbItem.phanBoTan : null,
+            phanBoCK: pbItem ? pbItem.phanBoCK : null,
+            ghiChu: pbItem ? pbItem.ghiChu : '',
+            isCategory: false, isDirty: false
+          });
+        });
+      }
+      // Category row (zone=null) — "toàn hạng mục"
+      var pbItemAll = findPhanBoItem(agg.project, agg.hangMuc, null);
+      rows.push({
+        project: agg.project, hangMuc: agg.hangMuc, zone: null,
+        shopTon: agg.totalTon, phanBoTan: pbItemAll ? pbItemAll.phanBoTan : null,
+        phanBoCK: pbItemAll ? pbItemAll.phanBoCK : null,
+        ghiChu: pbItemAll ? pbItemAll.ghiChu : '',
+        isCategory: true, isDirty: false
+      });
+    });
+    return rows;
+  }
+
+  var phanBoCurrentRows = []; // rows hiện tại trên grid
+  var phanBoDraftSaveTimer = null;
+
+  function renderPhanBoGrid() {
+    phanBoCurrentRows = buildPhanBoRows();
+    var tbody = document.getElementById('phanbo-table-body');
+    if (!tbody) return;
+    var emptyEl = document.getElementById('phanbo-empty');
+    var gridWrap = document.querySelector('.phanbo-grid-wrap');
+    if (!phanBoCurrentRows.length) {
+      tbody.innerHTML = '';
+      if (emptyEl) emptyEl.hidden = false;
+      if (gridWrap) gridWrap.style.display = 'none';
+      return;
+    }
+    if (emptyEl) emptyEl.hidden = true;
+    if (gridWrap) gridWrap.style.display = '';
+
+    // Filter
+    var search = document.getElementById('phanbo-search');
+    var onlyUnfilled = document.getElementById('phanbo-only-unfilled');
+    var projFilter = document.getElementById('phanbo-filter-project');
+    var hmFilter = document.getElementById('phanbo-filter-hangmuc');
+    var term = (search && search.value || '').trim().toLowerCase();
+    var unfilledOnly = onlyUnfilled && onlyUnfilled.checked;
+    var projVal = projFilter ? projFilter.value : '';
+    var hmVal = hmFilter ? hmFilter.value : '';
+
+    var filtered = phanBoCurrentRows.filter(function (r) {
+      if (projVal && r.project !== projVal) return false;
+      if (hmVal && r.hangMuc !== hmVal) return false;
+      if (unfilledOnly && r.phanBoTan != null && r.phanBoTan > 0) return false;
+      if (term) {
+        var hay = (r.project + ' ' + r.hangMuc + ' ' + (r.zone || '') + ' ' + (r.ghiChu || '')).toLowerCase();
+        if (hay.indexOf(term) === -1) return false;
+      }
+      return true;
+    });
+
+    // Draft diff map
+    var draftMap = {};
+    if (state.phanBoDraft && Array.isArray(state.phanBoDraft.items)) {
+      state.phanBoDraft.items.forEach(function (it) {
+        draftMap[(it.project || '') + '|||' + (it.hangMuc || '') + '|||' + (it.zone || '')] = it;
+      });
+    }
+
+    var frag = document.createDocumentFragment();
+    var lastProject = '';
+    filtered.forEach(function (r, idx) {
+      var tr = document.createElement('tr');
+      var rowPos = phanBoCurrentRows.indexOf(r);
+      tr.className = r.isCategory ? 'category-row' : '';
+      tr.dataset.idx = rowPos;
+      tr.dataset.visibleIdx = idx;
+
+      // Draft diff check
+      var dkey = (r.project || '') + '|||' + (r.hangMuc || '') + '|||' + (r.zone || '');
+      var isDirty = draftMap[dkey] && (
+        draftMap[dkey].phanBoTan !== r.phanBoTan ||
+        draftMap[dkey].phanBoCK !== r.phanBoCK ||
+        draftMap[dkey].ghiChu !== r.ghiChu
+      );
+      if (isDirty) tr.classList.add('draft-diff');
+
+      // Project column — group span
+      var projTd = document.createElement('td');
+      if (r.project !== lastProject) {
+        projTd.textContent = r.project;
+        projTd.rowSpan = filtered.filter(function (x) { return x.project === r.project; }).length;
+      }
+      if (r.project === lastProject) {
+        // rowSpan already handled
+      } else {
+        tr.appendChild(projTd);
+        lastProject = r.project;
+      }
+      // HM column
+      var hmTd = document.createElement('td');
+      hmTd.textContent = r.hangMuc;
+      tr.appendChild(hmTd);
+      // Zone column
+      var zoneTd = document.createElement('td');
+      zoneTd.textContent = r.zone || '(toàn hạng mục)';
+      if (!r.zone) zoneTd.style.opacity = '0.6';
+      tr.appendChild(zoneTd);
+      // PhanBoTan editable
+      tr.appendChild(makeCell(r.phanBoTan != null ? fmtTon.format(r.phanBoTan) : '', true, 'phanBoTan', rowPos, r));
+      // PhanBoCK editable
+      tr.appendChild(makeCell(r.phanBoCK != null ? String(r.phanBoCK) : '', true, 'phanBoCK', rowPos, r));
+      // ShopTon read-only
+      var shopTd = document.createElement('td');
+      shopTd.className = 'num-cell readonly';
+      shopTd.textContent = fmtTon.format(r.shopTon);
+      tr.appendChild(shopTd);
+      // % đạt read-only
+      var pctTd = document.createElement('td');
+      pctTd.className = 'num-cell readonly';
+      if (r.phanBoTan && r.phanBoTan > 0) pctTd.textContent = fmtPct.format(r.shopTon / r.phanBoTan * 100) + '%';
+      else pctTd.textContent = '—';
+      tr.appendChild(pctTd);
+      // GhiChu editable
+      tr.appendChild(makeCell(r.ghiChu || '', false, 'ghiChu', rowPos, r));
+
+      frag.appendChild(tr);
+    });
+    tbody.innerHTML = '';
+    tbody.appendChild(frag);
+    updateDirtyBadge();
+  }
+
+  function makeCell(value, isNumber, field, idx, row) {
+    var td = document.createElement('td');
+    td.className = 'cell-editable' + (isNumber ? ' num-cell' : '');
+    td.dataset.field = field;
+    td.dataset.idx = idx;
+    td.textContent = value;
+    td.tabIndex = 0;
+    if (value && row[field] != null) td.classList.add('is-dirty');
+    // Edit on focus
+    td.addEventListener('click', function () { enterEditMode(td); });
+    return td;
+  }
+
+  function enterEditMode(td) {
+    if (td.contentEditable === 'true') return;
+    td.contentEditable = 'true';
+    td.focus();
+    // Select all
+    var range = document.createRange();
+    range.selectNodeContents(td);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    // Enter edit
+    td.addEventListener('blur', function () { exitEditMode(td); }, { once: true });
+    td.addEventListener('keydown', function (e) { handleCellKeydown(e, td); });
+    td.addEventListener('paste', function (e) { handleCellPaste(e, td); });
+  }
+
+  function exitEditMode(td) {
+    td.contentEditable = 'false';
+    var idx = parseInt(td.dataset.idx);
+    var field = td.dataset.field;
+    var row = phanBoCurrentRows[idx];
+    if (!row) return;
+
+    var raw = td.textContent.trim();
+    var newVal = null;
+    if (field === 'phanBoTan') {
+      newVal = parseVietNum(raw);
+    } else if (field === 'phanBoCK') {
+      newVal = parseInt(parseVietNum(raw));
+      if (isNaN(newVal)) newVal = null;
+      else newVal = Math.max(0, newVal);
+    } else {
+      newVal = raw;
+    }
+    if (field === 'phanBoTan') {
+      if (newVal != null && !isNaN(newVal)) {
+        newVal = Math.round(newVal * 1000) / 1000;
+      } else {
+        newVal = null;
+      }
+    }
+
+    if (row[field] !== newVal) {
+      row[field] = newVal;
+      // Sync to phanBoItems
+      syncRowToPhanBoItems(row);
+      // Update display
+      if (field === 'phanBoTan') td.textContent = newVal != null ? fmtTon.format(newVal) : '';
+      else if (field === 'phanBoCK') td.textContent = newVal != null ? String(newVal) : '';
+      td.classList.toggle('is-dirty', newVal != null && newVal !== '');
+      // Update % achieved in same row
+      updateRowPct(row, td.closest('tr'));
+      saveDraftDebounced();
+    }
+  }
+
+  function updateRowPct(row, tr) {
+    if (!tr) return;
+    var pctTd = tr.querySelectorAll('td')[6]; // column 6 = % đạt
+    if (!pctTd) return;
+    if (row.phanBoTan && row.phanBoTan > 0) pctTd.textContent = fmtPct.format(row.shopTon / row.phanBoTan * 100) + '%';
+    else pctTd.textContent = '—';
+  }
+
+  function parseVietNum(s) {
+    if (!s || !s.trim()) return null;
+    // Remove thousand separators (dots) then replace comma with dot
+    s = s.trim().replace(/\./g, '').replace(',', '.');
+    var n = parseFloat(s);
+    return isNaN(n) ? null : n;
+  }
+
+  function syncRowToPhanBoItems(row) {
+    var key = row.project + '|||' + row.hangMuc + '|||' + row.zone;
+    var found = false;
+    for (var i = 0; i < state.phanBoItems.length; i++) {
+      var it = state.phanBoItems[i];
+      if (it.project === row.project && it.hangMuc === row.hangMuc && it.zone === row.zone) {
+        if (row.phanBoTan != null) it.phanBoTan = row.phanBoTan;
+        else if (row.phanBoTan === null && row.ghiChu === '') {
+          // Remove item if all empty
+          state.phanBoItems.splice(i, 1);
+          found = true; break;
+        }
+        it.phanBoCK = row.phanBoCK;
+        it.ghiChu = row.ghiChu || '';
+        found = true;
+        break;
+      }
+    }
+    if (!found && row.phanBoTan != null) {
+      state.phanBoItems.push({
+        project: row.project, hangMuc: row.hangMuc, zone: row.zone,
+        phanBoTan: row.phanBoTan, phanBoCK: row.phanBoCK || 0,
+        ghiChu: row.ghiChu || ''
+      });
+    }
+  }
+
+  // ===================== Keyboard navigation =====================
+  function handleCellKeydown(e, td) {
+    var idx = parseInt(td.closest('tr').dataset.visibleIdx);
+    var tr = td.closest('tr');
+    if (!tr) return;
+    var cells = Array.prototype.slice.call(tr.querySelectorAll('td'));
+    var cellIdx = cells.indexOf(td);
+    var allTrs = Array.prototype.slice.call(tr.parentNode.querySelectorAll('tr'));
+
+    if (e.key === 'Escape') {
+      td.blur();
+      e.preventDefault();
+    } else if (e.key === 'Enter' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      var nextIdx = idx + 1;
+      if (nextIdx < allTrs.length) {
+        var nextCells = allTrs[nextIdx].querySelectorAll('.cell-editable');
+        if (nextCells.length) nextCells[Math.min(cellIdx, nextCells.length - 1)].click();
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      var prevIdx = idx - 1;
+      if (prevIdx >= 0) {
+        var prevCells = allTrs[prevIdx].querySelectorAll('.cell-editable');
+        if (prevCells.length) prevCells[Math.min(cellIdx, prevCells.length - 1)].click();
+      }
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      var dir = e.shiftKey ? -1 : 1;
+      var nextCell = cells[cellIdx + dir];
+      if (!nextCell || nextCell === td) {
+        // Wrap to next row
+        var nextRowIdx = idx + dir;
+        if (nextRowIdx >= 0 && nextRowIdx < allTrs.length) {
+          var rc = allTrs[nextRowIdx].querySelectorAll('.cell-editable');
+          var target = dir > 0 ? rc[0] : rc[rc.length - 1];
+          if (target) target.click();
+        }
+      } else {
+        nextCell.click();
+      }
+    }
+  }
+
+  // ===================== Paste handler =====================
+  function handleCellPaste(e, td) {
+    e.preventDefault();
+    var text = (e.clipboardData || window.clipboardData).getData('text');
+    if (!text) return;
+    var lines = text.split(/\r?\n/).filter(function (l) { return l.length > 0; });
+    var startRow = parseInt(td.closest('tr').dataset.visibleIdx);
+    var tr = td.closest('tr');
+    var allTrs = Array.prototype.slice.call(tr.parentNode.querySelectorAll('tr'));
+    var cells = Array.prototype.slice.call(tr.querySelectorAll('td'));
+    var startCol = cells.indexOf(td);
+    var pasted = 0;
+
+    // Paste starting from current cell
+    lines.forEach(function (line, li) {
+      var rowIdx = startRow + li;
+      if (rowIdx >= allTrs.length) return;
+      var cols = line.split('\t');
+      cols.forEach(function (val, ci) {
+        var tgtColIdx = startCol + ci;
+        var tgtCells = allTrs[rowIdx].querySelectorAll('.cell-editable');
+        if (tgtColIdx >= tgtCells.length) return;
+        var tgtTd = tgtCells[tgtColIdx];
+        var tgtField = tgtTd.dataset.field;
+        if (tgtField === 'phanBoTan' || tgtField === 'phanBoCK') {
+          tgtTd.textContent = val;
+        } else {
+          tgtTd.textContent = val;
+        }
+        exitEditMode(tgtTd);
+        pasted++;
+      });
+    });
+    showToast('Đã dán ' + pasted + ' ô');
+    saveDraftDebounced();
+  }
+
+  // ===================== Draft save =====================
+  function saveDraftDebounced() {
+    clearTimeout(phanBoDraftSaveTimer);
+    phanBoDraftSaveTimer = setTimeout(saveDraftNow, 300);
+  }
+  function saveDraftNow() {
+    clearTimeout(phanBoDraftSaveTimer);
+    var items = state.phanBoItems.filter(function (it) { return it.phanBoTan != null || (it.ghiChu && it.ghiChu.trim()); });
+    var data = { meta: { updatedAt: new Date().toISOString(), updatedBy: getUserEmail(), version: 1 }, items: items };
+    try { localStorage.setItem(PHANBO_DRAFT_KEY, JSON.stringify(data)); } catch (e) {}
+    state.phanBoDraft = data;
+    updateDirtyBadge();
+  }
+  function updateDirtyBadge() {
+    var badge = document.getElementById('phanbo-dirty-badge');
+    var sidebarBadge = document.querySelector('.nav-item[data-route="phan-bo"] .phanbo-badge');
+    var dirtyCount = 0;
+    try {
+      var raw = localStorage.getItem(PHANBO_DRAFT_KEY);
+      if (raw) {
+        var draft = JSON.parse(raw);
+        if (draft && Array.isArray(draft.items)) dirtyCount = draft.items.length;
+      }
+    } catch (e) {}
+    if (badge) {
+      badge.hidden = dirtyCount === 0;
+      badge.textContent = '● ' + dirtyCount + ' thay đổi';
+    }
+    if (sidebarBadge) {
+      sidebarBadge.hidden = dirtyCount === 0;
+      sidebarBadge.textContent = dirtyCount;
+    }
+  }
+
+  // ===================== Download / Copy / Export / Discard =====================
+  function buildPhanBoOutput() {
+    var items = state.phanBoItems.filter(function (it) { return it.phanBoTan != null || (it.ghiChu && it.ghiChu.trim()); });
+    return { meta: { updatedAt: new Date().toISOString(), updatedBy: getUserEmail(), version: 1 }, items: items };
+  }
+  function downloadPhanBo() {
+    var data = buildPhanBoOutput();
+    var json = JSON.stringify(data, null, 2);
+    var blob = new Blob([json], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'phanbo.json';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    showToast('Đã tải phanbo.json. Chép vào D:\\SPM\\dashboard\\ rồi chạy push.bat');
+  }
+  function copyPhanBo() {
+    var json = JSON.stringify(buildPhanBoOutput(), null, 2);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(json).then(function () { showToast('Đã copy JSON vào clipboard'); });
+    } else {
+      showToast('Trình duyệt không hỗ trợ clipboard API');
+    }
+  }
+  function exportPhanBoCSV() {
+    var BOM = '\uFEFF';
+    var header = 'Dự án,Hạng mục,Zone,Phân bổ (tấn),Phân bổ (CK),Ghi chú';
+    var lines = state.phanBoItems.filter(function (it) { return it.phanBoTan != null || (it.ghiChu && it.ghiChu.trim()); }).map(function (it) {
+      return [it.project, it.hangMuc, it.zone || '', it.phanBoTan || 0, it.phanBoCK || 0, it.ghiChu || '']
+        .map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(',');
+    });
+    var csv = BOM + header + '\n' + lines.join('\n');
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'phanbo_export.csv';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    showToast('Đã xuất file CSV. Mở bằng Excel để xem đúng tiếng Việt.');
+  }
+  function discardDraft() {
+    if (!confirm('Bước 1/2: Xác nhận bỏ nháp? Thay đổi chưa xuất sẽ mất.')) return;
+    if (!confirm('Bước 2/2: Hành động này không thể hoàn tác. Tiếp tục?')) return;
+    try { localStorage.removeItem(PHANBO_DRAFT_KEY); } catch (e) {}
+    state.phanBoDraft = null;
+    if (state.phanBoServer) state.phanBoItems = state.phanBoServer.items.slice();
+    else state.phanBoItems = [];
+    renderPhanBoGrid();
+    renderAll();
+    showToast('Đã bỏ nháp, quay về bản trên server');
+  }
+
+  // ===================== Integrity warnings =====================
+  function computePhanBoWarnings() {
+    var warnings = [];
+    var byHM = {};
+    state.phanBoItems.forEach(function (it) {
+      var k = it.project + '|||' + it.hangMuc;
+      if (!byHM[k]) byHM[k] = [];
+      byHM[k].push(it);
+    });
+    Object.keys(byHM).forEach(function (k) {
+      var items = byHM[k];
+      var zoneItems = items.filter(function (it) { return it.zone != null; });
+      var catItem = null;
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].zone == null) { catItem = items[i]; break; }
+      }
+      if (zoneItems.length > 0 && catItem && catItem.phanBoTan > 0) {
+        var zoneSum = zoneItems.reduce(function (s, it) { return s + (it.phanBoTan || 0); }, 0);
+        var diff = Math.abs(zoneSum - catItem.phanBoTan);
+        if (diff / catItem.phanBoTan > 0.01) {
+          warnings.push('Hạng mục "' + catItem.hangMuc + '": tổng zone (' + fmtTon.format(zoneSum) + ') lệch so cấp hạng mục (' + fmtTon.format(catItem.phanBoTan) + ') > 1%');
+        }
+      }
+      // Shop > 0 nhưng chưa điền phân bổ
+      var hm = items[0].hangMuc;
+      var proj = items[0].project;
+      var shop = 0;
+      state.facts.forEach(function (f) {
+        if (f.project === proj && f.hangMuc === hm) shop += f.tan;
+      });
+      if (shop > 0 && items.every(function (it) { return !it.phanBoTan; })) {
+        warnings.push('"' + hm + '" có Shop ' + fmtTon.format(shop) + ' tấn nhưng chưa điền phân bổ');
+      }
+    });
+    // Orphan items
+    var validPairs = new Set();
+    state.facts.forEach(function (f) {
+      validPairs.add(f.project + '|||' + f.hangMuc);
+    });
+    state.phanBoItems.forEach(function (it) {
+      if (!validPairs.has(it.project + '|||' + it.hangMuc)) {
+        warnings.push('Item "' + it.hangMuc + '" [' + it.project + '] không khớp dữ liệu shop (dữ liệu mồ côi)');
+      }
+    });
+    return warnings;
+  }
+  function renderPhanBoWarnings() {
+    var el = document.getElementById('phanbo-warnings');
+    if (!el) return;
+    var w = computePhanBoWarnings();
+    if (!w.length) { el.hidden = true; return; }
+    el.hidden = false;
+    el.innerHTML = '<div style="font-weight:700;margin-bottom:4px;">Cảnh báo tính toàn vẹn</div>' +
+      w.map(function (m) { return '<div class="warn-item">⚠ ' + escapeHtml(m) + '</div>'; }).join('');
+  }
+
+  // ===================== Toast =====================
+  function showToast(msg) {
+    var t = document.createElement('div');
+    t.className = 'phanbo-toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.classList.add('show'); }, 10);
+    setTimeout(function () { t.classList.remove('show'); setTimeout(function () { t.remove(); }, 300); }, 3000);
+  }
+
+  // ===================== Zone detail panel =====================
+  // Kích hoạt: state.filters.hangmucs.size >= 1.
+  // Dữ liệu:
+  //   Shop = tổng tan/soCK của facts khớp (project + hangMuc + zone) SAU toàn bộ filter,
+  //          GỒM cả hold='Checked' và cả lifeState='L' (theo quyết định đã chốt ở PROMPT 0).
+  //          Zone rỗng từ fact (zone === NULL_KEY) được gộp vào bucket "Chưa phân Zone" thành 1 dòng.
+  //   Phân bổ = đọc từ state.phanBoItems (dashboard/phanbo.json) với khóa
+  //          (project, hangMuc, zone) — ưu tiên dòng cấp Zone; không có → hiển thị "—",
+  //          KHÔNG tự suy diễn chia đều từ cấp hạng mục, KHÔNG dùng fact.phanBo.
+  //   % đạt = shop / phanBo * 100 (cho phép > 100, thanh progress chốt trần 100%).
+  // Verification: với bộ lọc chỉ 1 hạng mục, tổng Shop trong bảng TỔNG phải khớp KPI
+  //   "Tổng khối lượng" (renderKPIs → kpi-total-ton). Lệch → NÉM LỖI để dừng thay vì tự chỉnh.
+  var zoneCharts = { donut: [], bar: [] };
+  var zonePanelUnit = 'tan';
+
+  function pctStatusClass(pct) {
+    if (pct == null || isNaN(pct)) return 'status-none';
+    if (pct >= 95) return 'status-good';
+    if (pct >= 60) return 'status-warn';
+    return 'status-bad';
+  }
+
+  // Build zone aggregation cho 1 (project, hangMuc) dưới bộ lọc hiện hành.
+  function aggregateZoneForHM(facts, project, hangMuc) {
+    var byZone = new Map(); // zone -> { shopTon, shopCK, holdTon, holdCK }
+    for (var i = 0; i < facts.length; i++) {
+      var r = facts[i];
+      // project === null means all projects represented by the current filtered facts.
+      if (project != null && r.project !== project) continue;
+      if (r.hangMuc !== hangMuc) continue;
+      var z = r.zone === '' ? NULL_KEY : (r.zone || NULL_KEY);
+      var agg = byZone.get(z);
+      if (!agg) { agg = { zone: z, shopTon: 0, shopCK: 0, holdTon: 0, holdCK: 0 }; byZone.set(z, agg); }
+      agg.shopTon += r.tan;
+      agg.shopCK += r.soCK;
+      if (r.hold === 'Checked') { agg.holdTon += r.tan; agg.holdCK += r.soCK; }
+      _firstSeen = r;
+    }
+    return {
+      project: project,
+      hangMuc: hangMuc,
+      zones: Array.from(byZone.values()).sort(function (a, b) {
+        var an = a.zone === NULL_KEY, bn = b.zone === NULL_KEY;
+        if (an && !bn) return 1;
+        if (bn && !an) return -1;
+        return a.zone.localeCompare(b.zone, 'vi');
+      })
+    };
+  }
+
+  // Phân bổ cấp Zone cho 1 (project, hangMuc, zone). KHÔNG fallback cấp hạng mục, KHÔNG từ fact.phanBo.
+  function getZonePhanBo(project, hangMuc, zone, unit) {
+    // project === null means aggregate across all projects for this (hangMuc, zone)
+    var items;
+    if (project == null) {
+      items = state.phanBoItems.filter(function (it) { return it.hangMuc === hangMuc && it.zone === zone; });
+      if (!items.length) return null;
+      return items.reduce(function (s, it) {
+        var v = unit === 'ck' ? it.phanBoCK : it.phanBoTan;
+        return s + (Number.isFinite(v) ? v : 0);
+      }, 0) || null;
+    }
+    var it = findPhanBoItem(project, hangMuc, zone);
+    if (!it) return null;
+    var v = unit === 'ck' ? it.phanBoCK : it.phanBoTan;
+    return Number.isFinite(v) ? v : null;
+  }
+
+  function disposeZoneCharts() {
+    zoneCharts.donut.forEach(function (c) { try { c.dispose(); } catch (e) {} });
+    zoneCharts.bar.forEach(function (c) { try { c.dispose(); } catch (e) {} });
+    zoneCharts.donut = [];
+    zoneCharts.bar = [];
+  }
+
+  function renderZoneCards(zones, project, hangMuc, unit) {
+    if (!zones.length) return '<div class="zone-panel-empty">Hạng mục này chưa có dữ liệu shop theo zone.</div>';
+    var cards = zones.map(function (z) {
+      var pb = getZonePhanBo(project, hangMuc, z.zone, unit);
+      var shopVal = unit === 'ck' ? z.shopCK : z.shopTon;
+      var pct = (pb && pb > 0) ? (shopVal / pb * 100) : null;
+      var pctDisplay = (pct == null || isNaN(pct)) ? '—' : (fmtPct.format(pct) + '%');
+      var pbDisplay = (pb == null) ? '—' : (unit === 'ck' ? fmtInt.format(pb) : fmtTon.format(pb));
+      var shopDisplay = unit === 'ck' ? fmtInt.format(z.shopCK) : fmtTon.format(z.shopTon);
+      var status = pctStatusClass(pct);
+      var progressPct = (pct == null || isNaN(pct)) ? 0 : Math.max(0, Math.min(100, pct));
+      var zoneLabel = z.zone === NULL_KEY ? 'Chưa phân Zone' : escapeHtml(z.zone);
+      return '' +
+        '<div class="card zone-card ' + status + '">' +
+          '<div class="zone-card-title">' + escapeHtml(hangMuc) + ' ' + zoneLabel + '</div>' +
+          '<div class="zone-card-main">' + pbDisplay + ' / ' + shopDisplay + ' | ' + pctDisplay + '</div>' +
+          '<div class="zone-card-sub">Phân bổ / Shop / % đạt</div>' +
+          '<div class="zone-progress"><div class="zone-progress-fill" style="width:' + progressPct.toFixed(1) + '%"></div></div>' +
+        '</div>';
+    }).join('');
+    return '<div class="zone-zone-grid">' + cards + '</div>';
+  }
+
+  // Dữ liệu cho bảng, sort độc lập theo từng cột.
+  function renderZoneTable(zones, project, hangMuc, unit, sortKey, sortDir) {
+    var hasNull = zones.some(function (z) { return z.zone === NULL_KEY; });
+    var unitKey = unit === 'ck' ? 'shopCK' : 'shopTon';
+    var rows = zones.map(function (z) {
+      var pb = getZonePhanBo(project, hangMuc, z.zone, unit);
+      var shop = z[unitKey];
+      var pct = (pb && pb > 0) ? (shop / pb * 100) : null;
+      var remain = (pb != null) ? (pb - shop) : null;
+      return {
+        zone: z.zone,
+        phanBo: pb,
+        shop: shop,
+        remain: remain,
+        pct: pct,
+        soCK: z.shopCK,
+        holdTon: z.holdTon,
+        holdCK: z.holdCK,
+        holdPct: z.shopTon > 0 ? (z.holdTon / z.shopTon * 100) : 0
+      };
+    });
+
+    var sortableKeys = {
+      zone: function (r) { return r.zone === NULL_KEY ? '￿' : r.zone; },
+      phanBo: function (r) { return r.phanBo == null ? -Infinity : r.phanBo; },
+      shop: function (r) { return r.shop; },
+      remain: function (r) { return r.remain == null ? -Infinity : r.remain; },
+      pct: function (r) { return r.pct == null ? -Infinity : r.pct; },
+      soCK: function (r) { return r.soCK; },
+      holdPct: function (r) { return r.holdPct; }
+    };
+    if (sortKey && sortableKeys[sortKey]) {
+      var kf = sortableKeys[sortKey];
+      var mul = sortDir === 'asc' ? 1 : -1;
+      rows.sort(function (a, b) {
+        var av = kf(a), bv = kf(b);
+        if (typeof av === 'string') return av.localeCompare(bv, 'vi') * mul;
+        return (av - bv) * mul;
+      });
+    }
+
+    // TỔNG row
+    var totalPb = 0, totalShop = 0, totalCK = 0, totalHoldTon = 0;
+    var totalPbKnown = false;
+    zones.forEach(function (z) {
+      var pb = getZonePhanBo(project, hangMuc, z.zone, unit);
+      if (pb != null) { totalPb += pb; totalPbKnown = true; }
+      totalShop += z.shopTon;
+      totalCK += z.shopCK;
+      totalHoldTon += z.holdTon;
+    });
+    var totalPct = totalPbKnown ? (totalPb > 0 ? (totalShop / totalPb * 100) : null) : null;
+
+    function fmtVal(v) {
+      if (v == null || isNaN(v)) return '—';
+      return unit === 'ck' ? fmtInt.format(v) : fmtTon.format(v);
+    }
+    function fmtPctOrDash(v) { return (v == null || isNaN(v)) ? '—' : (fmtPct.format(v) + '%'); }
+
+    var bodyHtml = rows.map(function (r) {
+      var zoneLabel = r.zone === NULL_KEY ? 'Chưa phân Zone' : escapeHtml(r.zone);
+      return '<tr>' +
+        '<td>' + zoneLabel + '</td>' +
+        '<td class="num">' + fmtVal(r.phanBo) + '</td>' +
+        '<td class="num">' + fmtVal(r.shop) + '</td>' +
+        '<td class="num">' + fmtVal(r.remain) + '</td>' +
+        '<td class="num">' + fmtPctOrDash(r.pct) + '</td>' +
+        '<td class="num">' + fmtInt.format(r.soCK) + '</td>' +
+        '<td class="num">' + fmtPct.format(r.holdPct) + '%</td>' +
+      '</tr>';
+    }).join('');
+    var totalRow = '<tr class="total-row">' +
+      '<td>TỔNG</td>' +
+      '<td class="num">' + (totalPbKnown ? fmtVal(totalPb) : '—') + '</td>' +
+      '<td class="num">' + fmtVal(totalShop) + '</td>' +
+      '<td class="num">' + (totalPbKnown ? fmtVal(totalPb - totalShop) : '—') + '</td>' +
+      '<td class="num">' + fmtPctOrDash(totalPct) + '</td>' +
+      '<td class="num">' + fmtInt.format(totalCK) + '</td>' +
+      '<td class="num">' + (totalShop > 0 ? fmtPct.format(totalHoldTon / totalShop * 100) + '%' : '0%') + '</td>' +
+    '</tr>';
+
+    var headers = [
+      { key: 'zone', label: 'Zone' },
+      { key: 'phanBo', label: 'Phân bổ' },
+      { key: 'shop', label: 'Shop' },
+      { key: 'remain', label: 'Còn lại' },
+      { key: 'pct', label: '% đạt' },
+      { key: 'soCK', label: 'Số CK' },
+      { key: 'holdPct', label: 'Hold %' }
+    ];
+    var headHtml = headers.map(function (h) {
+      var cls = '';
+      if (h.key === sortKey) cls = ' sorted-' + sortDir;
+      return '<th class="' + (h.key === 'phanBo' || h.key === 'shop' || h.key === 'remain' || h.key === 'pct' || h.key === 'soCK' ? 'num' : '') + '" data-sort="' + h.key + '">' +
+        escapeHtml(h.label) +
+        '<span class="sort-ind"></span>' +
+      '</th>';
+    }).join('');
+
+    return {
+      html: '<div class="zone-detail-table-wrap"><table class="zone-detail-table"><thead><tr>' + headHtml + '</tr></thead><tbody>' +
+            bodyHtml + totalRow + '</tbody></table></div>',
+      totalShop: totalShop,
+      totalAlloc: totalPbKnown ? totalPb : null
+    };
+  }
+
+  function setupZoneTableSort(host, project, hangMuc, zones, unit, onUpdate) {
+    var sortState = { key: 'zone', dir: 'asc' };
+    function apply() {
+      var fresh = renderZoneTable(zones, project, hangMuc, unit, sortState.key, sortState.dir);
+      host.innerHTML = fresh.html;
+      host.querySelectorAll('th[data-sort]').forEach(function (th) {
+        th.addEventListener('click', function () {
+          var k = th.dataset.sort;
+          if (sortState.key === k) sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+          else { sortState.key = k; sortState.dir = 'asc'; }
+          apply();
+        });
+      });
+      if (onUpdate) onUpdate(fresh);
+    }
+    apply();
+  }
+
+  function setupZoneCharts(zones, project, hangMuc, unit, panelEl) {
+    var donutEl = panelEl.querySelector('.zone-mini-chart[data-kind="donut"]');
+    var barEl = panelEl.querySelector('.zone-mini-chart[data-kind="bar"]');
+    if (!donutEl || !barEl) return;
+    var zonesFiltered = zones.filter(function (z) { return z.shopTon > 0; });
+    var shopKey = unit === 'ck' ? 'shopCK' : 'shopTon';
+
+    if (zonesFiltered.length) {
+      var donut = echarts.init(donutEl, null, { renderer: 'canvas' });
+      donut.setOption({
+        backgroundColor: 'transparent',
+        tooltip: {
+          trigger: 'item',
+          backgroundColor: tooltipStyle.backgroundColor, borderColor: tooltipStyle.borderColor,
+          borderWidth: tooltipStyle.borderWidth, textStyle: tooltipStyle.textStyle, extraCssText: tooltipStyle.extraCssText,
+          formatter: function (p) {
+            var val = unit === 'ck' ? fmtInt.format(p.value) + ' ck' : fmtTon.format(p.value) + ' tấn';
+            return '<b>' + (p.name === NULL_KEY ? 'Chưa phân Zone' : p.name) + '</b><br/>' + val + ' (' + p.percent + '%)';
+          }
+        },
+        legend: { orient: 'vertical', right: 6, top: 'middle', textStyle: { color: TEXT_SECONDARY, fontSize: 11 } },
+        series: [{
+          type: 'pie', radius: ['46%', '72%'], center: ['36%', '50%'], avoidLabelOverlap: true,
+          label: { show: false }, labelLine: { show: false },
+          data: zonesFiltered.map(function (z, idx) {
+            return {
+              name: z.zone === NULL_KEY ? 'Chưa phân Zone' : z.zone,
+              value: z[shopKey],
+              itemStyle: { color: CAT_PALETTE[idx % CAT_PALETTE.length] }
+            };
+          })
+        }]
+      });
+      zoneCharts.donut.push(donut);
+
+      var barData = zonesFiltered.map(function (z) {
+        var pb = getZonePhanBo(project, hangMuc, z.zone, unit);
+        var shop = z[shopKey];
+        var pct = (pb && pb > 0) ? (shop / pb * 100) : 0;
+        return {
+          name: z.zone === NULL_KEY ? 'Chưa phân Zone' : z.zone,
+          value: pct,
+          cls: pctStatusClass(pct)
+        };
+      });
+      var catData = barData.map(function (d) { return d.name; }).reverse();
+      var valData = barData.map(function (d) { return d.value; }).reverse();
+
+      var bar = echarts.init(barEl, null, { renderer: 'canvas' });
+      bar.setOption({
+        backgroundColor: 'transparent',
+        tooltip: {
+          trigger: 'axis', axisPointer: { type: 'shadow' },
+          backgroundColor: tooltipStyle.backgroundColor, borderColor: tooltipStyle.borderColor,
+          borderWidth: tooltipStyle.borderWidth, textStyle: tooltipStyle.textStyle, extraCssText: tooltipStyle.extraCssText,
+          formatter: function (params) {
+            var p = params[0];
+            return '<b>' + p.name + '</b><br/>% đạt: ' + fmtPct.format(p.value) + '%';
+          }
+        },
+        grid: { left: 8, right: 22, top: 4, bottom: 4, containLabel: true },
+        xAxis: { type: 'value', max: 100, show: false },
+        yAxis: { type: 'category', data: catData, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: TEXT_SECONDARY, fontSize: 11 } },
+        series: [{
+          type: 'bar', data: valData, barMaxWidth: 16,
+          itemStyle: {
+            borderRadius: [0, 4, 4, 0],
+            color: function (p) {
+              var d = barData[barData.length - 1 - p.dataIndex];
+              switch (d.cls) {
+                case 'status-good': return '#00c896';
+                case 'status-warn': return '#ffac5e';
+                case 'status-bad':  return '#ff6b6b';
+                default:            return '#6f7d93';
+              }
+            }
+          },
+          label: { show: true, position: 'right', color: TEXT_PRIMARY, fontSize: 10, formatter: function (p) { return fmtPct.format(p.value) + '%'; } },
+          markLine: {
+            symbol: 'none',
+            lineStyle: { color: '#ff6b6b', type: 'dashed', width: 1.5 },
+            data: [{ xAxis: 100, label: { show: false } }]
+          }
+        }]
+      });
+      zoneCharts.bar.push(bar);
+    } else {
+      donutEl.innerHTML = '<div class="zone-panel-empty" style="padding:60px 12px;">Chưa có dữ liệu shop.</div>';
+      barEl.innerHTML = '<div class="zone-panel-empty" style="padding:60px 12px;">Chưa có d��� liệu shop.</div>';
+    }
+  }
+
+  function buildZonePanelContent(facts, project, hangMuc, isOpen) {
+    var agg = aggregateZoneForHM(facts, project, hangMuc);
+    var tags = '<details class="zone-accordion card" ' + (isOpen ? 'open' : '') + '>' +
+      '<summary>Chi tiết hạng mục: ' + escapeHtml(hmLabel(hangMuc)) +
+      ' <span style="color:var(--text-muted);font-weight:500;font-size:12px;">· ' + agg.zones.length + ' zone</span></summary>';
+    var tableInfo = renderZoneTable(agg.zones, project, hangMuc, zonePanelUnit, 'zone', 'asc');
+    var cardsHtml = renderZoneCards(agg.zones, project, hangMuc, zonePanelUnit);
+    tags += cardsHtml +
+      '<div data-zone-table-host></div>' +
+      '<div class="zone-mini-charts">' +
+        '<div class="zone-mini-chart card" data-kind="donut"></div>' +
+        '<div class="zone-mini-chart card" data-kind="bar"></div>' +
+      '</div>' +
+    '</details>';
+    return { html: tags, zones: agg.zones, tableInfo: tableInfo };
+  }
+
+  function exportZoneDetailCSV(facts) {
+    var hms = Array.from(state.filters.hangmucs);
+    var rows = [['Hang_muc', 'Zone', 'Phan_bo', 'Shop', 'Con_lai', 'Pct_dat', 'SoCK', 'Hold_pct']];
+    hms.forEach(function (hm) {
+      var agg = aggregateZoneForHM(facts, hm);
+      agg.zones.forEach(function (z) {
+        var pb = getZonePhanBo(agg.project, hm, z.zone, 'tan');
+        var shop = z.shopTon;
+        var pct = (pb && pb > 0) ? (shop / pb * 100) : '';
+        var remain = (pb != null) ? (pb - shop) : '';
+        rows.push([
+          hm, z.zone === NULL_KEY ? 'Chưa phân Zone' : z.zone,
+          pb == null ? '' : pb.toFixed(3),
+          shop.toFixed(3),
+          remain === '' ? '' : remain.toFixed(3),
+          pct === '' ? '' : pct.toFixed(2),
+          z.shopCK,
+          z.shopTon > 0 ? (z.holdTon / z.shopTon * 100).toFixed(2) : '0.00'
+        ]);
+      });
+    });
+    var csv = '﻿' + rows.map(function (r) {
+      return r.map(function (c) {
+        var s = String(c == null ? '' : c);
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(',');
+    }).join('\r\n');
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'zone-detail.csv';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function renderZoneDetailPanel(facts) {
+    disposeZoneCharts();
+    var slot = document.getElementById('filter-panel-slot');
+    if (!slot) return;
+    var hms = Array.from(state.filters.hangmucs);
+    // Chỉ hiện panel khi view có filterbar (đã handle bằng moveFilterChromeTo) và người dùng đã chọn HM.
+    var viewNeedsFilter = !slot.hidden || (function () {
+      // phòng trường hợp người dùng switch view sang lịch-sử / phan-bo rồi quay lại
+      var route = parseHash();
+      return ROUTES[route] && ROUTES[route].needsFilter;
+    })();
+    if (!hms.length || !viewNeedsFilter) {
+      slot.innerHTML = '';
+      return;
+    }
+
+    var projectSet = new Set();
+    var projectOf = null; // null = all projects
+    hms.forEach(function (hm) {
+      facts.filter(function (f) { return f.hangMuc === hm; }).forEach(function (f) {
+        if (f.project) projectSet.add(f.project);
+      });
+    });
+    if (projectSet.size === 1) projectOf = Array.from(projectSet)[0];
+
+    var unitToggle = '<div class="zone-unit-toggle" role="tablist">' +
+      '<button type="button" class="zone-unit-btn ' + (zonePanelUnit === 'tan' ? 'active' : '') + '" data-unit="tan">Tấn</button>' +
+      '<button type="button" class="zone-unit-btn ' + (zonePanelUnit === 'ck'  ? 'active' : '') + '" data-unit="ck">Số CK</button>' +
+      '</div>';
+
+    var head = '<div class="zone-detail-head">' +
+      '<div class="zone-detail-title">' +
+        '<h2>Chi tiết hạng mục: ' + (hms.length === 1
+          ? escapeHtml(hmLabel(hms[0]))
+          : (hms.length + ' hạng mục đã chọn')) + '</h2>' +
+        '<p>' + (projectOf
+          ? escapeHtml(projectOf)
+          : escapeHtml(Array.from(projectSet).join(' · ') || projectOf || '')) + '</p>' +
+      '</div>' +
+      '<div class="zone-detail-actions">' +
+        unitToggle +
+        '<button type="button" class="btn btn-secondary" id="zone-btn-export">Xuất Excel</button>' +
+        '<button type="button" class="btn btn-secondary" id="zone-btn-close">✕ Bỏ lọc</button>' +
+      '</div>' +
+    '</div>';
+
+    var accordions = hms.map(function (hm, idx) {
+      return buildZonePanelContent(facts, projectOf, hm, idx === 0).html;
+    }).join('');
+
+    slot.innerHTML = '<section class="card zone-detail-panel">' + head + accordions + '</section>';
+
+    // Bind handlers
+    slot.querySelectorAll('.zone-unit-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        zonePanelUnit = btn.dataset.unit;
+        renderZoneDetailPanel(facts);
+      });
+    });
+    var exportBtn = document.getElementById('zone-btn-export');
+    if (exportBtn) exportBtn.addEventListener('click', function () { exportZoneDetailCSV(facts); });
+    var closeBtn = document.getElementById('zone-btn-close');
+    if (closeBtn) closeBtn.addEventListener('click', function () {
+      state.filters.hangmucs.clear();
+      refreshAllFilterPanels();
+      renderAll();
+    });
+
+    // Wire up tables & charts for each accordion
+    var accordionsList = slot.querySelectorAll('.zone-accordion');
+    hms.forEach(function (hm, idx) {
+      var acc = accordionsList[idx];
+      if (!acc) return;
+      var host = acc.querySelector('[data-zone-table-host]');
+      var agg = aggregateZoneForHM(facts, projectOf, hm);
+      // Khởi tạo bảng với khả năng sort; cập nhật verification mỗi lần sort
+      setupZoneTableSort(host, projectOf, hm, agg.zones, zonePanelUnit, function (fresh) {
+        verifyZonePanelTotal(facts, hm, agg, fresh.totalShop);
+      });
+      // Lần render đầu: verify
+      var firstRender = renderZoneTable(agg.zones, projectOf, hm, zonePanelUnit, 'zone', 'asc');
+      verifyZonePanelTotal(facts, hm, agg, firstRender.totalShop);
+      setupZoneCharts(agg.zones, projectOf, hm, zonePanelUnit, acc);
+    });
+  }
+
+  // Verification: khi lọc CHỈ 1 hạng mục, tổng Shop trong bảng TỔNG phải khớp KPI "Tổng khối lượng".
+  // (KPI tính bằng sum(r.tan) cho facts matching filter; panel tính bằng cộng shopTon của từng zone hiển thị.
+  //  Hai cách phải ra cùng số vì 1 zone chỉ có 1 bucket duy nhất.) Nếu lệch → NÉM lỗi, KHÔNG tự sửa.
+  function verifyZonePanelTotal(allFacts, hangMuc, agg, panelTotalShop) {
+    if (state.filters.hangmucs.size !== 1) return;
+    if (Array.from(state.filters.hangmucs)[0] !== hangMuc) return;
+    var kpiTotal = 0;
+    for (var i = 0; i < allFacts.length; i++) {
+      if (allFacts[i].hangMuc === hangMuc) kpiTotal += allFacts[i].tan;
+    }
+    var diff = Math.abs(kpiTotal - panelTotalShop);
+    if (diff > 1e-6) {
+      throw new Error('[Zone panel verify] Tổng Shop lệch KPI cho HM "' + hangMuc + '": ' +
+        'panel=' + panelTotalShop.toFixed(6) + ' vs KPI=' + kpiTotal.toFixed(6) + ' (diff=' + diff.toFixed(6) + '). ' +
+        'DỪNG render để kiểm tra; nguyên nhân có thể do zone gộp/bù trừ.');
+    }
+  }
+
+  // ===================== Init phan-bo toolbar =====================
+  function initPhanBoToolbar() {
+    document.getElementById('phanbo-btn-download').addEventListener('click', downloadPhanBo);
+    document.getElementById('phanbo-btn-copy').addEventListener('click', copyPhanBo);
+    document.getElementById('phanbo-btn-excel').addEventListener('click', exportPhanBoCSV);
+    document.getElementById('phanbo-btn-discard').addEventListener('click', discardDraft);
+    document.getElementById('phanbo-search').addEventListener('input', renderPhanBoGrid);
+    document.getElementById('phanbo-only-unfilled').addEventListener('change', renderPhanBoGrid);
+    document.getElementById('phanbo-filter-project').addEventListener('change', renderPhanBoGrid);
+    document.getElementById('phanbo-filter-hangmuc').addEventListener('change', renderPhanBoGrid);
+    populatePhanBoFilters();
+    updateDirtyBadge();
+  }
+
+  function populatePhanBoFilters() {
+    var projects = Array.from(new Set(state.facts.map(function (f) { return f.project; }).filter(Boolean))).sort();
+    var hangmucs = Array.from(new Set(state.facts.map(function (f) { return f.hangMuc; }).filter(Boolean))).sort();
+    var projSel = document.getElementById('phanbo-filter-project');
+    var hmSel = document.getElementById('phanbo-filter-hangmuc');
+    if (projSel) {
+      projSel.innerHTML = '<option value="">Tất cả dự án</option>' +
+        projects.map(function (p) { return '<option value="' + escapeHtml(p) + '">' + escapeHtml(p) + '</option>'; }).join('');
+    }
+    if (hmSel) {
+      hmSel.innerHTML = '<option value="">Tất cả hạng mục</option>' +
+        hangmucs.map(function (h) { return '<option value="' + escapeHtml(h) + '">' + escapeHtml(hmLabel(h)) + '</option>'; }).join('');
+    }
+  }
+
   function onDataReady() {
     document.getElementById('loading-state').hidden = true;
     document.getElementById('dashboard-content').hidden = false;
@@ -789,6 +2404,64 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     initFilterFields();
     ensureCharts();
     renderAll();
+    renderPhanBoGrid();
+    renderPhanBoWarnings();
+    initPhanBoToolbar();
+    resizeAllChartsSoon();  // chart trong view ẩn cần resize khi view hiện
+    selfCheck();
+  }
+
+  // Kiểm tra nhất quán dữ liệu: cộng tấn theo 4 cách nhóm khác nhau,
+  // nếu bất kỳ cặp nào lệch > 0.01 tấn → console.error + chip topbar.
+  // KHÔNG tự sửa số — chỉ cảnh báo để người dùng kiểm tra nguồn.
+  function selfCheck() {
+    var f = state.facts;
+    if (!f.length) return;
+
+    // 1. Tổng thô
+    var raw = 0;
+    for (var i = 0; i < f.length; i++) raw += f[i].tan;
+
+    // 2. Theo project
+    var mapP = new Map();
+    f.forEach(function (r) { mapP.set(r.project, (mapP.get(r.project) || 0) + r.tan); });
+    var byProject = 0; mapP.forEach(function (v) { byProject += v; });
+
+    // 3. Theo zone
+    var mapZ = new Map();
+    f.forEach(function (r) { var z = r.zone || NULL_KEY; mapZ.set(z, (mapZ.get(z) || 0) + r.tan); });
+    var byZone = 0; mapZ.forEach(function (v) { byZone += v; });
+
+    // 4. Theo hạng mục
+    var mapH = new Map();
+    f.forEach(function (r) { mapH.set(r.hangMuc, (mapH.get(r.hangMuc) || 0) + r.tan); });
+    var byHM = 0; mapH.forEach(function (v) { byHM += v; });
+
+    console.table([
+      { Nhóm: 'Tổng thô', Tan: raw },
+      { Nhóm: 'Theo project', Tan: byProject },
+      { Nhóm: 'Theo zone', Tan: byZone },
+      { Nhóm: 'Theo hạng mục', Tan: byHM }
+    ]);
+
+    var pairs = [
+      ['raw↔project', raw, byProject],
+      ['raw↔zone', raw, byZone],
+      ['raw↔hangMuc', raw, byHM]
+    ];
+    var errs = pairs.filter(function (p) { return Math.abs(p[1] - p[2]) > 0.01; });
+    if (errs.length) {
+      console.error('[selfCheck] DỮ LIỆU MẤT CÂN BẰNG:');
+      errs.forEach(function (e) {
+        console.error('  ' + e[0] + ': ' + e[1].toFixed(3) + ' vs ' + e[2].toFixed(3));
+      });
+      var chip = document.getElementById('topbar-status');
+      if (chip) {
+        chip.hidden = false;
+        chip.classList.add('selfcheck-warn');
+        chip.querySelector('#topbar-status-text').textContent = '⚠ Dữ liệu lệch — cần kiểm tra';
+      }
+    }
   }
 
   // ===================== Bộ lọc đa cấp, liên động =====================
@@ -826,6 +2499,11 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     renderAll();
   }
   function handleHangMucChange() { renderAll(); }
+
+  // Toggle a value in a Set filter used by filterbar. Clicking the same item twice clears it.
+  function toggleFilterSet(set, val) {
+    if (set.has(val)) set.delete(val); else set.add(val);
+  }
 
   function refreshAllFilterPanels() {
     ['filter-project', 'filter-zone', 'filter-hangmuc'].forEach(function (id) {
@@ -1004,6 +2682,16 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     renderChartZoneHold(facts);
     renderHistoryChart();
     renderTable(facts);
+    try {
+      renderZoneDetailPanel(facts);
+    } catch (e) {
+      console.error('[Zone panel] Lỗi render:', e);
+      var slot = document.getElementById('filter-panel-slot');
+      if (slot) {
+        slot.innerHTML = '<div style="padding:14px 18px;border-left:3px solid #ff6b6b;color:#ff6b6b;font-weight:700;font-size:13px;">' +
+          '❌ Lỗi verification: ' + escapeHtml(e.message) + '</div>';
+      }
+    }
   }
 
   // ===================== KPI =====================
@@ -1049,12 +2737,27 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     animateValue(document.getElementById('kpi-hold-pct-ck'), pctHoldCK, function (v) { return fmtPct.format(v) + '%'; });
     animateValue(document.getElementById('kpi-hangmuc-count'), hmSet.size, function (v) { return fmtInt.format(Math.round(v)); });
 
-    // Tính Tổng Phân bổ và % đạt tổng (chỉ tính các hạng mục có phanBo)
+    // ===================== Tính Tổng Phân bổ và % đạt tổng =====================
+    // Công thức: pct = achievedForAlloc / totalAlloc × 100
+    //
+    // totalAlloc  — tổng phanBoTan từ phanbo.json cho TẤT CẢ các (project, hangMuc)
+    //               có trong bộ facts ĐÃ LỌC (theo project/zone/hangMuc/lifeState/hold).
+    //               → mẫu số co theo đúng bộ lọc; KHÔNG lấy tổng phân bổ full
+    //                 khi người dùng đang lọc 1 zone cụ thể.
+    //
+    // achievedForAlloc — tổng fact.tan của các fact thuộc (project, hangMuc) có phân bổ.
+    //                    Tử số = shop thực tế trong scope filter hiện tại.
+    //
+    // Anti-double-count: getPhanBoFor() sum zone-level items nếu có,
+    //                    bỏ qua item zone:null để tránh đếm đôi.
     var allocMap = new Map();
     for (var i = 0; i < facts.length; i++) {
       var r = facts[i];
       var pkey = (r.project == null ? '' : r.project) + '|||' + r.hangMuc;
-      if (r.phanBo != null && !allocMap.has(pkey)) allocMap.set(pkey, r.phanBo);
+      if (!allocMap.has(pkey)) {
+        var pb = getScopedPhanBoFor(r.project, r.hangMuc);
+        if (pb != null) allocMap.set(pkey, pb);
+      }
     }
     var totalAlloc = 0;
     allocMap.forEach(function (v) { totalAlloc += v; });
@@ -1079,11 +2782,12 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     document.querySelectorAll('.kpi-tile').forEach(pulse);
   }
 
-  // ===================== Biểu đồ 1: Top hạng mục theo tấn =====================
+  // ===================== Bi���u đồ 1: Top hạng mục theo tấn =====================
+  // Click-to-filter: chuyển dataIndex ngược (vì catData bị reverse trước khi setOption).
   function renderChartTopHangMuc(facts) {
     var map = groupSum(facts, function (r) { return r.hangMuc; });
     var entries = Array.from(map.entries()).map(function (kv) {
-      return { label: hmLabel(kv[0]), ton: kv[1].ton, count: kv[1].count };
+      return { hmKey: kv[0], label: hmLabel(kv[0]), ton: kv[1].ton, count: kv[1].count };
     });
     entries.sort(function (a, b) { return b.ton - a.ton; });
 
@@ -1126,6 +2830,15 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
         label: { show: true, position: 'right', color: TEXT_PRIMARY, fontSize: 11, formatter: function (p) { return fmtTon.format(p.value); } }
       }]
     });
+    chartTopHangMuc.off('click');
+    chartTopHangMuc.on('click', function (p) {
+      if (p.dataIndex == null) return;
+      var idx = shown.length - 1 - p.dataIndex;
+      if (idx < 0 || idx >= shown.length) return;
+      toggleFilterSet(state.filters.hangmucs, shown[idx].hmKey);
+      refreshAllFilterPanels();
+      renderAll();
+    });
   }
 
   // ===================== Biểu đồ 2: Donut theo dự án =====================
@@ -1160,6 +2873,13 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
           return { name: e.name, value: e.value, itemStyle: { color: state.projectColor.get(e.name) || AXIS_COLOR } };
         })
       }]
+    });
+    chartDonutProject.off('click');
+    chartDonutProject.on('click', function (p) {
+      if (!p || !p.name) return;
+      toggleFilterSet(state.filters.projects, p.name);
+      refreshAllFilterPanels();
+      renderAll();
     });
   }
 
@@ -1284,30 +3004,27 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
   // như pipeline BigQuery hiện có).
   // TODO(mở rộng — tiến độ ban hành Shop): join thêm trạng thái/ngày ban hành theo (project, hangMuc)
   // vào computeTableRows(), thêm cột hoặc KPI riêng; không cần đổi groupSum()/getFilteredFacts().
+  // Công thức "% đạt": tử số = Shop (tổng tan của các fact khớp (project, hangMuc, zone) SAU bộ lọc),
+  // mẫu số = phân bổ cùng scope (project, hangMuc, zone) đọc từ dashboard/phanbo.json — không fallback
+  // lên cấp hạng mục khi đang lọc 1 zone, không dùng fact.phanBo (đã luôn null sau Phase Phân bổ).
   function computeTableRows(facts) {
     var map = new Map();
     for (var i = 0; i < facts.length; i++) {
       var r = facts[i];
-      var key = r.hangMuc + '|||' + r.zone;
+      var proj = r.project || '';
+      var key = proj + '|||' + r.hangMuc + '|||' + r.zone;
       var agg = map.get(key);
-      if (!agg) { agg = { hangMuc: r.hangMuc, zone: r.zone, count: 0, ton: 0, holdTon: 0, phanBo: 0, _seenPh: new Set() }; map.set(key, agg); }
+      if (!agg) {
+        agg = { project: proj, hangMuc: r.hangMuc, zone: r.zone, count: 0, ton: 0, holdTon: 0 };
+        map.set(key, agg);
+      }
       agg.count += r.soCK; agg.ton += r.tan;
       if (r.hold === 'Checked') agg.holdTon += r.tan;
-      // cộng phanBo chỉ 1 lần cho mỗi (project, hangMuc)
-      try {
-        var proj = r.project == null ? '' : String(r.project);
-        var phKey = proj + '|||' + r.hangMuc;
-        if (r.phanBo != null && !agg._seenPh.has(phKey)) {
-          agg._seenPh.add(phKey);
-          agg.phanBo += r.phanBo;
-        }
-      } catch (e) {
-        // ignore
-      }
     }
     return Array.from(map.values()).map(function (a) {
-      var ph = a.phanBo > 0 ? a.phanBo : null;
+      var ph = getScopedPhanBoForRow(a.project, a.hangMuc, a.zone);
       return {
+        project: a.project,
         hang_muc: hmLabel(a.hangMuc), zone: a.zone, count: a.count, ton: a.ton,
         phanBo: ph,
         pctAchieved: (ph && ph > 0) ? (a.ton / ph * 100) : null,
@@ -1356,6 +3073,22 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
         '<td class="num">' + fmtPct.format(r.pctHold) + '%</td>';
       frag.appendChild(tr);
     });
+    // TỔNG only covers rows visible after the active text search and sort.
+    var totalTon = 0, totalCK = 0, totalPB = 0, knownPB = false, totalHoldTon = 0;
+    data.forEach(function (r) {
+      totalTon += r.ton; totalCK += r.count; totalHoldTon += r.ton * (r.pctHold || 0) / 100;
+      if (r.phanBo != null) { totalPB += r.phanBo; knownPB = true; }
+    });
+    var totalPct = knownPB && totalPB > 0 ? totalTon / totalPB * 100 : null;
+    var totalTr = document.createElement('tr');
+    totalTr.className = 'total-row';
+    totalTr.innerHTML = '<td colspan="2">TỔNG</td>' +
+      '<td class="num">' + fmtInt.format(totalCK) + '</td>' +
+      '<td class="num">' + fmtTon.format(totalTon) + '</td>' +
+      '<td class="num">' + (knownPB ? fmtTon.format(totalPB) : '—') + '</td>' +
+      '<td class="num">' + (totalPct == null ? '—' : fmtPct.format(totalPct) + '%') + '</td>' +
+      '<td class="num">' + (totalTon > 0 ? fmtPct.format(totalHoldTon / totalTon * 100) : '0') + '%</td>';
+    frag.appendChild(totalTr);
     tbody.appendChild(frag);
 
     document.querySelectorAll('#detail-table th[data-sort]').forEach(function (th) {
@@ -1364,37 +3097,168 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     });
   }
 
-  // ===================== Nav rail: scroll-spy giữa các section =====================
-  // Nhiều section có thể cùng lọt ngưỡng "đang hiện" một lúc (viewport cao, trang ngắn) —
-  // luôn ưu tiên section đứng trước nhất theo thứ tự nav (topmost), không phải entry bắn cuối cùng.
-  function initNavRail() {
-    var navItems = Array.from(document.querySelectorAll('.nav-item'));
-    var scrollArea = document.querySelector('.scroll-area');
-    var sectionIds = navItems.map(function (btn) { return btn.dataset.target; });
-    var sections = sectionIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
-    var visible = new Set();
+  function exportDetailCSV() {
+    var rows = lastFilteredTableRows.slice();
+    var header = 'Hạng mục,Zone,Số CK,Tấn,Phân bổ,% đạt,% Hold';
+    var lines = rows.map(function (r) {
+      return [
+        r.hang_muc, r.zone,
+        r.count, r.ton.toFixed(3),
+        r.phanBo == null ? '' : r.phanBo.toFixed(3),
+        r.pctAchieved == null ? '' : r.pctAchieved.toFixed(2),
+        r.pctHold.toFixed(2)
+      ].map(function (c) {
+        var s = String(c == null ? '' : c);
+        return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(',');
+    });
+    var csv = '﻿' + header + '\r\n' + lines.join('\r\n');
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'detail-table.csv';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
 
-    navItems.forEach(function (btn) {
+  // ===================== Sidebar + Hash router =====================
+  // Điều hướng dựa trên location.hash. Mỗi view là một wrapper <div class="view" data-view="...">.
+  // Filterbar là 1 instance duy nhất — JS move vào view đang active (hoặc ẩn nếu view không cần).
+  var ROUTES = {
+    'tong-quan': { needsFilter: true },
+    'hang-muc' : { needsFilter: true },
+    'chi-tiet' : { needsFilter: true },
+    'lich-su'  : { needsFilter: false },
+    'phan-bo'  : { needsFilter: false }
+  };
+  var DEFAULT_ROUTE = 'tong-quan';
+
+  function parseHash() {
+    var h = (location.hash || '').replace(/^#\/?/, '');
+    return ROUTES[h] ? h : DEFAULT_ROUTE;
+  }
+
+  function moveFilterChromeTo(viewEl, needsFilter) {
+    var fb = document.getElementById('filterbar');
+    var slot = document.getElementById('filter-panel-slot');
+    if (!fb || !slot) return;
+    if (needsFilter) {
+      fb.hidden = false;
+      slot.hidden = false;
+      if (fb.parentNode !== viewEl) viewEl.insertBefore(fb, viewEl.firstChild);
+      if (slot.parentNode !== viewEl) viewEl.insertBefore(slot, fb.nextSibling);
+    } else {
+      fb.hidden = true;
+      slot.hidden = true;
+      // re-parent về #dashboard-content để lần sau move dễ
+      var host = document.getElementById('dashboard-content');
+      if (host) {
+        if (fb.parentNode !== host) host.insertBefore(fb, host.firstChild);
+        if (slot.parentNode !== host) host.insertBefore(slot, fb.nextSibling);
+      }
+    }
+  }
+
+  function resizeAllChartsSoon() {
+    // Đợi 1 frame để ECharts thấy layout box mới sau khi đổi display
+    requestAnimationFrame(function () {
+      if (chartTopHangMuc)  chartTopHangMuc.resize();
+      if (chartDonutProject)chartDonutProject.resize();
+      if (chartZoneHold)    chartZoneHold.resize();
+      if (chartHistory)     chartHistory.resize();
+    });
+  }
+
+  function switchView(route) {
+    route = ROUTES[route] ? route : DEFAULT_ROUTE;
+    var meta = ROUTES[route];
+    var views = document.querySelectorAll('.view');
+    var targetView = null;
+    views.forEach(function (v) {
+      var match = v.dataset.view === route;
+      v.hidden = !match;
+      if (match) targetView = v;
+    });
+    if (targetView) moveFilterChromeTo(targetView, meta.needsFilter);
+
+    document.querySelectorAll('.sidebar .nav-item[data-route]').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.route === route);
+    });
+
+    var desiredHash = '#/' + route;
+    if (location.hash !== desiredHash) {
+      try { history.replaceState(null, '', desiredHash); } catch (e) { location.hash = desiredHash; }
+    }
+
+    var sa = document.querySelector('.scroll-area');
+    if (sa) sa.scrollTop = 0;
+    resizeAllChartsSoon();
+  }
+
+  function initSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+
+    // 1) Load trạng thái thu gọn
+    var saved = null;
+    try { saved = localStorage.getItem('spm.ui.sidebar'); } catch (e) { saved = null; }
+
+    function syncAuto() {
+      if (window.innerWidth < 1100) sidebar.dataset.state = 'collapsed';
+      else if (saved === 'collapsed' || saved === 'expanded') sidebar.dataset.state = saved;
+      else sidebar.dataset.state = 'expanded';
+    }
+    syncAuto();
+
+    // 2) Nút thu gọn
+    var toggleBtn = document.getElementById('btn-sidebar-toggle');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function () {
+        var next = sidebar.dataset.state === 'collapsed' ? 'expanded' : 'collapsed';
+        sidebar.dataset.state = next;
+        try { localStorage.setItem('spm.ui.sidebar', next); } catch (e) {}
+        saved = next;
+        // đợi CSS transition 220ms xong rồi resize
+        setTimeout(resizeAllChartsSoon, 240);
+      });
+    }
+
+    // 3) Click mục nav → chuyển view
+    document.querySelectorAll('.sidebar .nav-item[data-route]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var target = document.getElementById(btn.dataset.target);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        switchView(btn.dataset.route);
       });
     });
 
-    function updateActive() {
-      var activeId = sectionIds.filter(function (id) { return visible.has(id); })[0];
-      if (!activeId) return;
-      navItems.forEach(function (btn) { btn.classList.toggle('active', btn.dataset.target === activeId); });
+    // 4) Mục "Thiết đặt" → mở modal Thiết đặt sẵn có (cùng với nút topbar)
+    var navSettings = document.getElementById('nav-settings');
+    if (navSettings) {
+      navSettings.addEventListener('click', function () {
+        var top = document.getElementById('btn-settings');
+        if (top) top.click();
+      });
     }
 
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) visible.add(entry.target.id); else visible.delete(entry.target.id);
-      });
-      updateActive();
-    }, { root: scrollArea, threshold: 0.35 });
+    // 5) Hash change + khởi tạo
+    window.addEventListener('hashchange', function () { switchView(parseHash()); });
+    if (!location.hash) {
+      try { history.replaceState(null, '', '#/' + DEFAULT_ROUTE); } catch (e) { location.hash = '#/' + DEFAULT_ROUTE; }
+    }
+    switchView(parseHash());
 
-    sections.forEach(function (s) { observer.observe(s); });
+    // 6) Responsive: < 1100px ép thu gọn
+    var resizeT;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(function () {
+        var wasAuto = window.innerWidth < 1100;
+        if (wasAuto && sidebar.dataset.state !== 'collapsed') {
+          sidebar.dataset.state = 'collapsed';
+        }
+        resizeAllChartsSoon();
+      }, 120);
+    });
   }
 
   // ===================== Khởi tạo =====================
@@ -1437,20 +3301,17 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       state.search = e.target.value;
       applyTableSortSearchAndRender();
     });
+    document.getElementById('btn-detail-export').addEventListener('click', exportDetailCSV);
 
     window.addEventListener('resize', function () {
-      chartTopHangMuc && chartTopHangMuc.resize();
-      chartDonutProject && chartDonutProject.resize();
-      chartZoneHold && chartZoneHold.resize();
-      chartHistory && chartHistory.resize();
+      resizeAllChartsSoon();
     });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    initNavRail();
+    initSidebar();
     initUIHandlers();
-    loadHistory();   // tuỳ chọn, chạy song song — tự ẩn card nếu lỗi/thiếu
-    loadMainData();  // bắt buộc — lỗi sẽ hiện #error-state, không vẽ số giả
+    initAuth();        // [V2] kiểm tra phiên; nếu hợp lệ → gọi loadHistory() + loadMainData() ở trong
   });
 })();
 
