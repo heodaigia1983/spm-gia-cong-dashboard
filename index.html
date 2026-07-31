@@ -1015,6 +1015,141 @@
   .theme-label{font-size:12.5px;}
   @media (max-width:900px){.theme-label{display:none;}}
 
+
+  /* ---------- Sidebar: thời tiết + lịch tháng ---------- */
+  .sidebar-widgets{padding:10px 10px 4px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:10px;}
+  .sidebar[data-state="collapsed"] .sidebar-widgets{display:none;}
+  @media (max-width:1100px){ .sidebar-widgets{display:none;} }
+
+  .side-weather{
+    border-radius:11px;padding:11px 12px;
+    background:linear-gradient(140deg,rgba(53,164,255,.14),rgba(53,164,255,.04));
+    border:1px solid var(--border);
+    box-shadow:inset 0 1px 0 var(--d-rim);
+  }
+  html[data-theme="light"] .side-weather{
+    background:linear-gradient(140deg,rgba(22,104,214,.10),rgba(22,104,214,.03));border-color:#dde5f0;
+  }
+  .sw-load,.sw-err{font-size:11.5px;color:var(--text-muted);}
+  .sw-top{display:flex;align-items:center;gap:10px;}
+  .sw-ico{width:34px;height:34px;flex:none;color:var(--accent-light);}
+  html[data-theme="light"] .sw-ico{color:var(--accent);}
+  .sw-temp{font-size:23px;font-weight:800;color:var(--text-primary);line-height:1;letter-spacing:-.02em;}
+  .sw-desc{font-size:11px;color:var(--text-secondary);margin-top:3px;line-height:1.25;}
+  .sw-place{font-size:10.5px;color:var(--text-muted);margin-top:7px;display:flex;align-items:center;gap:4px;}
+  .sw-meta{display:flex;gap:12px;margin-top:7px;font-size:10.5px;color:var(--text-muted);}
+  .sw-meta b{color:var(--text-secondary);font-weight:700;}
+
+  .side-cal{
+    border-radius:11px;padding:10px 11px 11px;
+    background:var(--bg-field);border:1px solid var(--border);
+  }
+  html[data-theme="light"] .side-cal{background:#f7fafe;border-color:#dde5f0;}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+  .cal-title{font-size:11.5px;font-weight:800;color:var(--text-primary);letter-spacing:.02em;}
+  .cal-week{font-size:10px;color:var(--text-muted);font-weight:600;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+  .cal-dow{font-size:9.5px;color:var(--text-muted);text-align:center;font-weight:700;padding:2px 0 3px;}
+  .cal-dow.we{color:var(--warn);}
+  .cal-day{
+    font-size:10.5px;text-align:center;padding:3px 0;border-radius:5px;
+    color:var(--text-secondary);font-variant-numeric:tabular-nums;
+  }
+  .cal-day.out{color:transparent;}
+  .cal-day.we{color:var(--warn);}
+  .cal-day.today{
+    background:var(--accent);color:#fff;font-weight:800;
+    box-shadow:0 3px 8px var(--d-glow);
+  }
+
+
+  /* --- Thẻ: thanh Shop vs Còn lại + ô nhập phân bổ --- */
+  .zdp-card{padding-bottom:13px;}
+  .zdp-split{
+    position:relative;margin-top:10px;height:7px;border-radius:999px;overflow:hidden;
+    background:var(--zdp-track);
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.18);
+  }
+  html[data-theme="light"] .zdp-split{box-shadow:inset 0 1px 2px rgba(16,32,64,.10);}
+  .zdp-split-fill{
+    height:100%;width:0;border-radius:999px;
+    transition:width .45s cubic-bezier(.22,1,.36,1);
+    background:linear-gradient(90deg,#0e9f7e,#16c79a);
+  }
+  .zdp-card.s-warn .zdp-split-fill{background:linear-gradient(90deg,#d98614,#f0a132);}
+  .zdp-card.s-bad  .zdp-split-fill{background:linear-gradient(90deg,#d13333,#ef4444);}
+  .zdp-card.s-none .zdp-split-fill{background:linear-gradient(90deg,#7b8ca6,#94a3b8);}
+  .zdp-split.over .zdp-split-fill{background:linear-gradient(90deg,#b45309,#f59e0b);}
+  .zdp-split.nodata{opacity:.45;}
+  .zdp-remain{margin-top:5px;font-size:10.5px;color:var(--zdp-sub);font-variant-numeric:tabular-nums;}
+
+  /* ô phân bổ sửa được */
+  .pb-slot{border-radius:5px;padding:0 2px;}
+  .zdp.editing .pb-slot{
+    cursor:text;outline:1px dashed var(--zdp-c1);outline-offset:2px;
+    background:rgba(92,182,255,.10);
+  }
+  html[data-theme="light"] .zdp.editing .pb-slot{background:rgba(22,104,214,.08);}
+  .zdp.editing .pb-slot:hover{background:rgba(92,182,255,.18);}
+  .pb-slot[contenteditable="true"]{outline:2px solid var(--zdp-c1);outline-offset:2px;background:transparent;}
+  .pb-slot.dirty{box-shadow:inset 0 -2px 0 #f0a132;}
+
+  .zdp-editbar{
+    display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+    margin:0 0 14px;padding:9px 12px;border-radius:10px;
+    background:rgba(240,161,50,.10);border:1px solid rgba(240,161,50,.32);
+    font-size:11.5px;color:var(--zdp-sub);
+  }
+  html[data-theme="light"] .zdp-editbar{background:#fff7ed;border-color:#fed7aa;color:#8a4d05;}
+  .zdp-editbar b{color:var(--zdp-num);}
+  .zdp-editbar .grow{margin-left:auto;}
+  .zdp-btn.warn{border-color:rgba(240,161,50,.55);color:#f0a132;}
+  .zdp-btn.warn:hover{background:rgba(240,161,50,.12);}
+  .zdp-btn.go{background:var(--zdp-c1);border-color:var(--zdp-c1);color:#fff;}
+  .zdp-btn.go:hover{filter:brightness(1.08);color:#fff;}
+  .zdp-btn.go:disabled{opacity:.5;cursor:not-allowed;}
+
+
+  /* Man hinh thap: uu tien menu, an bot widget cho khoi che muc cuoi */
+  @media (max-height:900px){ .side-cal{display:none;} }
+  @media (max-height:720px){ .sidebar-widgets{display:none;} }
+
+
+  /* ---------- Hộp nhập trong trang ---------- */
+  .app-modal{
+    position:fixed;inset:0;z-index:10050;display:flex;align-items:center;justify-content:center;
+    background:rgba(4,10,24,.62);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    animation:fadeRefresh .16s ease;
+  }
+  html[data-theme="light"] .app-modal{background:rgba(16,32,64,.34);}
+  .app-modal-card{
+    width:420px;max-width:92vw;padding:22px 24px 18px;border-radius:14px;
+    background:linear-gradient(180deg,rgba(23,37,68,.98),rgba(14,24,48,.98));
+    border:1px solid var(--border-strong);
+    box-shadow:0 30px 70px rgba(0,0,0,.5),inset 0 1px 0 var(--d-rim);
+    animation:authCardIn .26s cubic-bezier(.2,.7,.3,1) both;
+  }
+  html[data-theme="light"] .app-modal-card{
+    background:#fff;border-color:#dde5f0;
+    box-shadow:0 30px 70px rgba(16,32,64,.22),inset 0 1px 0 #fff;
+  }
+  .app-modal-card h3{margin:0 0 8px;font-size:16px;font-weight:800;color:var(--text-primary);}
+  .app-modal-card p{margin:0 0 14px;font-size:12.5px;line-height:1.6;color:var(--text-secondary);}
+  .app-modal-card code{font-size:11.5px;}
+  .app-modal-card input{
+    width:100%;padding:10px 12px;border-radius:9px;font-size:14px;outline:none;
+    background:var(--bg-field);border:1px solid var(--border-strong);color:var(--text-primary);
+    transition:border-color .16s,box-shadow .16s;
+  }
+  html[data-theme="light"] .app-modal-card input{background:#f6f9fd;border-color:#ccdaea;}
+  .app-modal-card input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  .app-modal-err{min-height:15px;margin-top:7px;font-size:12px;color:#ff6b6b;}
+  .app-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px;}
+  .app-modal-actions .zdp-btn{padding:8px 16px;font-size:12.5px;
+    border-color:var(--border-strong);color:var(--text-secondary);}
+  .app-modal-actions .zdp-btn:hover{color:var(--text-primary);border-color:var(--accent);}
+  .app-modal-actions .zdp-btn.go{background:var(--accent);border-color:var(--accent);color:#fff;}
+
 </style>
 </head>
 <body>
@@ -1095,6 +1230,13 @@
         </button>
       </div>
     </nav>
+
+    <div class="sidebar-widgets" id="sidebar-widgets">
+      <div class="side-weather" id="side-weather">
+        <div class="sw-load">Đang lấy thời tiết…</div>
+      </div>
+      <div class="side-cal" id="side-cal"></div>
+    </div>
 
     <div class="sidebar-footer">
       <button type="button" class="sidebar-collapse" id="btn-sidebar-toggle" aria-label="Thu gọn thanh bên">
@@ -1239,6 +1381,28 @@
               <div class="kpi-value" id="kpi-total-phanbo">0</div>
               <div class="kpi-unit"><span id="kpi-phanbo-pct">0%</span> % đạt tổng</div>
               <div class="kpi-meter"><div class="kpi-meter-fill" id="kpi-phanbo-bar"></div></div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="charts-grid-2">
+              <div class="card chart-card">
+                <div class="chart-head">
+                  <h3>Phân bổ so với đã ban hành</h3>
+                  <div class="legend-inline">
+                    <span><span class="legend-dot" style="background:var(--accent-hover)"></span>Đã ban hành</span>
+                    <span><span class="legend-dot" style="background:var(--warn)"></span>Còn lại</span>
+                  </div>
+                </div>
+                <div class="chart-body" id="chart-pb-vs-shop"></div>
+              </div>
+              <div class="card chart-card">
+                <div class="chart-head">
+                  <h3>Khối lượng ban hành thêm mỗi ngày</h3>
+                  <span class="chart-sub" id="chart-daily-sub"></span>
+                </div>
+                <div class="chart-body" id="chart-daily-delta"></div>
+              </div>
             </div>
           </section>
         </div>
@@ -1682,7 +1846,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     phanBoDraft: null       // bản nháp từ localStorage (null = không có draft)
   };
 
-  var chartTopHangMuc, chartDonutProject, chartZoneHold, chartHistory;
+  var chartTopHangMuc, chartDonutProject, chartZoneHold, chartHistory, chartPbVsShop, chartDailyDelta;
 
   // ===================== Tiện ích =====================
   function toNum(v) {
@@ -2764,6 +2928,276 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     document.body.removeChild(a); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
 
+  // ===================== Hộp nhập trong trang =====================
+  // Dùng thay window.prompt(): prompt() khoá cứng cả tab, không hợp với dashboard.
+  function askModal(opts) {
+    return new Promise(function (resolve) {
+      var old = document.getElementById('app-modal');
+      if (old) old.remove();
+      var wrap = document.createElement('div');
+      wrap.id = 'app-modal';
+      wrap.className = 'app-modal';
+      wrap.setAttribute('data-lpignore', 'true');
+      wrap.innerHTML =
+        '<div class="app-modal-card" role="dialog" aria-modal="true">' +
+          '<h3>' + escapeHtml(opts.title || '') + '</h3>' +
+          (opts.desc ? '<p>' + opts.desc + '</p>' : '') +
+          '<input type="' + (opts.password ? 'password' : 'text') + '" id="app-modal-input" ' +
+            'placeholder="' + escapeHtml(opts.placeholder || '') + '" ' +
+            'value="' + escapeHtml(opts.value || '') + '" ' +
+            // new-password: chặn trình duyệt gợi ý lưu — đây không phải mật khẩu tài khoản
+            'autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false">' +
+          '<div class="app-modal-err" id="app-modal-err"></div>' +
+          '<div class="app-modal-actions">' +
+            '<button type="button" class="zdp-btn" data-act="cancel">Huỷ</button>' +
+            '<button type="button" class="zdp-btn go" data-act="ok">' + escapeHtml(opts.okText || 'Xác nhận') + '</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(wrap);
+      var input = wrap.querySelector('#app-modal-input');
+      var close = function (val) { wrap.remove(); resolve(val); };
+      wrap.querySelector('[data-act="cancel"]').addEventListener('click', function () { close(null); });
+      wrap.querySelector('[data-act="ok"]').addEventListener('click', function () { close(input.value); });
+      wrap.addEventListener('mousedown', function (e) { if (e.target === wrap) close(null); });
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); close(input.value); }
+        else if (e.key === 'Escape') { e.preventDefault(); close(null); }
+      });
+      setTimeout(function () { input.focus(); input.select(); }, 30);
+    });
+  }
+
+  // ===================== Ghi phanbo.json lên GitHub =====================
+  // KHÔNG nhúng token vào file này — file nằm public trên GitHub Pages, ai cũng đọc được.
+  // Token do người dùng dán một lần, chỉ nằm trong localStorage của máy họ.
+  var GH_REPO   = 'heodaigia1983/spm-gia-cong-dashboard';
+  var GH_BRANCH = 'main';
+  var GH_PATH   = 'phanbo.json';
+  var GH_TOKEN_KEY = 'spm.gh.token';
+
+  function ghGetToken() {
+    try { return localStorage.getItem(GH_TOKEN_KEY) || ''; } catch (e) { return ''; }
+  }
+  function ghAskToken() {
+    return askModal({
+      title: 'GitHub token',
+      desc: 'Token loại <b>fine-grained</b>, quyền <b>Contents: Read and write</b> cho repo <code>' + GH_REPO + '</code>.<br>' +
+            'Token chỉ lưu trên máy này, <b>không</b> nằm trong file web. Để trống rồi Lưu = xoá token.',
+      password: true, placeholder: 'github_pat_…', value: ghGetToken(), okText: 'Lưu token'
+    }).then(function (t) {
+      if (t == null) return null;
+      t = t.trim();
+      try {
+        if (t) localStorage.setItem(GH_TOKEN_KEY, t);
+        else localStorage.removeItem(GH_TOKEN_KEY);
+      } catch (e) {}
+      return t;
+    });
+  }
+
+  function ghHeaders(token) {
+    return {
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    };
+  }
+
+  // btoa() chỉ nuốt được latin-1; JSON có tiếng Việt nên phải mã hoá UTF-8 trước.
+  function b64EncodeUtf8(str) {
+    var bytes = new TextEncoder().encode(str);
+    var bin = '';
+    for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+
+  function ghPushPhanBo(btn) {
+    var token = ghGetToken();
+    if (!token) {
+      ghAskToken().then(function (t) {
+        if (!t) { showToast('Chưa có token — huỷ'); return; }
+        ghPushPhanBo(btn);
+      });
+      return;
+    }
+    var items = state.phanBoItems.filter(function (it) {
+      return it.phanBoTan != null || (it.ghiChu && it.ghiChu.trim());
+    });
+    var payload = {
+      meta: { updatedAt: new Date().toISOString(), updatedBy: getUserEmail(), version: 1 },
+      items: items
+    };
+    var content = JSON.stringify(payload, null, 2);
+    var url = 'https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_PATH;
+
+    if (btn) { btn.disabled = true; btn.textContent = 'Đang lưu…'; }
+    var done = function (msg) {
+      if (btn) { btn.disabled = false; btn.textContent = '⬆ Lưu lên GitHub'; }
+      showToast(msg);
+    };
+
+    // Lấy sha bản hiện tại để ghi đè đúng phiên bản.
+    fetch(url + '?ref=' + GH_BRANCH, { headers: ghHeaders(token) })
+      .then(function (r) {
+        if (r.status === 401 || r.status === 403) throw new Error('Token sai hoặc thiếu quyền Contents:write');
+        if (r.status === 404) return { sha: null };   // file chưa có -> tạo mới
+        if (!r.ok) throw new Error('Đọc file lỗi HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (cur) {
+        var body = {
+          message: 'chore: cap nhat phan bo (' + items.length + ' muc) tu dashboard',
+          content: b64EncodeUtf8(content),
+          branch: GH_BRANCH
+        };
+        if (cur && cur.sha) body.sha = cur.sha;
+        return fetch(url, { method: 'PUT', headers: ghHeaders(token), body: JSON.stringify(body) });
+      })
+      .then(function (r) {
+        if (r.status === 409) throw new Error('File vừa đổi trên GitHub — tải lại trang rồi lưu lại');
+        if (!r.ok) return r.json().then(function (e) {
+          throw new Error(e && e.message ? e.message : 'Ghi lỗi HTTP ' + r.status);
+        });
+        return r.json();
+      })
+      .then(function () {
+        // Đã lên server -> bản trên máy không còn là nháp nữa.
+        state.phanBoServer = payload;
+        state.phanBoDraft = null;
+        try { localStorage.removeItem(PHANBO_DRAFT_KEY); } catch (e) {}
+        updateDirtyBadge();
+        renderAll();
+        renderPhanBoGrid();
+        done('Đã lưu lên GitHub · trang web cập nhật sau ~1 phút');
+      })
+      .catch(function (err) {
+        done('Lỗi: ' + (err && err.message ? err.message : err));
+      });
+  }
+
+  // ===================== Sửa phân bổ ngay trên thẻ =====================
+  // Chỉ email này thấy nút sửa. Đây là rào chống sửa nhầm, KHÔNG phải bảo mật:
+  // trang là HTML tĩnh public nên mọi kiểm tra phía trình duyệt đều có thể bị bỏ qua.
+  var PB_EDITOR_EMAILS = ['heodaigia1983@gmail.com'];
+  var PB_PASS_SHA256 = 'e7cb397a3238340e549b361c50a033a05ac6942e6554571296500c96dc84b148';
+  var pbEditing = false;      // đang bật chế độ sửa
+  var pbUnlocked = false;     // đã nhập đúng mật khẩu trong phiên này
+
+  function pbCanEdit() {
+    return PB_EDITOR_EMAILS.indexOf((getUserEmail() || '').toLowerCase()) !== -1;
+  }
+
+  // (project, hangMuc) đã có phân bổ chi tiết theo zone -> không cho sửa ở cấp hạng mục,
+  // vì getPhanBoFor() cộng các zone và bỏ qua item zone:null (quy tắc chống đếm đôi).
+  function pbHasZoneLevel(project, hangMuc) {
+    return state.phanBoItems.some(function (it) {
+      return it.project === project && it.hangMuc === hangMuc && it.zone != null;
+    });
+  }
+
+  function pbUnlock() {
+    if (pbUnlocked) return Promise.resolve(true);
+    return askModal({
+      title: 'Mở khoá sửa phân bổ',
+      desc: 'Nhập mật khẩu để bật chế độ sửa số phân bổ (tấn).',
+      password: true, placeholder: 'Mật khẩu', okText: 'Mở khoá'
+    }).then(function (pass) {
+      if (pass == null) return false;
+      return authDigest(pass).then(function (h) {
+        if (h === PB_PASS_SHA256) { pbUnlocked = true; return true; }
+        showToast('Mật khẩu không đúng');
+        return false;
+      });
+    }).catch(function () { showToast('Không kiểm tra được mật khẩu'); return false; });
+  }
+
+  function pbSetItemTan(project, hangMuc, val) {
+    var it = findPhanBoItem(project, hangMuc, null);
+    if (val == null) {
+      if (it) {
+        var i = state.phanBoItems.indexOf(it);
+        if (i >= 0) state.phanBoItems.splice(i, 1);
+      }
+      return;
+    }
+    if (it) { it.phanBoTan = val; }
+    else {
+      state.phanBoItems.push({
+        project: project, hangMuc: hangMuc, zone: null,
+        phanBoTan: val, phanBoCK: 0, ghiChu: ''
+      });
+    }
+  }
+
+  function pbBindCardEditing(slot, facts) {
+    if (!pbEditing) return;
+    slot.querySelectorAll('.zdp-card').forEach(function (card) {
+      var el = card.querySelector('[data-pb-slot]');
+      if (!el) return;
+      var project = card.dataset.project || null;
+      var hm = card.dataset.hm;
+      if (!project) {
+        el.title = 'Thẻ gộp nhiều dự án — mở view Phân bổ kế hoạch để sửa.';
+        el.style.opacity = '.55';
+        return;
+      }
+      if (pbHasZoneLevel(project, hm)) {
+        el.title = 'Hạng mục này đã phân bổ chi tiết theo zone — sửa ở view Phân bổ kế hoạch.';
+        el.style.opacity = '.55';
+        return;
+      }
+      el.title = 'Bấm để sửa phân bổ (tấn)';
+      el.addEventListener('click', function () {
+        if (el.isContentEditable) return;
+        var cur = findPhanBoItem(project, hm, null);
+        el.dataset.old = el.textContent;
+        el.textContent = (cur && cur.phanBoTan != null) ? String(cur.phanBoTan).replace('.', ',') : '';
+        el.contentEditable = 'true';
+        el.focus();
+        document.execCommand && document.execCommand('selectAll', false, null);
+      });
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+        else if (e.key === 'Escape') { e.preventDefault(); el.textContent = el.dataset.old || ''; el.contentEditable = 'false'; }
+      });
+      el.addEventListener('blur', function () {
+        if (!el.isContentEditable) return;
+        el.contentEditable = 'false';
+        var raw = el.textContent.trim();
+        var val = raw === '' ? null : parseVietNum(raw);
+        if (val != null && (isNaN(val) || val < 0)) { showToast('Số không hợp lệ'); val = null; }
+        if (val != null) val = Math.round(val * 1000) / 1000;
+        pbSetItemTan(project, hm, val);
+        saveDraftNow();
+        renderAll();
+        renderPhanBoGrid();
+        showToast(val == null ? 'Đã xoá phân bổ: ' + hmLabel(hm) : 'Đã đặt ' + fmtTon.format(val) + ' tấn · ' + hmLabel(hm));
+      });
+    });
+  }
+
+  function pbRenderEditBar() {
+    if (!pbCanEdit()) return '';
+    if (!pbEditing) {
+      return '<button type="button" class="zdp-btn" id="zdp-edit-on">✎ Sửa phân bổ</button>';
+    }
+    return '<button type="button" class="zdp-btn warn" id="zdp-edit-off">✓ Xong</button>';
+  }
+
+  function pbRenderBanner() {
+    if (!pbEditing) return '';
+    var dirty = 0;
+    try { dirty = state.phanBoDraft && state.phanBoDraft.items ? state.phanBoDraft.items.length : 0; } catch (e) {}
+    return '<div class="zdp-editbar">' +
+        '<span>Đang ở chế độ sửa — bấm vào số <b>phân bổ</b> trên thẻ để nhập. ' +
+          'Enter để lưu, Esc để huỷ.</span>' +
+        '<span class="grow"></span>' +
+        '<span><b>' + dirty + '</b> mục đang lưu tạm trên máy</span>' +
+        '<button type="button" class="zdp-btn go" id="zdp-push-gh">⬆ Lưu lên GitHub</button>' +
+        '<button type="button" class="zdp-btn" id="zdp-dl-json">Tải phanbo.json</button>' +
+      '</div>';
+  }
+
   function renderZoneDetailPanel(facts) {
     disposeZoneCharts();
     var slot = document.getElementById('filter-panel-slot');
@@ -2848,13 +3282,26 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       var w = (c.pct == null || isNaN(c.pct)) ? 0 : Math.max(0, Math.min(100, c.pct));
       var lbl = hmLabel(c.hm);
       var subTxt = (labelCount[lbl] > 1 && c.project) ? c.project : '';
-      return '<div class="zdp-card ' + st + (c.alt ? ' alt' : '') + '">' +
+      // Thanh 2 phần: đã ban hành / còn lại. Vượt phân bổ -> lấp đầy + đánh dấu.
+      var over = (c.pb != null && c.shop > c.pb);
+      var remain = (c.pb == null) ? null : (c.pb - c.shop);
+      var barCls = 'zdp-split' + (over ? ' over' : '') + (c.pb == null ? ' nodata' : '');
+      var remainTxt = remain == null ? 'chưa có phân bổ'
+        : (remain > 0 ? 'còn ' + fmtVal(remain) + (isCK ? ' ck' : ' tấn')
+                      : 'vượt ' + fmtVal(Math.abs(remain)) + (isCK ? ' ck' : ' tấn'));
+      return '<div class="zdp-card ' + st + (c.alt ? ' alt' : '') + '" data-hm="' + escapeHtml(c.hm) +
+              '" data-project="' + escapeHtml(c.project || '') + '">' +
           '<div class="zdp-card-title" title="' + escapeHtml(lbl) + '">' + escapeHtml(lbl) + '</div>' +
           (subTxt ? '<div class="zdp-card-zone" title="' + escapeHtml(subTxt) + '">' + escapeHtml(subTxt) + '</div>' : '') +
-          '<div class="zdp-card-main">' + pbTxt + '<span class="sep"> / </span>' + fmtVal(c.shop) +
+          '<div class="zdp-card-main">' +
+            '<span class="pb-slot" data-pb-slot>' + pbTxt + '</span>' +
+            '<span class="sep"> / </span>' + fmtVal(c.shop) +
             '<span class="sep"> | </span><span class="pct">' + pctTxt + '</span></div>' +
           '<div class="zdp-card-sub">Phân bổ / Shop / % đạt</div>' +
-          '<div class="zdp-bar"><div class="zdp-bar-fill" style="width:' + w.toFixed(1) + '%"></div></div>' +
+          '<div class="' + barCls + '">' +
+            '<div class="zdp-split-fill" style="width:' + w.toFixed(1) + '%"></div>' +
+          '</div>' +
+          '<div class="zdp-remain">' + escapeHtml(remainTxt) + '</div>' +
         '</div>';
     }).join('') : '<div class="zdp-empty">Hạng mục đã chọn chưa có dữ liệu shop.</div>';
 
@@ -2867,7 +3314,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       : (projectSet.size ? Array.from(projectSet).join(' · ') : 'Tổng quan ban hành Shop');
 
     var html =
-      '<section class="zdp" data-theme="' + currentTheme() + '">' +
+      '<section class="zdp' + (pbEditing ? ' editing' : '') + '" data-theme="' + currentTheme() + '">' +
         '<div class="zdp-head">' +
           '<div class="zdp-head-main">' +
             '<h2 class="zdp-title">' + escapeHtml(title) + '</h2>' +
@@ -2879,10 +3326,12 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
               '<button type="button" data-unit="tan" class="' + (isCK ? '' : 'active') + '">Tấn</button>' +
               '<button type="button" data-unit="ck" class="' + (isCK ? 'active' : '') + '">Số CK</button>' +
             '</div>' +
+            pbRenderEditBar() +
             '<button type="button" class="zdp-btn" id="zone-btn-export">Xuất Excel</button>' +
             '<button type="button" class="zdp-btn" id="zone-btn-close">✕ Bỏ lọc</button>' +
           '</div>' +
         '</div>' +
+        pbRenderBanner() +
         '<div class="zdp-summary">' +
           '<div class="zdp-total">' +
             '<div class="zdp-cap">Tổng quan Shop toàn bộ hệ</div>' +
@@ -2911,6 +3360,25 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       refreshAllFilterPanels();
       renderAll();
     });
+
+    var onBtn = slot.querySelector('#zdp-edit-on');
+    if (onBtn) onBtn.addEventListener('click', function () {
+      pbUnlock().then(function (ok) {
+        if (!ok) return;
+        pbEditing = true;
+        renderZoneDetailPanel(facts);
+      });
+    });
+    var offBtn = slot.querySelector('#zdp-edit-off');
+    if (offBtn) offBtn.addEventListener('click', function () {
+      pbEditing = false;
+      renderZoneDetailPanel(facts);
+    });
+    var pushBtn = slot.querySelector('#zdp-push-gh');
+    if (pushBtn) pushBtn.addEventListener('click', function () { ghPushPhanBo(pushBtn); });
+    var dlBtn = slot.querySelector('#zdp-dl-json');
+    if (dlBtn) dlBtn.addEventListener('click', function () { downloadPhanBo(); });
+    pbBindCardEditing(slot, facts);
 
     // Verification giữ nguyên: chỉ chạy khi lọc đúng 1 hạng mục
     hms.forEach(function (hm) {
@@ -3252,6 +3720,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     renderChartTopHangMuc(facts);
     renderChartDonutProject(facts);
     renderChartZoneHold(facts);
+    renderChartPbVsShop(facts);
+    renderChartDailyDelta();
     renderHistoryChart();
     renderTable(facts);
     try {
@@ -3743,6 +4213,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       if (chartDonutProject)chartDonutProject.resize();
       if (chartZoneHold)    chartZoneHold.resize();
       if (chartHistory)     chartHistory.resize();
+      if (chartPbVsShop)    chartPbVsShop.resize();
+      if (chartDailyDelta)  chartDailyDelta.resize();
     });
   }
 
@@ -3838,11 +4310,176 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
   }
 
   // ===================== Khởi tạo =====================
+  // ===================== Chart: Phân bổ vs Đã ban hành =====================
+  // Thanh chồng ngang cho từng hạng mục: phần đã ban hành + phần còn lại.
+  // Chỉ lấy hạng mục CÓ phân bổ, vì không có mẫu số thì so sánh vô nghĩa.
+  function renderChartPbVsShop(facts) {
+    if (!chartPbVsShop) return;
+    var byKey = new Map();
+    facts.forEach(function (f) {
+      var k = f.project + '|||' + f.hangMuc;
+      var o = byKey.get(k);
+      if (!o) { o = { project: f.project, hm: f.hangMuc, shop: 0 }; byKey.set(k, o); }
+      o.shop += f.tan;
+    });
+    var rows = [];
+    byKey.forEach(function (o) {
+      var pb = getScopedPhanBoFor(o.project, o.hm);
+      if (pb == null || pb <= 0) return;
+      rows.push({
+        name: hmLabel(o.hm),
+        pb: pb,
+        shop: o.shop,
+        remain: Math.max(0, pb - o.shop),
+        over: Math.max(0, o.shop - pb),
+        pct: o.shop / pb * 100
+      });
+    });
+    rows.sort(function (a, b) { return a.pct - b.pct; });   // chậm nhất lên trên cùng
+    rows = rows.slice(0, 12).reverse();                      // ECharts vẽ từ dưới lên
+
+    if (!rows.length) {
+      chartPbVsShop.clear();
+      chartPbVsShop.setOption({
+        backgroundColor: 'transparent',
+        title: {
+          text: 'Chưa có hạng mục nào được phân bổ',
+          left: 'center', top: 'middle',
+          textStyle: { color: AXIS_COLOR, fontSize: 13, fontWeight: 'normal' }
+        }
+      });
+      return;
+    }
+
+    chartPbVsShop.clear();
+    chartPbVsShop.setOption({
+      backgroundColor: 'transparent',
+      grid: { left: 8, right: 58, top: 12, bottom: 26, containLabel: true },
+      tooltip: {
+        trigger: 'axis', axisPointer: { type: 'shadow' },
+        backgroundColor: tooltipStyle.backgroundColor, borderColor: tooltipStyle.borderColor,
+        borderWidth: tooltipStyle.borderWidth, textStyle: tooltipStyle.textStyle,
+        extraCssText: tooltipStyle.extraCssText,
+        formatter: function (ps) {
+          var r = rows[ps[0].dataIndex];
+          return '<b>' + escapeHtml(r.name) + '</b><br/>' +
+            'Phân bổ: ' + fmtTon.format(r.pb) + ' tấn<br/>' +
+            'Đã ban hành: ' + fmtTon.format(r.shop) + ' tấn (' + fmtPct.format(r.pct) + '%)<br/>' +
+            (r.over > 0 ? 'Vượt: ' + fmtTon.format(r.over) + ' tấn'
+                        : 'Còn lại: ' + fmtTon.format(r.remain) + ' tấn');
+        }
+      },
+      xAxis: {
+        type: 'value',
+        axisLabel: { color: AXIS_COLOR, formatter: function (v) { return fmtInt.format(v); } },
+        splitLine: { lineStyle: { color: GRID_COLOR } }
+      },
+      yAxis: {
+        type: 'category',
+        data: rows.map(function (r) { return r.name; }),
+        axisTick: { show: false }, axisLine: { show: false },
+        axisLabel: { color: TEXT_SECONDARY, width: 168, overflow: 'truncate' }
+      },
+      series: [
+        {
+          name: 'Đã ban hành', type: 'bar', stack: 'x',
+          data: rows.map(function (r) { return Math.min(r.shop, r.pb); }),
+          itemStyle: { color: COLOR_ACCENT, borderRadius: [4, 0, 0, 4] },
+          barWidth: 15
+        },
+        {
+          name: 'Còn lại', type: 'bar', stack: 'x',
+          data: rows.map(function (r) { return r.remain; }),
+          itemStyle: { color: COLOR_WARN, opacity: .42, borderRadius: [0, 4, 4, 0] },
+          label: {
+            show: true, position: 'right', color: TEXT_SECONDARY, fontSize: 11,
+            formatter: function (p) { return fmtPct.format(rows[p.dataIndex].pct) + '%'; }
+          }
+        }
+      ]
+    });
+  }
+
+  // ===================== Chart: khối lượng ban hành thêm mỗi ngày =====================
+  function renderChartDailyDelta() {
+    if (!chartDailyDelta) return;
+    var sub = document.getElementById('chart-daily-sub');
+    var h = state.historyData;
+    if (!Array.isArray(h) || h.length < 2) {
+      chartDailyDelta.clear();
+      chartDailyDelta.setOption({
+        backgroundColor: 'transparent',
+        title: {
+          text: 'Cần ít nhất 2 ngày dữ liệu lịch sử',
+          left: 'center', top: 'middle',
+          textStyle: { color: AXIS_COLOR, fontSize: 13, fontWeight: 'normal' }
+        }
+      });
+      if (sub) sub.textContent = '';
+      return;
+    }
+    // Cùng quy tắc lọc dự án như S-curve để 2 biểu đồ luôn khớp nhau.
+    var pf = state.filters.projects;
+    var pts = h.map(function (e) {
+      var ton = 0;
+      (e.byProject || []).forEach(function (bp) {
+        if (!pf.size || pf.has(bp.project)) ton += toNum(bp.tan);
+      });
+      return { date: e.date, ton: ton };
+    }).sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+
+    var days = [], deltas = [];
+    for (var i = 1; i < pts.length; i++) {
+      days.push(pts[i].date || '');
+      deltas.push(Math.round((pts[i].ton - pts[i - 1].ton) * 100) / 100);
+    }
+    if (!deltas.length) {
+      chartDailyDelta.clear();
+      if (sub) sub.textContent = '';
+      return;
+    }
+    var sum = deltas.reduce(function (a, b) { return a + b; }, 0);
+    if (sub) sub.textContent = 'TB ' + fmtTon.format(sum / deltas.length) + ' tấn/ngày';
+
+    chartDailyDelta.clear();
+    chartDailyDelta.setOption({
+      backgroundColor: 'transparent',
+      grid: { left: 8, right: 14, top: 14, bottom: 24, containLabel: true },
+      tooltip: {
+        trigger: 'axis', axisPointer: { type: 'shadow' },
+        backgroundColor: tooltipStyle.backgroundColor, borderColor: tooltipStyle.borderColor,
+        borderWidth: tooltipStyle.borderWidth, textStyle: tooltipStyle.textStyle,
+        extraCssText: tooltipStyle.extraCssText,
+        valueFormatter: function (v) { return fmtTon.format(v) + ' tấn'; }
+      },
+      xAxis: {
+        type: 'category', data: days,
+        axisTick: { show: false },
+        axisLine: { lineStyle: { color: GRID_COLOR } },
+        axisLabel: { color: AXIS_COLOR, fontSize: 10, hideOverlap: true }
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: { color: AXIS_COLOR, formatter: function (v) { return fmtInt.format(v); } },
+        splitLine: { lineStyle: { color: GRID_COLOR } }
+      },
+      series: [{
+        type: 'bar', data: deltas, barMaxWidth: 26,
+        itemStyle: {
+          borderRadius: [4, 4, 0, 0],
+          color: function (p) { return p.value < 0 ? '#ef4444' : COLOR_ACCENT; }
+        }
+      }]
+    });
+  }
+
   function ensureCharts() {
     if (!chartTopHangMuc) chartTopHangMuc = echarts.init(document.getElementById('chart-top-hangmuc'), null, { renderer: 'canvas' });
     if (!chartDonutProject) chartDonutProject = echarts.init(document.getElementById('chart-project-donut'), null, { renderer: 'canvas' });
     if (!chartZoneHold) chartZoneHold = echarts.init(document.getElementById('chart-zone-hold'), null, { renderer: 'canvas' });
     if (!chartHistory) chartHistory = echarts.init(document.getElementById('chart-history'), null, { renderer: 'canvas' });
+    if (!chartPbVsShop) chartPbVsShop = echarts.init(document.getElementById('chart-pb-vs-shop'), null, { renderer: 'canvas' });
+    if (!chartDailyDelta) chartDailyDelta = echarts.init(document.getElementById('chart-daily-delta'), null, { renderer: 'canvas' });
   }
 
   function initUIHandlers() {
@@ -3882,6 +4519,123 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     window.addEventListener('resize', function () {
       resizeAllChartsSoon();
     });
+  }
+
+  // ===================== Sidebar: lịch tháng =====================
+  function renderSideCalendar() {
+    var host = document.getElementById('side-cal');
+    if (!host) return;
+    var now = new Date();
+    var y = now.getFullYear(), m = now.getMonth(), today = now.getDate();
+    var first = new Date(y, m, 1);
+    // Tuần bắt đầu Thứ 2: JS getDay() trả 0=CN -> đổi thành 0=T2..6=CN
+    var lead = (first.getDay() + 6) % 7;
+    var daysInMonth = new Date(y, m + 1, 0).getDate();
+
+    var dows = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+    var html = '<div class="cal-head">' +
+        '<span class="cal-title">Tháng ' + (m + 1) + ' · ' + y + '</span>' +
+        '<span class="cal-week">' + ['CN','T2','T3','T4','T5','T6','T7'][now.getDay()] + ' ' +
+          String(today).padStart(2, '0') + '/' + String(m + 1).padStart(2, '0') + '</span>' +
+      '</div><div class="cal-grid">';
+
+    dows.forEach(function (d, i) {
+      html += '<div class="cal-dow' + (i >= 5 ? ' we' : '') + '">' + d + '</div>';
+    });
+    for (var i = 0; i < lead; i++) html += '<div class="cal-day out">0</div>';
+    for (var d = 1; d <= daysInMonth; d++) {
+      var col = (lead + d - 1) % 7;
+      var cls = 'cal-day' + (col >= 5 ? ' we' : '') + (d === today ? ' today' : '');
+      html += '<div class="' + cls + '">' + d + '</div>';
+    }
+    html += '</div>';
+    host.innerHTML = html;
+  }
+
+  // ===================== Sidebar: thời tiết =====================
+  // Open-Meteo: miễn phí, không cần khoá API, có CORS. Vị trí dò theo IP.
+  var WMO = {
+    0:  ['Trời quang', 'sun'],       1:  ['Ít mây', 'sun'],
+    2:  ['Có mây', 'cloud'],         3:  ['Nhiều mây', 'cloud'],
+    45: ['Sương mù', 'fog'],         48: ['Sương muối', 'fog'],
+    51: ['Mưa phùn nhẹ', 'rain'],    53: ['Mưa phùn', 'rain'],    55: ['Mưa phùn dày', 'rain'],
+    61: ['Mưa nhẹ', 'rain'],         63: ['Mưa', 'rain'],         65: ['Mưa to', 'rain'],
+    66: ['Mưa lạnh', 'rain'],        67: ['Mưa lạnh to', 'rain'],
+    71: ['Tuyết nhẹ', 'snow'],       73: ['Tuyết', 'snow'],       75: ['Tuyết dày', 'snow'],
+    80: ['Mưa rào nhẹ', 'rain'],     81: ['Mưa rào', 'rain'],     82: ['Mưa rào to', 'rain'],
+    95: ['Dông', 'storm'],           96: ['Dông kèm mưa đá', 'storm'], 99: ['Dông mạnh', 'storm']
+  };
+  var WICON = {
+    sun:   '<circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.6M12 19.9v2.6M4.2 4.2l1.9 1.9M17.9 17.9l1.9 1.9M1.5 12h2.6M19.9 12h2.6M4.2 19.8l1.9-1.9M17.9 6.1l1.9-1.9"/>',
+    cloud: '<path d="M7 18h10a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.7A3.5 3.5 0 0 0 7 18z"/>',
+    rain:  '<path d="M7 15h10a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.7A3.5 3.5 0 0 0 7 15z"/><path d="M9 18.5l-.8 2M13 18.5l-.8 2M17 18.5l-.8 2"/>',
+    storm: '<path d="M7 15h10a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.7A3.5 3.5 0 0 0 7 15z"/><path d="M13 17l-2.6 3.5h3L11 24"/>',
+    fog:   '<path d="M7 13h10a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.7A3.5 3.5 0 0 0 7 13z"/><path d="M5 17h14M7 20.5h11"/>',
+    snow:  '<path d="M7 15h10a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.7A3.5 3.5 0 0 0 7 15z"/><path d="M9 19h.01M13 19h.01M11 21.5h.01M15 21.5h.01"/>'
+  };
+
+  function weatherSvg(kind) {
+    return '<svg class="sw-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + (WICON[kind] || WICON.cloud) + '</svg>';
+  }
+
+  function ipLocate() {
+    // Thử lần lượt vài dịch vụ; hỏng hết thì rơi về Phú Quốc (công trường T2).
+    return fetch('https://ipwho.is/?fields=success,city,latitude,longitude')
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || d.success === false || d.latitude == null) throw new Error('ipwho');
+        return { lat: d.latitude, lon: d.longitude, city: d.city };
+      })
+      .catch(function () {
+        return fetch('https://ipapi.co/json/').then(function (r) { return r.json(); }).then(function (d) {
+          if (!d || d.latitude == null) throw new Error('ipapi');
+          return { lat: d.latitude, lon: d.longitude, city: d.city };
+        });
+      })
+      .catch(function () {
+        return { lat: 10.2270, lon: 103.9670, city: 'Phú Quốc' };
+      });
+  }
+
+  function renderWeather() {
+    var host = document.getElementById('side-weather');
+    if (!host) return;
+    ipLocate().then(function (loc) {
+      var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + loc.lat + '&longitude=' + loc.lon +
+        '&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m' +
+        '&daily=temperature_2m_max,temperature_2m_min&forecast_days=1&timezone=auto';
+      return fetch(url).then(function (r) { return r.json(); }).then(function (d) {
+        var c = d && d.current;
+        if (!c) throw new Error('no data');
+        var info = WMO[c.weather_code] || ['—', 'cloud'];
+        var hi = d.daily && d.daily.temperature_2m_max ? Math.round(d.daily.temperature_2m_max[0]) : null;
+        var lo = d.daily && d.daily.temperature_2m_min ? Math.round(d.daily.temperature_2m_min[0]) : null;
+        host.innerHTML =
+          '<div class="sw-top">' + weatherSvg(info[1]) +
+            '<div><div class="sw-temp">' + Math.round(c.temperature_2m) + '°C</div>' +
+            '<div class="sw-desc">' + escapeHtml(info[0]) +
+              (c.apparent_temperature != null ? ' · cảm giác ' + Math.round(c.apparent_temperature) + '°' : '') +
+            '</div></div>' +
+          '</div>' +
+          '<div class="sw-meta">' +
+            (hi != null ? '<span><b>' + hi + '°</b> / ' + lo + '°</span>' : '') +
+            (c.relative_humidity_2m != null ? '<span>Ẩm <b>' + c.relative_humidity_2m + '%</b></span>' : '') +
+            (c.wind_speed_10m != null ? '<span>Gió <b>' + Math.round(c.wind_speed_10m) + '</b> km/h</span>' : '') +
+          '</div>' +
+          '<div class="sw-place">📍 ' + escapeHtml(loc.city || '—') + '</div>';
+      });
+    }).catch(function () {
+      host.innerHTML = '<div class="sw-err">Không lấy được thời tiết.</div>';
+    });
+  }
+
+  function initSideWidgets() {
+    renderSideCalendar();
+    renderWeather();
+    // Cập nhật thời tiết mỗi 15 phút; lịch tự đổi khi sang ngày mới.
+    setInterval(renderWeather, 15 * 60 * 1000);
+    setInterval(renderSideCalendar, 60 * 1000);
   }
 
   // ===================== Theme toàn trang =====================
@@ -3930,6 +4684,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
 
   document.addEventListener('DOMContentLoaded', function () {
     initThemeToggle();
+    initSideWidgets();
     initTilt3D();
     initSidebar();
     initUIHandlers();
