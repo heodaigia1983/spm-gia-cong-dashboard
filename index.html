@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SPM · Tổng quan tiến độ gia công</title>
 <link rel="icon" href="data:,">
+<script>
+  /* Áp theme TRƯỚC khi trình duyệt vẽ, tránh nháy màu khi tải trang. */
+  (function () {
+    var t;
+    try { t = localStorage.getItem('spm.theme'); } catch (e) {}
+    if (t !== 'light' && t !== 'dark') {
+      t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
 <style>
   /* Bộ design token glass-dark duy nhất cho toàn dashboard. */
   :root{
@@ -293,7 +304,7 @@
     color:var(--zdp-sub);padding:5px 11px;border-radius:6px;line-height:1;transition:.16s;}
   .zdp-seg button:hover{color:var(--zdp-num);}
   .zdp-seg button.active{background:var(--zdp-c1);color:#fff;}
-  .zdp[data-theme="light"] .zdp-seg button.active{background:var(--zdp-c1);color:#fff;}
+  
   .zdp-btn{background:none;border:1px solid var(--zdp-card-border);color:var(--zdp-sub);cursor:pointer;
     font:inherit;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:8px;transition:.16s;}
   .zdp-btn:hover{color:var(--zdp-num);border-color:var(--zdp-c1);}
@@ -648,6 +659,362 @@
   .auth-dropdown.open{display:block;}
   .auth-dropdown button{display:block;width:100%;padding:9px 13px;background:none;border:none;border-radius:7px;text-align:left;color:#e3edf9;font-size:13px;cursor:pointer;transition:background .12s;}
   .auth-dropdown button:hover{background:rgba(53,164,255,.14);}
+
+  /* ============================================================
+     LIGHT MODE — skin đè lên bộ CSS tối, không sửa dòng nào ở trên.
+     Bật bằng: <html data-theme="light">
+     ============================================================ */
+  html[data-theme="light"]{
+    --bg-rail:rgba(255,255,255,.88);
+    --bg-app:#eef2f8;
+    --bg-card:#ffffff;
+    --bg-card-hover:#ffffff;
+    --bg-field:#f4f7fc;
+    --border:#dde5f0;
+    --border-strong:#c3d1e5;
+    --text-primary:#0e1b32;
+    --text-secondary:#3d5375;
+    --text-muted:#6a7f9f;
+    --accent:#1668d6;
+    --accent-hover:#0d55b8;
+    --accent-light:#0f5fc7;
+    --accent-soft:rgba(22,104,214,.10);
+    --warn:#c2620d;
+    --warn-soft:rgba(224,138,32,.14);
+    --shadow-card:0 1px 2px rgba(16,32,64,.05),0 8px 20px rgba(16,32,64,.07),inset 0 1px 0 rgba(255,255,255,.9);
+    --shadow-card-hover:0 4px 8px rgba(16,32,64,.07),0 20px 42px rgba(16,32,64,.13),inset 0 1px 0 #fff;
+    background:#eef2f8;
+    color-scheme:light;
+  }
+  html[data-theme="light"] body{
+    color:var(--text-primary);
+    background:
+      radial-gradient(760px 580px at 88% -14%,rgba(22,104,214,.10),transparent 66%),
+      radial-gradient(600px 480px at -6% 100%,rgba(110,62,212,.07),transparent 68%),
+      linear-gradient(135deg,#f2f6fc 0%,#e9eff8 52%,#eef2f8 100%);
+  }
+  html[data-theme="light"] body::before{
+    opacity:.5;
+    background-image:linear-gradient(rgba(30,74,140,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(30,74,140,.05) 1px,transparent 1px);
+  }
+  html[data-theme="light"] body::after{
+    opacity:.30;background:radial-gradient(circle,rgba(85,168,255,.55),transparent 66%);
+  }
+
+  /* --- sidebar --- */
+  html[data-theme="light"] .sidebar{
+    background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(246,249,253,.88));
+    border-right-color:#dbe4f0;
+    box-shadow:1px 0 0 rgba(16,32,64,.03);
+  }
+  html[data-theme="light"] .sidebar::after{background:linear-gradient(transparent,rgba(22,104,214,.28),transparent);}
+  html[data-theme="light"] .sidebar-logo{
+    background:linear-gradient(135deg,#0f5fc7 0%,#3596ee 55%,#7ec8ff 160%);
+    box-shadow:0 6px 16px rgba(22,104,214,.30),inset 0 1px 1px rgba(255,255,255,.5);
+  }
+  html[data-theme="light"] .nav-item:hover{background:rgba(22,104,214,.08);color:var(--text-primary);}
+  html[data-theme="light"] .nav-item.active{
+    background:linear-gradient(90deg,rgba(22,104,214,.13),rgba(22,104,214,.02));color:#0b3f8f;
+  }
+  html[data-theme="light"] .nav-item.active::before{
+    background:linear-gradient(#3596ee,#0f5fc7);box-shadow:0 0 10px rgba(22,104,214,.45);
+  }
+  html[data-theme="light"] .sidebar-collapse{color:var(--text-secondary);}
+  html[data-theme="light"] .sidebar-collapse:hover{background:rgba(22,104,214,.08);}
+  html[data-theme="light"] .sidebar[data-state="collapsed"] .nav-item::after{
+    background:#16233c;color:#fff;box-shadow:0 6px 18px rgba(16,32,64,.28);
+  }
+
+  /* --- topbar --- */
+  html[data-theme="light"] .topbar{
+    background:rgba(255,255,255,.80);border-bottom-color:#dbe4f0;
+    box-shadow:0 1px 0 rgba(16,32,64,.04);
+  }
+  html[data-theme="light"] .topbar-status{
+    border-color:rgba(22,104,214,.24);background:rgba(22,104,214,.07);color:#14508f;
+  }
+  html[data-theme="light"] .topbar-status .dot{background:#1780e0;box-shadow:0 0 8px rgba(23,128,224,.55);}
+
+  /* --- buttons --- */
+  html[data-theme="light"] .btn-primary{
+    background:linear-gradient(135deg,#0f5fc7,#2f95ea);color:#fff;
+    box-shadow:0 6px 14px rgba(22,104,214,.26),inset 0 1px 0 rgba(255,255,255,.28);
+  }
+  html[data-theme="light"] .btn-primary:hover{background:linear-gradient(135deg,#1470dc,#48a6f5);}
+  html[data-theme="light"] .btn-secondary{
+    background:#fff;border-color:#ccdaea;color:var(--text-secondary);
+    box-shadow:0 1px 2px rgba(16,32,64,.05);
+  }
+  html[data-theme="light"] .btn-secondary:hover{background:#f3f7fd;border-color:#9dbde2;color:var(--text-primary);}
+
+  /* --- hero --- */
+  html[data-theme="light"] .hero{
+    border-color:rgba(22,104,214,.22);
+    background:radial-gradient(600px 220px at 86% 0%,rgba(255,255,255,.30),transparent 62%),
+      linear-gradient(120deg,#1257b8,#1a72cf 46%,#2f9ae0);
+    box-shadow:0 18px 40px rgba(16,50,110,.22),inset 0 1px 0 rgba(255,255,255,.28);
+  }
+  html[data-theme="light"] .hero-title{text-shadow:0 2px 14px rgba(0,37,94,.28);}
+
+  /* --- surfaces --- */
+  html[data-theme="light"] .state-card,
+  html[data-theme="light"] .filterbar,
+  html[data-theme="light"] .kpi-tile,
+  html[data-theme="light"] .card{
+    background:linear-gradient(180deg,#ffffff,#fbfdff);
+    border-color:#dde5f0;
+    backdrop-filter:none;-webkit-backdrop-filter:none;
+    box-shadow:var(--shadow-card);
+  }
+  html[data-theme="light"] .kpi-tile:hover,
+  html[data-theme="light"] .card:hover{border-color:#a9c6e8;box-shadow:var(--shadow-card-hover);}
+  html[data-theme="light"] .kpi-tile::before,
+  html[data-theme="light"] .card::before{
+    background:linear-gradient(90deg,transparent,rgba(22,104,214,.30),transparent);
+  }
+  html[data-theme="light"] .kpi-value{text-shadow:none;}
+  html[data-theme="light"] .kpi-meter{background:#e7edf6;}
+  html[data-theme="light"] .kpi-meter-fill{background:linear-gradient(90deg,#0f5fc7,#3ba7f5);box-shadow:0 0 8px rgba(22,104,214,.35);}
+  html[data-theme="light"] .kpi-meter-fill.warn{background:linear-gradient(90deg,#e08a20,#f5b95a);box-shadow:0 0 8px rgba(224,138,32,.35);}
+  html[data-theme="light"] .chart-sub{color:var(--text-muted);}
+  html[data-theme="light"] .chart-body{filter:none;}
+  html[data-theme="light"] .legend-inline{border-color:#dde5f0;background:#f7fafe;}
+
+  /* --- fields / dropdown --- */
+  html[data-theme="light"] .ms-trigger,
+  html[data-theme="light"] #table-search,
+  html[data-theme="light"] .segmented,
+  html[data-theme="light"] .phanbo-search-input,
+  html[data-theme="light"] .phanbo-select{
+    background:#fff;border-color:#ccdaea;color:var(--text-primary);
+    box-shadow:inset 0 1px 2px rgba(16,32,64,.04);
+  }
+  html[data-theme="light"] .ms-trigger:hover,
+  html[data-theme="light"] #table-search:hover,
+  html[data-theme="light"] .ms-trigger.active{border-color:#5b9de6;box-shadow:0 0 0 3px rgba(22,104,214,.10);}
+  html[data-theme="light"] .ms-trigger.active{background:rgba(22,104,214,.07);color:#0b3f8f;}
+  html[data-theme="light"] .ms-panel{
+    background:#fff;border-color:#d3dfee;
+    box-shadow:0 20px 44px rgba(16,32,64,.16),0 2px 6px rgba(16,32,64,.06);
+    backdrop-filter:none;-webkit-backdrop-filter:none;
+  }
+  html[data-theme="light"] .ms-search input{background:#f5f8fc;border-color:#ccdaea;color:var(--text-primary);}
+  html[data-theme="light"] .ms-option{color:var(--text-secondary);}
+  html[data-theme="light"] .ms-option:hover{background:rgba(22,104,214,.09);color:var(--text-primary);}
+  html[data-theme="light"] .switch-track{background:#d7e0ec;}
+  html[data-theme="light"] .switch.on .switch-track{background:linear-gradient(90deg,#0f5fc7,#3ba7f5);box-shadow:0 0 10px rgba(22,104,214,.28);}
+  html[data-theme="light"] .seg-btn{color:var(--text-secondary);}
+  html[data-theme="light"] .seg-btn.active{background:linear-gradient(135deg,#0f5fc7,#3596ee);color:#fff;box-shadow:0 3px 8px rgba(22,104,214,.26);}
+
+  /* --- tables --- */
+  html[data-theme="light"] .table-scroll{border-color:#dde5f0;background:#fff;}
+  html[data-theme="light"] thead th,
+  html[data-theme="light"] .phanbo-table thead th,
+  html[data-theme="light"] .zone-detail-table th{
+    background:#eff4fb;color:#4b628a;border-bottom-color:#d6e0ee;backdrop-filter:none;
+  }
+  html[data-theme="light"] thead th:hover{color:var(--text-primary);}
+  html[data-theme="light"] tbody td,
+  html[data-theme="light"] .phanbo-table td,
+  html[data-theme="light"] .zone-detail-table td{border-bottom-color:#e8eef7;border-top-color:#e8eef7;color:var(--text-secondary);}
+  html[data-theme="light"] tbody tr:hover td{background:rgba(22,104,214,.055);color:var(--text-primary);}
+  html[data-theme="light"] #detail-table tbody tr.total-row td,
+  html[data-theme="light"] .zone-detail-table tr.total-row{
+    background:#eaf1fb;color:var(--text-primary);border-top-color:#c3d1e5;backdrop-filter:none;
+  }
+  html[data-theme="light"] .cell-editable:hover{background:rgba(22,104,214,.07);}
+  html[data-theme="light"] .cell-editable:focus{background:rgba(22,104,214,.10);}
+
+  /* --- misc --- */
+  html[data-theme="light"] code{background:rgba(22,104,214,.09);border:1px solid #d5e2f2;color:#0b3f8f;}
+  html[data-theme="light"] .state-card .remedy{background:#f5f8fc;border-color:#dde5f0;}
+  html[data-theme="light"] .spinner{border-color:rgba(22,104,214,.18);border-top-color:var(--accent);}
+  html[data-theme="light"] .view-placeholder{
+    background:linear-gradient(135deg,#ffffff,#f5f8fd);border-color:#dde5f0;
+  }
+  html[data-theme="light"] .phanbo-toolbar{background:#fff;border-color:#dde5f0;box-shadow:var(--shadow-card);}
+  html[data-theme="light"] .phanbo-grid-wrap{border-color:#dde5f0;background:#fff;}
+  html[data-theme="light"] .phanbo-warnings{background:rgba(224,138,32,.10);border-color:rgba(224,138,32,.32);color:#8a4d05;}
+  html[data-theme="light"] .phanbo-toast{
+    background:#fff;border-color:#d3dfee;color:var(--text-primary);
+    box-shadow:0 14px 32px rgba(16,32,64,.18);backdrop-filter:none;
+  }
+  html[data-theme="light"] ::-webkit-scrollbar-thumb{background:rgba(22,60,120,.22);}
+  html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:rgba(22,60,120,.34);}
+  html[data-theme="light"] button:focus-visible,
+  html[data-theme="light"] input:focus-visible{outline-color:#1668d6;}
+  html[data-theme="light"] .zone-card.status-none .zone-card-main{color:var(--text-muted);}
+  html[data-theme="light"] .zone-progress{background:#e7edf6;}
+  html[data-theme="light"] .zone-unit-btn.active{background:var(--accent);color:#fff;}
+
+  /* --- auth overlay --- */
+  html[data-theme="light"] #auth-overlay{background:linear-gradient(175deg,#f2f6fc 0%,#e2ecf9 100%);}
+  html[data-theme="light"] #auth-overlay::before{
+    background:radial-gradient(ellipse 65% 55% at 18% 20%,rgba(22,104,214,.10),transparent),
+      radial-gradient(ellipse 60% 50% at 80% 72%,rgba(0,170,130,.07),transparent);
+  }
+  html[data-theme="light"] #auth-overlay::after{
+    background-image:linear-gradient(rgba(30,74,140,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(30,74,140,.05) 1px,transparent 1px);
+  }
+  html[data-theme="light"] .auth-card{
+    background:#fff;border-color:#dde5f0;backdrop-filter:none;-webkit-backdrop-filter:none;
+    box-shadow:0 30px 70px rgba(16,32,64,.18),0 2px 8px rgba(16,32,64,.06),inset 0 1px 0 #fff;
+  }
+  html[data-theme="light"] .auth-card::before{background:linear-gradient(90deg,transparent,rgba(22,104,214,.32),transparent);}
+  html[data-theme="light"] .auth-title{color:var(--text-primary);}
+  html[data-theme="light"] .auth-sub{color:var(--text-muted);}
+  html[data-theme="light"] .auth-field input[type="email"],
+  html[data-theme="light"] .auth-field input[type="password"]{
+    background:#f6f9fd;border-color:#ccdaea;color:var(--text-primary);
+  }
+  html[data-theme="light"] .auth-field input::placeholder{color:#93a6c0;}
+  html[data-theme="light"] .auth-field input:focus{border-color:#5b9de6;box-shadow:0 0 0 3px rgba(22,104,214,.12);}
+  html[data-theme="light"] .auth-field-icon,
+  html[data-theme="light"] .auth-eye{color:#7b90ae;}
+  html[data-theme="light"] .auth-eye:hover{color:#1668d6;}
+  html[data-theme="light"] .auth-remember{color:var(--text-secondary);}
+  html[data-theme="light"] .auth-remember input[type="checkbox"]{background:#fff;border-color:#ccdaea;}
+  html[data-theme="light"] .auth-submit{background:linear-gradient(135deg,#0f5fc7,#2f95ea);box-shadow:0 8px 22px rgba(22,104,214,.26);}
+  html[data-theme="light"] .auth-submit:hover{background:linear-gradient(135deg,#1470dc,#48a6f5);}
+  html[data-theme="light"] .auth-error{color:#d92d20;}
+  html[data-theme="light"] .auth-user-chip{background:rgba(22,104,214,.07);border-color:rgba(22,104,214,.20);color:#14508f;}
+  html[data-theme="light"] .auth-user-chip:hover{background:rgba(22,104,214,.13);}
+  html[data-theme="light"] .auth-dropdown{
+    background:#fff;border-color:#d3dfee;box-shadow:0 18px 40px rgba(16,32,64,.16);backdrop-filter:none;
+  }
+  html[data-theme="light"] .auth-dropdown button{color:var(--text-secondary);}
+  html[data-theme="light"] .auth-dropdown button:hover{background:rgba(22,104,214,.10);color:var(--text-primary);}
+
+
+  /* ============================================================
+     3D DEPTH — chiều sâu & nghiêng theo chuột, dùng chung 2 theme.
+     Cường độ bóng/độ sáng đổi theo --d-* nên tự hợp tông từng theme.
+     ============================================================ */
+  :root{
+    --d-lift:-5px;              /* độ nâng khi hover */
+    --d-tilt:7deg;              /* biên độ nghiêng tối đa */
+    --d-rim:rgba(255,255,255,.14);      /* viền sáng mép trên */
+    --d-rim-strong:rgba(255,255,255,.30);
+    --d-under:rgba(0,0,0,.34);          /* bóng đổ chính */
+    --d-under-soft:rgba(0,0,0,.20);
+    --d-glow:rgba(72,181,255,.28);      /* quầng sáng accent khi hover */
+    --d-sheen:rgba(255,255,255,.10);    /* vệt sáng lướt bề mặt */
+  }
+  html[data-theme="light"]{
+    --d-rim:rgba(255,255,255,.95);
+    --d-rim-strong:#ffffff;
+    --d-under:rgba(16,32,64,.16);
+    --d-under-soft:rgba(16,32,64,.08);
+    --d-glow:rgba(22,104,214,.20);
+    --d-sheen:rgba(255,255,255,.62);
+  }
+
+  /* Sân khấu 3D: con phải nằm trong cha có perspective mới nghiêng thật */
+  .kpi-grid,.charts-grid-2,.zdp-grid,.zone-zone-grid{perspective:1200px;perspective-origin:50% 40%;}
+
+  .kpi-tile,.card,.zdp-card{
+    transform-style:preserve-3d;
+    will-change:transform;
+    transition:transform .26s cubic-bezier(.2,.7,.3,1),box-shadow .26s ease,border-color .2s ease;
+  }
+
+  /* Bóng nhiều lớp = chiều sâu thật, không phải 1 lớp blur phẳng */
+  .kpi-tile,.card{
+    box-shadow:
+      0 1px 1px var(--d-under-soft),
+      0 3px 6px var(--d-under-soft),
+      0 10px 22px var(--d-under),
+      inset 0 1px 0 var(--d-rim);
+  }
+  .kpi-tile:hover,.card:hover{
+    transform:translateY(var(--d-lift)) scale(1.012);
+    box-shadow:
+      0 2px 3px var(--d-under-soft),
+      0 8px 16px var(--d-under-soft),
+      0 26px 50px var(--d-under),
+      0 0 34px var(--d-glow),
+      inset 0 1px 0 var(--d-rim-strong);
+  }
+
+  /* Nghiêng theo chuột — JS gắn --mx/--my (0..1). Không có JS thì vẫn đẹp nhờ hover ở trên. */
+  .tilt3d{
+    transform:
+      translateY(var(--d-lift))
+      rotateX(calc((0.5 - var(--my,.5)) * var(--d-tilt)))
+      rotateY(calc((var(--mx,.5) - 0.5) * var(--d-tilt)))
+      scale(1.015);
+  }
+  /* Vệt sáng chạy theo con trỏ, tạo cảm giác mặt kính cong */
+  .kpi-tile::after,.zdp-card::after{
+    content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+    background:radial-gradient(280px circle at calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%),var(--d-sheen),transparent 62%);
+    opacity:0;transition:opacity .26s ease;
+  }
+  .kpi-tile:hover::after,.zdp-card:hover::after{opacity:1;}
+  .kpi-tile,.zdp-card{position:relative;overflow:hidden;}
+
+  /* Chữ số KPI nổi lên khỏi mặt thẻ */
+  .kpi-value{transform:translateZ(26px);}
+  .kpi-label,.kpi-unit{transform:translateZ(12px);}
+  .zdp-card-main{transform:translateZ(18px);}
+  .zdp-card-title{transform:translateZ(10px);}
+
+  /* Thẻ trong panel chi tiết */
+  .zdp-card{
+    box-shadow:0 1px 1px var(--d-under-soft),0 6px 14px var(--d-under),inset 0 1px 0 var(--d-rim);
+  }
+  .zdp-card:hover{
+    transform:translateY(-4px) scale(1.015);
+    box-shadow:0 2px 4px var(--d-under-soft),0 18px 34px var(--d-under),0 0 26px var(--d-glow),inset 0 1px 0 var(--d-rim-strong);
+  }
+
+  /* Hero: khối nổi cao nhất trang */
+  .hero{transform-style:preserve-3d;transition:box-shadow .3s ease,transform .3s ease;}
+  .hero-text{transform:translateZ(30px);}
+
+  /* Nút bấm: nổi lên rồi lún xuống khi nhấn */
+  .btn-primary,.auth-submit,.zdp-btn,.btn-secondary{
+    transition:transform .14s cubic-bezier(.2,.7,.3,1),box-shadow .2s ease,background .16s ease,border-color .16s ease;
+  }
+  .btn-primary:hover,.auth-submit:hover{transform:translateY(-2px);}
+  .btn-primary:active,.auth-submit:active,.btn-secondary:active,.zdp-btn:active{transform:translateY(1px) scale(.985);}
+  .zdp-btn:hover,.btn-secondary:hover{transform:translateY(-1px);}
+
+  /* Panel chi tiết & filterbar: nâng nhẹ khỏi nền */
+  .zdp{
+    box-shadow:0 2px 4px var(--d-under-soft),0 20px 48px var(--d-under),inset 0 1px 0 var(--d-rim);
+  }
+  html[data-theme="light"] .zdp{box-shadow:0 2px 4px rgba(16,32,64,.06),0 18px 40px rgba(16,32,64,.12),inset 0 1px 0 #fff;}
+  .filterbar{box-shadow:0 1px 2px var(--d-under-soft),0 8px 20px var(--d-under-soft),inset 0 1px 0 var(--d-rim);}
+
+  /* Sidebar logo & chip: khối 3D nhỏ */
+  .sidebar-logo,.chip-avatar,.auth-logo{
+    box-shadow:0 6px 14px var(--d-under),inset 0 1px 1px var(--d-rim-strong),inset 0 -2px 4px rgba(0,0,0,.14);
+  }
+
+  /* Tôn trọng người tắt hiệu ứng chuyển động */
+  @media (prefers-reduced-motion:reduce){
+    .kpi-tile,.card,.zdp-card,.hero,.btn-primary,.btn-secondary,.auth-submit,.zdp-btn{transition:none !important;}
+    .tilt3d{transform:none !important;}
+    .kpi-tile::after,.zdp-card::after{display:none;}
+    .kpi-value,.kpi-label,.kpi-unit,.zdp-card-main,.zdp-card-title,.hero-text{transform:none !important;}
+  }
+
+
+  /* --- nút chuyển giao diện --- */
+  /* Icon nút thu gọn sidebar thiếu kích thước -> phóng to đè lên chữ phiên bản */
+  .sidebar-collapse svg{width:17px;height:17px;flex:none;}
+  .sidebar-footer{display:flex;flex-direction:column;gap:2px;}
+
+  .theme-toggle{padding:7px 12px;position:relative;overflow:hidden;}
+  .theme-toggle svg{transition:transform .4s cubic-bezier(.2,.7,.3,1),opacity .25s ease;}
+  .theme-toggle .ico-sun{display:none;}
+  html[data-theme="light"] .theme-toggle .ico-moon{display:none;}
+  html[data-theme="light"] .theme-toggle .ico-sun{display:block;}
+  .theme-toggle:hover svg{transform:rotate(-25deg) scale(1.08);}
+  .theme-label{font-size:12.5px;}
+  @media (max-width:900px){.theme-label{display:none;}}
+
 </style>
 </head>
 <body>
@@ -752,6 +1119,11 @@
           <button type="button" id="auth-logout">Đăng xuất</button>
         </div>
       </div>
+      <button type="button" class="btn btn-secondary theme-toggle" id="btn-theme" title="Chuyển giao diện Tối / Sáng" aria-label="Chuyển giao diện Tối / Sáng">
+        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <span class="theme-label">Tối</span>
+      </button>
       <button type="button" class="btn btn-secondary" id="btn-settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         Thiết đặt
@@ -1230,19 +1602,57 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
   var COLOR_ACCENT = '#35a4ff'; // xanh cyan — trạng thái Đã Hold / hành động chính
   var COLOR_WARN   = '#ffac5e'; // cam hổ phách — trạng thái Chưa Hold
 
-  var TEXT_PRIMARY   = '#f4f8ff';
-  var TEXT_SECONDARY = '#c0cee5';
-  var AXIS_COLOR     = '#8293b2';
-  var GRID_COLOR     = 'rgba(159,207,255,0.12)';
-  var SURFACE_BG     = 'rgba(12,22,45,0.9)';
-
-  var tooltipStyle = {
-    backgroundColor: 'rgba(12,23,47,0.94)',
-    borderColor: 'rgba(154,216,255,0.30)',
-    borderWidth: 1,
-    textStyle: { color: TEXT_PRIMARY, fontSize: 12 },
-    extraCssText: 'border-radius:10px;box-shadow:0 16px 34px rgba(0,0,0,0.42),inset 0 1px 0 rgba(255,255,255,0.06);padding:10px 13px;backdrop-filter:blur(14px);'
+  // Màu biểu đồ theo theme. Đổi theme -> applyChartTheme() gán lại rồi render lại chart.
+  var CHART_THEME = {
+    dark: {
+      textPrimary: '#f4f8ff', textSecondary: '#c0cee5', axis: '#8293b2',
+      grid: 'rgba(159,207,255,0.12)', surface: 'rgba(12,22,45,0.9)',
+      tipBg: 'rgba(12,23,47,0.94)', tipBorder: 'rgba(154,216,255,0.30)',
+      tipCss: 'border-radius:10px;box-shadow:0 16px 34px rgba(0,0,0,0.42),inset 0 1px 0 rgba(255,255,255,0.06);padding:10px 13px;backdrop-filter:blur(14px);',
+      line: '#58c9ff', lineShadow: 'rgba(57,184,255,.5)', dot: '#81d8ff',
+      areaTop: 'rgba(70,189,255,0.36)', areaBottom: 'rgba(38,125,245,0)',
+      palette: ['#50c5ff', '#6ee7b7', '#b99cff', '#ff9bc7', '#ffd37a', '#69a7ff'],
+      accent: '#35a4ff', warn: '#ffac5e'
+    },
+    light: {
+      textPrimary: '#0e1b32', textSecondary: '#3d5375', axis: '#6a7f9f',
+      grid: 'rgba(30,74,140,0.12)', surface: 'rgba(255,255,255,0.94)',
+      tipBg: 'rgba(255,255,255,0.97)', tipBorder: 'rgba(30,74,140,0.18)',
+      tipCss: 'border-radius:10px;box-shadow:0 16px 34px rgba(16,32,64,0.16),inset 0 1px 0 #fff;padding:10px 13px;',
+      line: '#1668d6', lineShadow: 'rgba(22,104,214,.30)', dot: '#0f5fc7',
+      areaTop: 'rgba(22,104,214,0.26)', areaBottom: 'rgba(22,104,214,0)',
+      palette: ['#1f7fd4', '#129d78', '#7c5cd6', '#d94f8c', '#d69210', '#3b62c9'],
+      accent: '#1668d6', warn: '#c2620d'
+    }
   };
+
+  var TEXT_PRIMARY, TEXT_SECONDARY, AXIS_COLOR, GRID_COLOR, SURFACE_BG;
+  var tooltipStyle = { borderWidth: 1, textStyle: { fontSize: 12 } };
+
+  function currentTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  }
+
+  function applyChartTheme() {
+    var t = CHART_THEME[currentTheme()];
+    TEXT_PRIMARY = t.textPrimary;
+    TEXT_SECONDARY = t.textSecondary;
+    AXIS_COLOR = t.axis;
+    GRID_COLOR = t.grid;
+    SURFACE_BG = t.surface;
+    tooltipStyle.backgroundColor = t.tipBg;
+    tooltipStyle.borderColor = t.tipBorder;
+    tooltipStyle.textStyle = { color: t.textPrimary, fontSize: 12 };
+    tooltipStyle.extraCssText = t.tipCss;
+    SERIES_LINE = t.line; SERIES_LINE_SHADOW = t.lineShadow; SERIES_DOT = t.dot;
+    SERIES_AREA_TOP = t.areaTop; SERIES_AREA_BOTTOM = t.areaBottom;
+    COLOR_ACCENT = t.accent; COLOR_WARN = t.warn;
+    CAT_PALETTE = t.palette.slice();
+    // state có thể chưa khởi tạo ở lần gọi đầu (lúc định nghĩa biến) -> bỏ qua an toàn
+    if (typeof state !== 'undefined' && state.projectColor) rebuildProjectColors();
+  }
+  var SERIES_LINE, SERIES_LINE_SHADOW, SERIES_DOT, SERIES_AREA_TOP, SERIES_AREA_BOTTOM;
+  applyChartTheme();
 
   var fmtInt = new Intl.NumberFormat('vi-VN');
   var fmtTon = new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -2354,11 +2764,6 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     document.body.removeChild(a); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
 
-  // Theme của panel chi tiết: 'dark' | 'light'
-  var zdpTheme = (function () {
-    try { return localStorage.getItem('spm.zdpTheme') === 'light' ? 'light' : 'dark'; } catch (e) { return 'dark'; }
-  })();
-
   function renderZoneDetailPanel(facts) {
     disposeZoneCharts();
     var slot = document.getElementById('filter-panel-slot');
@@ -2462,7 +2867,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       : (projectSet.size ? Array.from(projectSet).join(' · ') : 'Tổng quan ban hành Shop');
 
     var html =
-      '<section class="zdp" data-theme="' + zdpTheme + '">' +
+      '<section class="zdp" data-theme="' + currentTheme() + '">' +
         '<div class="zdp-head">' +
           '<div class="zdp-head-main">' +
             '<h2 class="zdp-title">' + escapeHtml(title) + '</h2>' +
@@ -2473,10 +2878,6 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
             '<div class="zdp-seg" id="zdp-unit">' +
               '<button type="button" data-unit="tan" class="' + (isCK ? '' : 'active') + '">Tấn</button>' +
               '<button type="button" data-unit="ck" class="' + (isCK ? 'active' : '') + '">Số CK</button>' +
-            '</div>' +
-            '<div class="zdp-seg" id="zdp-theme">' +
-              '<button type="button" data-theme="dark" class="' + (zdpTheme === 'dark' ? 'active' : '') + '">Tối</button>' +
-              '<button type="button" data-theme="light" class="' + (zdpTheme === 'light' ? 'active' : '') + '">Sáng</button>' +
             '</div>' +
             '<button type="button" class="zdp-btn" id="zone-btn-export">Xuất Excel</button>' +
             '<button type="button" class="zdp-btn" id="zone-btn-close">✕ Bỏ lọc</button>' +
@@ -2501,13 +2902,6 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
 
     slot.querySelectorAll('#zdp-unit button').forEach(function (b) {
       b.addEventListener('click', function () { zonePanelUnit = b.dataset.unit; renderZoneDetailPanel(facts); });
-    });
-    slot.querySelectorAll('#zdp-theme button').forEach(function (b) {
-      b.addEventListener('click', function () {
-        zdpTheme = b.dataset.theme;
-        try { localStorage.setItem('spm.zdpTheme', zdpTheme); } catch (e) {}
-        renderZoneDetailPanel(facts);
-      });
     });
     var exportBtn = slot.querySelector('#zone-btn-export');
     if (exportBtn) exportBtn.addEventListener('click', function () { exportZoneDetailCSV(facts); });
@@ -3164,12 +3558,12 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       series: [{
         type: 'line', data: points.map(function (p) { return p.ton; }), smooth: true,
         symbol: 'circle', symbolSize: 7,
-        lineStyle: { color: '#58c9ff', width: 2.5, shadowBlur: 9, shadowColor: 'rgba(57,184,255,.5)' },
-        itemStyle: { color: '#81d8ff', borderColor: SURFACE_BG, borderWidth: 2 },
+        lineStyle: { color: SERIES_LINE, width: 2.5, shadowBlur: 9, shadowColor: SERIES_LINE_SHADOW },
+        itemStyle: { color: SERIES_DOT, borderColor: SURFACE_BG, borderWidth: 2 },
         areaStyle: {
           color: {
             type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-            colorStops: [{ offset: 0, color: 'rgba(70,189,255,0.36)' }, { offset: 1, color: 'rgba(38,125,245,0)' }]
+            colorStops: [{ offset: 0, color: SERIES_AREA_TOP }, { offset: 1, color: SERIES_AREA_BOTTOM }]
           }
         }
       }]
@@ -3490,7 +3884,53 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     });
   }
 
+  // ===================== Theme toàn trang =====================
+  function setTheme(theme, persist) {
+    theme = theme === 'light' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    if (persist) { try { localStorage.setItem('spm.theme', theme); } catch (e) {} }
+    var lbl = document.querySelector('#btn-theme .theme-label');
+    if (lbl) lbl.textContent = theme === 'light' ? 'Sáng' : 'Tối';
+    applyChartTheme();
+    // Chart giữ option cũ nên phải vẽ lại để ăn màu mới.
+    if (state.facts.length && !document.getElementById('dashboard-content').hidden) {
+      renderAll();
+      resizeAllChartsSoon();
+    }
+  }
+
+  function initThemeToggle() {
+    setTheme(currentTheme(), false);
+    var btn = document.getElementById('btn-theme');
+    if (btn) btn.addEventListener('click', function () {
+      setTheme(currentTheme() === 'light' ? 'dark' : 'light', true);
+    });
+  }
+
+  // ===================== Hiệu ứng nghiêng 3D theo con trỏ =====================
+  function initTilt3D() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var SEL = '.kpi-tile, .zdp-card';
+    document.addEventListener('pointermove', function (e) {
+      var el = e.target && e.target.closest ? e.target.closest(SEL) : null;
+      if (!el) return;
+      var r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', ((e.clientX - r.left) / r.width).toFixed(3));
+      el.style.setProperty('--my', ((e.clientY - r.top) / r.height).toFixed(3));
+      el.classList.add('tilt3d');
+    }, { passive: true });
+    document.addEventListener('pointerout', function (e) {
+      var el = e.target && e.target.closest ? e.target.closest(SEL) : null;
+      if (!el || (e.relatedTarget && el.contains(e.relatedTarget))) return;
+      el.classList.remove('tilt3d');
+      el.style.removeProperty('--mx');
+      el.style.removeProperty('--my');
+    }, { passive: true });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
+    initThemeToggle();
+    initTilt3D();
     initSidebar();
     initUIHandlers();
     initAuth();        // [V2] kiểm tra phiên; nếu hợp lệ → gọi loadHistory() + loadMainData() ở trong
