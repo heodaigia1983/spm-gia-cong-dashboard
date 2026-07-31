@@ -1098,7 +1098,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       var email = document.getElementById('auth-email').value.trim();
       var value = password.value;
       authSetError('');
-      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         authSetError('Vui lòng nhập email hợp lệ');
         return;
       }
