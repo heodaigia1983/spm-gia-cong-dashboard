@@ -213,6 +213,8 @@
   .ms-trigger-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
   .filter-panel-slot{width:100%;}
+  #ms-portal-slot{width:100%;}
+  #ms-portal-slot + .filter-panel-slot{margin-top:22px;}
 
   /* ---------- Zone detail panel ---------- */
   .zone-detail-panel{padding:18px 20px 20px;}
@@ -721,6 +723,8 @@
             Đặt lại bộ lọc
           </button>
         </section>
+
+        <div id="ms-portal-slot"></div>
 
         <div class="filter-panel-slot" id="filter-panel-slot" hidden></div>
 
@@ -2497,7 +2501,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     refreshAllFilterPanels();
     renderAll();
   }
-  function handleHangMucChange() { renderAll(); }
+  function handleHangMucChange() { refreshAllFilterPanels(); renderAll(); }
 
   // Toggle a value in a Set filter used by filterbar. Clicking the same item twice clears it.
   function toggleFilterSet(set, val) {
@@ -2578,10 +2582,10 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     }
 
     trigger.addEventListener('click', function () {
-      var wasOpen = !panel.hidden;
+      var wasOpen = !panel.hidden && panel.isConnected;
       closeAllMultiSelects();
       if (!wasOpen) {
-        document.getElementById('filter-panel-slot').appendChild(panel);
+        document.getElementById('ms-portal-slot').appendChild(panel);
         panel.hidden = false;
         renderOptions();
         searchInput.focus();
@@ -3141,20 +3145,24 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
   function moveFilterChromeTo(viewEl, needsFilter) {
     var fb = document.getElementById('filterbar');
     var slot = document.getElementById('filter-panel-slot');
+    var msSlot = document.getElementById('ms-portal-slot');
     if (!fb || !slot) return;
     if (needsFilter) {
       fb.hidden = false;
       slot.hidden = false;
       if (fb.parentNode !== viewEl) viewEl.insertBefore(fb, viewEl.firstChild);
-      if (slot.parentNode !== viewEl) viewEl.insertBefore(slot, fb.nextSibling);
+      if (msSlot && msSlot.parentNode !== viewEl) viewEl.insertBefore(msSlot, fb.nextSibling);
+      if (slot.parentNode !== viewEl) viewEl.insertBefore(slot, (msSlot || fb).nextSibling);
     } else {
       fb.hidden = true;
       slot.hidden = true;
+      closeAllMultiSelects();
       // re-parent về #dashboard-content để lần sau move dễ
       var host = document.getElementById('dashboard-content');
       if (host) {
         if (fb.parentNode !== host) host.insertBefore(fb, host.firstChild);
-        if (slot.parentNode !== host) host.insertBefore(slot, fb.nextSibling);
+        if (msSlot && msSlot.parentNode !== host) host.insertBefore(msSlot, fb.nextSibling);
+        if (slot.parentNode !== host) host.insertBefore(slot, (msSlot || fb).nextSibling);
       }
     }
   }
