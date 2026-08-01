@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-08-01T02:54:21.133Z",
+    "updatedAt": "2026-08-01T02:56:37.067Z",
     "updatedBy": "heodaigia1983@gmail.com",
     "version": 1
   },
@@ -57,7 +57,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Support, Bracing, LP, Column Stud,… Zone 3",
       "zone": null,
-      "phanBoTan": 101,
+      "phanBoTan": 100,
       "phanBoCK": 101,
       "ghiChu": ""
     },
@@ -81,7 +81,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Gutter Frame Zone 3",
       "zone": null,
-      "phanBoTan": 111,
+      "phanBoTan": 98,
       "phanBoCK": 111,
       "ghiChu": ""
     },
@@ -97,7 +97,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Skylight Zone 3",
       "zone": null,
-      "phanBoTan": 30,
+      "phanBoTan": 10.53,
       "phanBoCK": 30,
       "ghiChu": ""
     },
@@ -121,7 +121,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Alu Support Zone 3",
       "zone": null,
-      "phanBoTan": 176,
+      "phanBoTan": 180,
       "phanBoCK": 176,
       "ghiChu": ""
     },
@@ -282,6 +282,14 @@
       "hangMuc": "Hệ xà gồ mái Zone 2",
       "zone": null,
       "phanBoTan": 380,
+      "phanBoCK": 0,
+      "ghiChu": ""
+    },
+    {
+      "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
+      "hangMuc": "Hệ xà gồ mái Zone 3",
+      "zone": null,
+      "phanBoTan": 600,
       "phanBoCK": 0,
       "ghiChu": ""
     }
