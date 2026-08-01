@@ -1,7 +1,7 @@
 {
   "meta": {
-    "updatedAt": "2026-07-31T07:01:35+00:00",
-    "updatedBy": "migrate_phanbo.py",
+    "updatedAt": "2026-08-01T02:52:25.282Z",
+    "updatedBy": "heodaigia1983@gmail.com",
     "version": 1
   },
   "items": [
@@ -9,7 +9,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Support, Bracing, LP, Column Stud,… Zone 1",
       "zone": null,
-      "phanBoTan": 168.0,
+      "phanBoTan": 168,
       "phanBoCK": 168,
       "ghiChu": ""
     },
@@ -17,7 +17,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Support, Bracing, LP, Column Stud,… Zone 2",
       "zone": null,
-      "phanBoTan": 106.0,
+      "phanBoTan": 140,
       "phanBoCK": 106,
       "ghiChu": ""
     },
@@ -25,7 +25,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Alu Support Zone 1",
       "zone": null,
-      "phanBoTan": 159.0,
+      "phanBoTan": 159,
       "phanBoCK": 159,
       "ghiChu": ""
     },
@@ -33,7 +33,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Gutter Frame Zone 1",
       "zone": null,
-      "phanBoTan": 79.0,
+      "phanBoTan": 79,
       "phanBoCK": 79,
       "ghiChu": ""
     },
@@ -41,7 +41,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Alu Support Zone 2",
       "zone": null,
-      "phanBoTan": 162.0,
+      "phanBoTan": 145,
       "phanBoCK": 162,
       "ghiChu": ""
     },
@@ -49,7 +49,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Gutter Frame Zone 2",
       "zone": null,
-      "phanBoTan": 104.0,
+      "phanBoTan": 70,
       "phanBoCK": 104,
       "ghiChu": ""
     },
@@ -57,7 +57,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Support, Bracing, LP, Column Stud,… Zone 3",
       "zone": null,
-      "phanBoTan": 101.0,
+      "phanBoTan": 101,
       "phanBoCK": 101,
       "ghiChu": ""
     },
@@ -65,7 +65,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Skylight Zone 4",
       "zone": null,
-      "phanBoTan": 30.0,
+      "phanBoTan": 30,
       "phanBoCK": 30,
       "ghiChu": ""
     },
@@ -73,7 +73,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Skylight Zone 1",
       "zone": null,
-      "phanBoTan": 31.0,
+      "phanBoTan": 31,
       "phanBoCK": 31,
       "ghiChu": ""
     },
@@ -81,7 +81,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Gutter Frame Zone 3",
       "zone": null,
-      "phanBoTan": 111.0,
+      "phanBoTan": 111,
       "phanBoCK": 111,
       "ghiChu": ""
     },
@@ -89,7 +89,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Skylight Zone 2",
       "zone": null,
-      "phanBoTan": 40.0,
+      "phanBoTan": 21,
       "phanBoCK": 40,
       "ghiChu": ""
     },
@@ -97,7 +97,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Skylight Zone 3",
       "zone": null,
-      "phanBoTan": 30.0,
+      "phanBoTan": 30,
       "phanBoCK": 30,
       "ghiChu": ""
     },
@@ -105,7 +105,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Support, Bracing, LP, Column Stud,… Zone 4",
       "zone": null,
-      "phanBoTan": 101.0,
+      "phanBoTan": 101,
       "phanBoCK": 101,
       "ghiChu": ""
     },
@@ -113,7 +113,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Gutter Frame Zone 4",
       "zone": null,
-      "phanBoTan": 111.0,
+      "phanBoTan": 111,
       "phanBoCK": 111,
       "ghiChu": ""
     },
@@ -121,7 +121,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Alu Support Zone 3",
       "zone": null,
-      "phanBoTan": 176.0,
+      "phanBoTan": 176,
       "phanBoCK": 176,
       "ghiChu": ""
     },
@@ -129,7 +129,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Alu Support Zone 4",
       "zone": null,
-      "phanBoTan": 176.0,
+      "phanBoTan": 176,
       "phanBoCK": 176,
       "ghiChu": ""
     },
@@ -137,7 +137,7 @@
       "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
       "hangMuc": "Hệ mái cố định",
       "zone": null,
-      "phanBoTan": 5948.0,
+      "phanBoTan": 5948,
       "phanBoCK": 5948,
       "ghiChu": ""
     },
@@ -145,7 +145,7 @@
       "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
       "hangMuc": "Hệ Super Truss MB1",
       "zone": null,
-      "phanBoTan": 4535.0,
+      "phanBoTan": 4535,
       "phanBoCK": 4535,
       "ghiChu": ""
     },
@@ -153,7 +153,7 @@
       "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
       "hangMuc": "Hệ Super Truss MB2",
       "zone": null,
-      "phanBoTan": 4438.0,
+      "phanBoTan": 4438,
       "phanBoCK": 4438,
       "ghiChu": ""
     },
@@ -161,7 +161,7 @@
       "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
       "hangMuc": "Hệ giàn nâng",
       "zone": null,
-      "phanBoTan": 2498.0,
+      "phanBoTan": 2498,
       "phanBoCK": 2498,
       "ghiChu": ""
     },
@@ -169,7 +169,7 @@
       "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
       "hangMuc": "Hệ mái di động",
       "zone": null,
-      "phanBoTan": 2377.0,
+      "phanBoTan": 2377,
       "phanBoCK": 2377,
       "ghiChu": ""
     },
@@ -177,7 +177,7 @@
       "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
       "hangMuc": "Hệ chân Pin",
       "zone": null,
-      "phanBoTan": 1453.0,
+      "phanBoTan": 1453,
       "phanBoCK": 1453,
       "ghiChu": ""
     },
@@ -185,7 +185,7 @@
       "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
       "hangMuc": "Hệ giàn nâng (gia cường)",
       "zone": null,
-      "phanBoTan": 1020.0,
+      "phanBoTan": 1020,
       "phanBoCK": 1020,
       "ghiChu": ""
     },
@@ -193,7 +193,7 @@
       "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
       "hangMuc": "Hệ giàn Support",
       "zone": null,
-      "phanBoTan": 830.0,
+      "phanBoTan": 830,
       "phanBoCK": 830,
       "ghiChu": ""
     },
@@ -201,7 +201,7 @@
       "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
       "hangMuc": "Hệ móc bạt",
       "zone": null,
-      "phanBoTan": 67.0,
+      "phanBoTan": 67,
       "phanBoCK": 67,
       "ghiChu": ""
     },
@@ -209,7 +209,7 @@
       "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
       "hangMuc": "Hệ giàn nâng",
       "zone": null,
-      "phanBoTan": 16016.0,
+      "phanBoTan": 16016,
       "phanBoCK": 16016,
       "ghiChu": ""
     },
@@ -217,7 +217,7 @@
       "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
       "hangMuc": "He Super Truss (MB1+MB2 - CHUA TACH, xem ghi chu)",
       "zone": null,
-      "phanBoTan": 20363.0,
+      "phanBoTan": 20363,
       "phanBoCK": 20363,
       "ghiChu": ""
     },
@@ -225,7 +225,7 @@
       "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
       "hangMuc": "Hệ chân PIN",
       "zone": null,
-      "phanBoTan": 4873.0,
+      "phanBoTan": 4873,
       "phanBoCK": 4873,
       "ghiChu": ""
     },
@@ -233,7 +233,7 @@
       "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
       "hangMuc": "Hệ giàn support",
       "zone": null,
-      "phanBoTan": 2180.0,
+      "phanBoTan": 2180,
       "phanBoCK": 2180,
       "ghiChu": ""
     },
@@ -241,7 +241,7 @@
       "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
       "hangMuc": "Hệ giàn tổ hơp",
       "zone": null,
-      "phanBoTan": 591.0,
+      "phanBoTan": 591,
       "phanBoCK": 591,
       "ghiChu": ""
     },
@@ -249,7 +249,7 @@
       "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
       "hangMuc": "Hệ ống đỡ bạt",
       "zone": null,
-      "phanBoTan": 943.0,
+      "phanBoTan": 943,
       "phanBoCK": 943,
       "ghiChu": ""
     },
@@ -257,7 +257,7 @@
       "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
       "hangMuc": "Hệ Mái Cố Định",
       "zone": null,
-      "phanBoTan": 5470.0,
+      "phanBoTan": 5470,
       "phanBoCK": 5470,
       "ghiChu": ""
     },
@@ -265,7 +265,7 @@
       "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
       "hangMuc": "Hệ Cột Ring Beam",
       "zone": null,
-      "phanBoTan": 3416.0,
+      "phanBoTan": 3416,
       "phanBoCK": 3416,
       "ghiChu": ""
     },
@@ -273,8 +273,16 @@
       "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
       "hangMuc": "Hệ Ring Beam",
       "zone": null,
-      "phanBoTan": 1205.0,
+      "phanBoTan": 1205,
       "phanBoCK": 1205,
+      "ghiChu": ""
+    },
+    {
+      "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
+      "hangMuc": "Hệ xà gồ mái Zone 2",
+      "zone": null,
+      "phanBoTan": 385,
+      "phanBoCK": 0,
       "ghiChu": ""
     }
   ]
