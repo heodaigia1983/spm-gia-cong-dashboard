@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-08-01T02:52:25.282Z",
+    "updatedAt": "2026-08-01T02:54:21.133Z",
     "updatedBy": "heodaigia1983@gmail.com",
     "version": 1
   },
@@ -41,7 +41,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Alu Support Zone 2",
       "zone": null,
-      "phanBoTan": 145,
+      "phanBoTan": 140,
       "phanBoCK": 162,
       "ghiChu": ""
     },
@@ -89,7 +89,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ Skylight Zone 2",
       "zone": null,
-      "phanBoTan": 21,
+      "phanBoTan": 20.45,
       "phanBoCK": 40,
       "ghiChu": ""
     },
@@ -281,7 +281,7 @@
       "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
       "hangMuc": "Hệ xà gồ mái Zone 2",
       "zone": null,
-      "phanBoTan": 385,
+      "phanBoTan": 380,
       "phanBoCK": 0,
       "ghiChu": ""
     }
