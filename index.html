@@ -3007,7 +3007,16 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     return btoa(bin);
   }
 
-  function ghPushPhanBo(btn) {
+  // Đánh dấu lỗi token để .catch biết cần xoá token rồi hỏi lại.
+  function ghBadToken_(status) {
+    var e = new Error(status === 401
+      ? 'Token sai hoặc đã hết hạn'
+      : 'Token thiếu quyền Contents: Read and write');
+    e.badToken = true;
+    return e;
+  }
+
+  function ghPushPhanBo(btn, retried) {
     var token = ghGetToken();
     if (!token) {
       ghAskToken().then(function (t) {
@@ -3035,7 +3044,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     // Lấy sha bản hiện tại để ghi đè đúng phiên bản.
     fetch(url + '?ref=' + GH_BRANCH, { headers: ghHeaders(token) })
       .then(function (r) {
-        if (r.status === 401 || r.status === 403) throw new Error('Token sai hoặc thiếu quyền Contents:write');
+        if (r.status === 401 || r.status === 403) throw ghBadToken_(r.status);
         if (r.status === 404) return { sha: null };   // file chưa có -> tạo mới
         if (!r.ok) throw new Error('Đọc file lỗi HTTP ' + r.status);
         return r.json();
@@ -3050,6 +3059,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
         return fetch(url, { method: 'PUT', headers: ghHeaders(token), body: JSON.stringify(body) });
       })
       .then(function (r) {
+        if (r.status === 401 || r.status === 403) throw ghBadToken_(r.status);
         if (r.status === 409) throw new Error('File vừa đổi trên GitHub — tải lại trang rồi lưu lại');
         if (!r.ok) return r.json().then(function (e) {
           throw new Error(e && e.message ? e.message : 'Ghi lỗi HTTP ' + r.status);
@@ -3067,6 +3077,17 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
         done('Đã lưu lên GitHub · trang web cập nhật sau ~1 phút');
       })
       .catch(function (err) {
+        // Token hỏng: xoá khỏi máy rồi mở lại hộp nhập. Không có nhánh này thì
+        // ghGetToken() vẫn trả về token hỏng, lần bấm sau không bao giờ hỏi lại.
+        if (err && err.badToken && !retried) {
+          try { localStorage.removeItem(GH_TOKEN_KEY); } catch (e) {}
+          done(err.message + ' — nhập lại token');
+          ghAskToken().then(function (t) {
+            if (!t) { showToast('Chưa có token — huỷ'); return; }
+            ghPushPhanBo(btn, true);
+          });
+          return;
+        }
         done('Lỗi: ' + (err && err.message ? err.message : err));
       });
   }
