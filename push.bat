@@ -4,6 +4,12 @@ REM Chi push - viec chuan hoa + gop JSON + commit da lam san trong chat.
 cd /d D:\SPM\dashboard
 echo ==== %date% %time% ==== > push.log
 REM Keo ve commit phan bo do dashboard ghi thang len GitHub, tranh push bi reject.
-git pull --rebase origin main >> push.log 2>&1
+git pull --rebase --autostash origin main >> push.log 2>&1
+if errorlevel 1 (
+  echo LOI pull --rebase - huy rebase de repo khong bi ket. >> push.log
+  git rebase --abort >> push.log 2>&1
+  echo exit=2 >> push.log
+  exit /b 2
+)
 git push origin main >> push.log 2>&1
 echo exit=%errorlevel% >> push.log
