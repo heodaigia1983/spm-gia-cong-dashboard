@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-08-04T02:59:06.279Z",
+    "updatedAt": "2026-08-04T09:44:29.876Z",
     "updatedBy": "heodaigia1983@gmail.com",
     "version": 1
   },
@@ -290,6 +290,62 @@
       "hangMuc": "Hệ xà gồ mái Zone 3",
       "zone": null,
       "phanBoTan": 617.11,
+      "phanBoCK": 0,
+      "ghiChu": ""
+    },
+    {
+      "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
+      "hangMuc": "Hệ chân PIN",
+      "zone": null,
+      "phanBoTan": 5090,
+      "phanBoCK": 0,
+      "ghiChu": ""
+    },
+    {
+      "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
+      "hangMuc": "Hệ giàn nâng",
+      "zone": null,
+      "phanBoTan": 12860,
+      "phanBoCK": 0,
+      "ghiChu": ""
+    },
+    {
+      "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
+      "hangMuc": "Hệ giàn support",
+      "zone": null,
+      "phanBoTan": 2031,
+      "phanBoCK": 0,
+      "ghiChu": ""
+    },
+    {
+      "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
+      "hangMuc": "Hệ giàn tổ hơp",
+      "zone": null,
+      "phanBoTan": 750,
+      "phanBoCK": 0,
+      "ghiChu": ""
+    },
+    {
+      "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
+      "hangMuc": "Hệ ống đỡ bạt",
+      "zone": null,
+      "phanBoTan": 940,
+      "phanBoCK": 0,
+      "ghiChu": ""
+    },
+    {
+      "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
+      "hangMuc": "Super Truss MB1",
+      "zone": null,
+      "phanBoTan": 11338,
+      "phanBoCK": 0,
+      "ghiChu": ""
+    },
+    {
+      "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
+      "hangMuc": "Super Truss MB2",
+      "zone": null,
+      "phanBoTan": 7134,
       "phanBoCK": 0,
       "ghiChu": ""
     }
