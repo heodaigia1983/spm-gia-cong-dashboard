@@ -212,6 +212,23 @@
   .filter-field{position:relative;display:flex;flex-direction:column;gap:6px;min-width:184px;}
   .filter-field > label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
 
+  /* ===== Bộ lọc nhanh (preset chips) ===== */
+  .preset-row{flex:0 0 100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+  .preset-row-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-right:4px;}
+  .preset-chip{
+    display:inline-flex;align-items:center;gap:7px;
+    background:rgba(143,198,255,.055);border:1px solid rgba(154,216,255,.18);
+    color:var(--text-secondary);font-size:12.5px;font-weight:650;
+    padding:6px 13px;border-radius:999px;cursor:pointer;white-space:nowrap;
+    transition:border-color .13s ease,background .13s ease,color .13s ease;
+  }
+  .preset-chip:hover{border-color:var(--accent-light);color:var(--text-primary);}
+  .preset-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 0 3px var(--accent-soft);}
+  .preset-chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.7;flex:none;}
+  html[data-theme="light"] .preset-chip{background:#f2f6fc;border-color:#d8e3f2;}
+  html[data-theme="light"] .preset-chip:hover{background:#e9f1fb;}
+  html[data-theme="light"] .preset-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+
   .ms-trigger{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
     background:var(--bg-field);border:1px solid var(--border-strong);color:var(--text-primary);
@@ -1297,6 +1314,7 @@
 
         <!-- shared filterbar — moved by JS into the active view's filter-slot -->
         <section class="section filterbar" id="filterbar" hidden>
+          <div class="preset-row" id="preset-row"></div>
           <div class="filter-field" id="filter-project"></div>
           <div class="filter-field" id="filter-zone"></div>
           <div class="filter-field" id="filter-hangmuc"></div>
@@ -3678,6 +3696,151 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       computeHangMucOptions, function () { return state.filters.hangmucs; }, hmLabel, handleHangMucChange);
   }
 
+  // ===================== Bộ lọc nhanh (preset) =====================
+  // Thêm/bớt preset: chỉ cần sửa mảng PRESETS bên dưới.
+  // hangmucs phải trùng TUYỆT ĐỐI với giá trị trong report_data.json.
+  var PRESETS = [
+    {
+      id: 'pqia-z2',
+      label: 'PQIA · Zone 2',
+      projects: ['10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC'],
+      hangmucs: [
+        'Alu Support Zone 2',
+        'Gutter Frame Zone 2',
+        'Hệ Skylight Zone 2',
+        'Hệ Support, Bracing, LP, Column Stud,… Zone 2',
+        'Hệ xà gồ mái Zone 2',
+        NULL_KEY
+      ]
+    },
+    {
+      id: 'pqia-z3',
+      label: 'PQIA · Zone 3',
+      projects: ['10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC'],
+      hangmucs: [
+        'Alu Support Zone 3',
+        'Gutter Frame Zone 3',
+        'Hệ Skylight Zone 3',
+        'Hệ Support, Bracing, LP, Column Stud,… Zone 3',
+        'Hệ xà gồ mái Zone 3',
+        NULL_KEY
+      ]
+    },
+    {
+      id: 'hung-vuong',
+      label: 'Hùng Vương',
+      projects: ['10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG'],
+      hangmucs: [
+        'Biện pháp',
+        'Biện pháp công trường',
+        'Hệ chân PIN',
+        'Hệ giàn nâng',
+        'Hệ giàn support',
+        'Hệ giàn tổ hơp',
+        'Hệ ống đỡ bạt',
+        'Super Truss MB1',
+        'Super Truss MB2',
+        NULL_KEY
+      ]
+    }
+  ];
+
+  function nfc(s) { return (s == null ? '' : String(s)).normalize('NFC'); }
+
+  // report_data.json có vài chuỗi ở dạng Unicode tổ hợp ('Hê' + U+0323 = 'Hệ').
+  // PRESETS khai báo chuỗi NFC "đẹp" -> ánh xạ ngược về key thật trong facts.
+  function resolveList(list, actualValues) {
+    var idx = new Map();
+    actualValues.forEach(function (v) { if (!idx.has(nfc(v))) idx.set(nfc(v), v); });
+    var out = [];
+    (list || []).forEach(function (w) {
+      var hit = idx.get(nfc(w));
+      if (hit != null && out.indexOf(hit) === -1) out.push(hit);
+    });
+    return out;
+  }
+
+  function resolvePreset(p) {
+    if (p._rv === state.facts && p._resolved) return p._resolved;   // cache theo lần nạp dữ liệu
+    var pool = state.allProjects && state.allProjects.length
+      ? state.allProjects
+      : state.facts.map(function (f) { return f.project; });
+    var projects = resolveList(p.projects, pool);
+    var pset = new Set(projects);
+    var hmPool = state.facts
+      .filter(function (f) { return !pset.size || pset.has(f.project); })
+      .map(function (f) { return f.hangMuc; });
+    p._resolved = { projects: projects, hangmucs: resolveList(p.hangmucs, hmPool) };
+    p._rv = state.facts;
+    return p._resolved;
+  }
+
+  function presetMatches(p) {
+    var f = state.filters, r = resolvePreset(p);
+    if (!r.hangmucs.length) return false;
+    if (f.projects.size !== r.projects.length || f.hangmucs.size !== r.hangmucs.length) return false;
+    if (f.zones.size) return false;
+    if (f.includeBienPhap !== !!p.includeBienPhap) return false;
+    if (f.lifeState !== (p.lifeState || 'ALL')) return false;
+    for (var i = 0; i < r.projects.length; i++) if (!f.projects.has(r.projects[i])) return false;
+    for (var j = 0; j < r.hangmucs.length; j++) if (!f.hangmucs.has(r.hangmucs[j])) return false;
+    return true;
+  }
+
+  function syncFilterControls() {
+    var tb = document.getElementById('toggle-bienphap');
+    if (tb) {
+      tb.classList.toggle('on', state.filters.includeBienPhap);
+      tb.setAttribute('aria-pressed', String(state.filters.includeBienPhap));
+    }
+    document.querySelectorAll('#seg-lifestate .seg-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.value === state.filters.lifeState);
+    });
+  }
+
+  function applyPreset(p) {
+    // Bấm lại chip đang active => bỏ lọc
+    if (presetMatches(p)) { resetFilters(true); return; }
+    var f = state.filters, r = resolvePreset(p);
+    if (!r.hangmucs.length) { console.warn('[Preset] Không khớp hạng mục nào:', p.id); return; }
+    f.projects.clear();  r.projects.forEach(function (v) { f.projects.add(v); });
+    f.zones.clear();
+    f.hangmucs.clear();  r.hangmucs.forEach(function (v) { f.hangmucs.add(v); });
+    f.includeBienPhap = !!p.includeBienPhap;
+    f.lifeState = p.lifeState || 'ALL';
+    syncFilterControls();
+    refreshAllFilterPanels();
+    renderAll();
+  }
+
+  function buildPresetRow() {
+    var row = document.getElementById('preset-row');
+    if (!row) return;
+    var html = '<span class="preset-row-label">Bộ lọc nhanh</span>';
+    PRESETS.forEach(function (p) {
+      html += '<button type="button" class="preset-chip" data-preset="' + p.id + '">' +
+                '<span class="dot"></span>' + escapeHtml(p.label) +
+              '</button>';
+    });
+    row.innerHTML = html;
+    row.querySelectorAll('.preset-chip').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var p = PRESETS.filter(function (x) { return x.id === btn.dataset.preset; })[0];
+        if (p) applyPreset(p);
+      });
+    });
+    updatePresetChips();
+  }
+
+  function updatePresetChips() {
+    var row = document.getElementById('preset-row');
+    if (!row) return;
+    row.querySelectorAll('.preset-chip').forEach(function (btn) {
+      var p = PRESETS.filter(function (x) { return x.id === btn.dataset.preset; })[0];
+      btn.classList.toggle('active', !!p && presetMatches(p));
+    });
+  }
+
   function resetFilters(rerender) {
     state.filters.projects.clear();
     state.filters.zones.clear();
@@ -3732,6 +3895,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
 
   function renderAll() {
     var facts = getFilteredFacts();
+    updatePresetChips();
     flashRefresh();
     renderKPIs(facts);
     renderChartTopHangMuc(facts);
@@ -4518,6 +4682,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     });
 
     document.getElementById('btn-reset-filters').addEventListener('click', function () { resetFilters(true); });
+    buildPresetRow();
 
     document.querySelectorAll('#detail-table th[data-sort]').forEach(function (th) {
       th.addEventListener('click', function () {
