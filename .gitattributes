@@ -1,0 +1,17 @@
+# Thong nhat kieu xuong dong, tranh git bao "ca file thay doi" gia.
+# Ly do: dashboard web ghi phanbo.json len GitHub bang LF, con Windows
+# (core.autocrlf=true) checkout ra CRLF -> git thay khac -> autostash ->
+# xung dot khi pull. Chot LF cho du lieu, CRLF cho file .bat cua Windows.
+* text=auto
+
+*.json text eol=lf
+*.html text eol=lf
+*.js   text eol=lf
+*.py   text eol=lf
+*.md   text eol=lf
+
+*.bat text eol=crlf
+
+*.xlsx binary
+*.png  binary
+*.jpg  binary
