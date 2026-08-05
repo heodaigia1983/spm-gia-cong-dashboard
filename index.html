@@ -166,6 +166,9 @@
   /* ---------- scroll area ---------- */
   .scroll-area{flex:1;overflow-y:auto;padding:22px 28px 64px;}
   .section{scroll-margin-top:14px;}
+  /* Cot Du an dung rowSpan rat lon -> ten bi day xuong giua, ngoai tam nhin. Ghim len dau nhom. */
+  .phanbo-table td.proj-cell{vertical-align:top;}
+  .phanbo-table td.proj-cell > span{position:sticky;top:8px;display:block;}
   .section + .section,.section + .filter-panel-slot,.filter-panel-slot + .section,.section-slot + .section{margin-top:22px;}
 
   /* ---------- hero ---------- */
@@ -1499,7 +1502,29 @@
                 <h3>S-curve khối lượng theo ngày</h3>
                 <span class="chart-sub" id="history-sub"></span>
               </div>
-              <div class="chart-body chart-body-flat" id="chart-history"></div>
+              <div class="chart-body chart-body-tall" id="chart-history"></div>
+            </div>
+          </section>
+          <section class="section kpi-grid" id="history-kpis" hidden>
+            <div class="kpi-tile">
+              <div class="kpi-label">Tăng trong kỳ</div>
+              <div class="kpi-value" id="hist-kpi-delta">0</div>
+              <div class="kpi-unit">tấn</div>
+            </div>
+            <div class="kpi-tile">
+              <div class="kpi-label">Trung bình mỗi ngày</div>
+              <div class="kpi-value" id="hist-kpi-avg">0</div>
+              <div class="kpi-unit">tấn/ngày</div>
+            </div>
+            <div class="kpi-tile">
+              <div class="kpi-label">Ngày ban hành nhiều nhất</div>
+              <div class="kpi-value" id="hist-kpi-best">—</div>
+              <div class="kpi-unit" id="hist-kpi-best-sub">—</div>
+            </div>
+            <div class="kpi-tile">
+              <div class="kpi-label">Số ngày không tăng</div>
+              <div class="kpi-value" id="hist-kpi-flat">0</div>
+              <div class="kpi-unit">ngày</div>
             </div>
           </section>
         </div>
@@ -2192,8 +2217,11 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
 
       // Project column — group span
       var projTd = document.createElement('td');
+      projTd.className = 'proj-cell';
       if (r.project !== lastProject) {
-        projTd.textContent = r.project;
+        var projSpan = document.createElement('span');
+        projSpan.textContent = r.project;
+        projTd.appendChild(projSpan);
         projTd.rowSpan = filtered.filter(function (x) { return x.project === r.project; }).length;
       }
       if (r.project === lastProject) {
@@ -4130,6 +4158,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     var cats = entries.map(function (e) { return e.zone; }).reverse();
     var checkedData = entries.map(function (e) { return e.checked; }).reverse();
     var uncheckedData = entries.map(function (e) { return e.unchecked; }).reverse();
+    var totalData = entries.map(function (e) { return e.total; }).reverse();
 
     var bodyEl = document.getElementById('chart-zone-hold');
     var h = Math.max(360, entries.length * 36);
@@ -4164,8 +4193,10 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
         axisLabel: { color: TEXT_SECONDARY, width: 218, overflow: 'truncate' }
       },
       series: [
-        { name: 'Đã Hold', type: 'bar', stack: 'hold', data: checkedData, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#1f7feb' }, { offset: 1, color: '#59c8ff' }]), borderRadius: [5, 0, 0, 5] }, barMaxWidth: 16 },
-        { name: 'Chưa Hold', type: 'bar', stack: 'hold', data: uncheckedData, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#f18a4e' }, { offset: 1, color: '#ffd07b' }]), borderRadius: [0, 5, 5, 0] }, barMaxWidth: 16 }
+        { name: 'Chưa Hold', type: 'bar', stack: 'hold', data: uncheckedData, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#1f7feb' }, { offset: 1, color: '#59c8ff' }]), borderRadius: [5, 0, 0, 5] }, barMaxWidth: 16 },
+        { name: 'Đã Hold', type: 'bar', stack: 'hold', data: checkedData, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#e8663d' }, { offset: 1, color: '#ffb066' }]), borderRadius: [0, 5, 5, 0] }, barMaxWidth: 16,
+          label: { show: true, position: 'right', color: TEXT_SECONDARY, fontSize: 10.5,
+            formatter: function (p) { var t = totalData[p.dataIndex]; return t > 0 ? fmtTon.format(t) : ''; } } }
       ]
     });
   }
@@ -4190,6 +4221,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     card.hidden = false;
     document.getElementById('history-sub').textContent =
       points.length + (points.length === 1 ? ' điểm dữ liệu' : ' ngày');
+    renderHistoryKpis(points);
 
     chartHistory.resize();
     chartHistory.setOption({
@@ -4210,7 +4242,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
         axisLine: { lineStyle: { color: GRID_COLOR } }, axisLabel: { color: AXIS_COLOR }
       },
       yAxis: {
-        type: 'value', axisLabel: { color: AXIS_COLOR, formatter: function (v) { return fmtInt.format(v); } },
+        type: 'value', scale: true,
+        axisLabel: { color: AXIS_COLOR, formatter: function (v) { return fmtInt.format(v); } },
         splitLine: { lineStyle: { color: GRID_COLOR } }
       },
       series: [{
@@ -4226,6 +4259,29 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
         }
       }]
     });
+  }
+
+  // Tóm tắt biến động của chuỗi lịch sử — lấp khoảng trống view Lịch sử và trả lời
+  // câu hỏi thực tế: kỳ này ban hành thêm bao nhiêu, ngày nào mạnh nhất, bao nhiêu ngày đứng yên.
+  function renderHistoryKpis(points) {
+    var box = document.getElementById('history-kpis');
+    if (!box) return;
+    if (!points || points.length < 2) { box.hidden = true; return; }
+    box.hidden = false;
+
+    var deltas = [];
+    for (var i = 1; i < points.length; i++) {
+      deltas.push({ date: points[i].date, d: points[i].ton - points[i - 1].ton });
+    }
+    var total = points[points.length - 1].ton - points[0].ton;
+    var best = deltas.reduce(function (a, b) { return b.d > a.d ? b : a; }, deltas[0]);
+    var flat = deltas.filter(function (x) { return Math.abs(x.d) < 0.005; }).length;
+
+    document.getElementById('hist-kpi-delta').textContent = fmtTon.format(total);
+    document.getElementById('hist-kpi-avg').textContent = fmtTon.format(total / deltas.length);
+    document.getElementById('hist-kpi-best').textContent = best.date || '—';
+    document.getElementById('hist-kpi-best-sub').textContent = '+' + fmtTon.format(best.d) + ' tấn';
+    document.getElementById('hist-kpi-flat').textContent = String(flat);
   }
 
   // ===================== Bảng chi tiết =====================
@@ -4558,8 +4614,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
         }
       },
       xAxis: {
-        type: 'value',
-        axisLabel: { color: AXIS_COLOR, formatter: function (v) { return fmtInt.format(v); } },
+        type: 'value', min: 0, max: 100,
+        axisLabel: { color: AXIS_COLOR, formatter: function (v) { return v + '%'; } },
         splitLine: { lineStyle: { color: GRID_COLOR } }
       },
       yAxis: {
@@ -4571,13 +4627,21 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       series: [
         {
           name: 'Đã ban hành', type: 'bar', stack: 'x',
-          data: rows.map(function (r) { return Math.min(r.shop, r.pb); }),
-          itemStyle: { color: COLOR_ACCENT, borderRadius: [4, 0, 0, 4] },
+          data: rows.map(function (r) {
+            var full = r.pct >= 100;
+            return {
+              value: Math.min(100, r.pct),
+              itemStyle: {
+                color: full ? '#16c79a' : COLOR_ACCENT,
+                borderRadius: full ? [4, 4, 4, 4] : [4, 0, 0, 4]
+              }
+            };
+          }),
           barWidth: 15
         },
         {
           name: 'Còn lại', type: 'bar', stack: 'x',
-          data: rows.map(function (r) { return r.remain; }),
+          data: rows.map(function (r) { return Math.max(0, 100 - r.pct); }),
           itemStyle: { color: COLOR_WARN, opacity: .42, borderRadius: [0, 4, 4, 0] },
           label: {
             show: true, position: 'right', color: TEXT_SECONDARY, fontSize: 11,
