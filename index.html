@@ -4433,9 +4433,14 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     if (needsFilter) {
       fb.hidden = false;
       slot.hidden = false;
-      if (fb.parentNode !== viewEl) viewEl.insertBefore(fb, viewEl.firstChild);
-      if (msSlot && msSlot.parentNode !== viewEl) viewEl.insertBefore(msSlot, fb.nextSibling);
-      if (slot.parentNode !== viewEl) viewEl.insertBefore(slot, (msSlot || fb).nextSibling);
+      // Banner tiêu đề (nếu view có) phải đứng trên cùng — bộ lọc xếp ngay dưới nó.
+      var hero = viewEl.querySelector('#section-overview');
+      var anchor = (hero && hero.parentNode === viewEl) ? hero.nextSibling : viewEl.firstChild;
+      if (fb.parentNode !== viewEl || fb.previousSibling !== (anchor === viewEl.firstChild ? null : hero)) {
+        viewEl.insertBefore(fb, anchor);
+      }
+      if (msSlot && msSlot.previousSibling !== fb) viewEl.insertBefore(msSlot, fb.nextSibling);
+      if (slot.previousSibling !== (msSlot || fb)) viewEl.insertBefore(slot, (msSlot || fb).nextSibling);
     } else {
       fb.hidden = true;
       slot.hidden = true;
