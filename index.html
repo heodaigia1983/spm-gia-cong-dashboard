@@ -1853,8 +1853,10 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     var dropdown = document.getElementById('auth-dropdown');
     var logout = document.getElementById('auth-logout');
     var session = authGetSession();
-    if (session) { authSetUser(session); authHideOverlay(); authStartDashboard(); }
+    if (session) { authSetUser(session); authHideOverlay(); }
     else authShowOverlay();
+    // Tải song song ngay, không đợi đăng nhập — để 4 bước phản ánh tiến trình thật.
+    authStartDashboard();
     if (eye) eye.addEventListener('click', function () {
       var shown = password.type === 'text';
       password.type = shown ? 'password' : 'text';
