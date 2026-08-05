@@ -166,6 +166,12 @@
   /* ---------- scroll area ---------- */
   .scroll-area{flex:1;overflow-y:auto;padding:22px 28px 64px;}
   .section{scroll-margin-top:14px;}
+  /* Hành động huỷ (Bỏ nháp) phải chìm hơn các nút chính bên cạnh. */
+  .btn-quiet{opacity:.62;}
+  .btn-quiet:hover{opacity:1;}
+  /* % đạt: đọc được trạng thái ngay bằng màu, khỏi phải nhẩm so với 100%. */
+  #detail-table tbody td.pct-over{color:#16c79a;font-weight:700;}
+  #detail-table tbody td.pct-low{color:var(--warn);font-weight:700;}
   /* Cot Du an dung rowSpan rat lon -> ten bi day xuong giua, ngoai tam nhin. Ghim len dau nhom. */
   .phanbo-table td.proj-cell{vertical-align:top;}
   .phanbo-table td.proj-cell > span{position:sticky;top:8px;display:block;}
@@ -459,7 +465,9 @@
     padding:7px 12px;border-radius:var(--radius-btn);font-size:13px;min-width:230px;outline:none;
   }
   #table-search:focus{border-color:var(--accent-light);}
-  .table-scroll{max-height:460px;overflow:auto;border-radius:6px;border:1px solid var(--border);}
+  /* Trước đây max-height 460px tạo thanh cuộn thứ hai lồng trong cuộn trang. Để bảng chạy hết
+     chiều cao tự nhiên, chỉ giữ cuộn ngang khi bảng rộng hơn khung. */
+  .table-scroll{overflow-x:auto;overflow-y:visible;border-radius:6px;border:1px solid var(--border);}
   /* Sticky TỔNG row when searching/sorting */
   #detail-table tbody tr.total-row td{
     position:sticky;bottom:0;z-index:2;background:rgba(14,22,46,.97);
@@ -1555,7 +1563,7 @@
               <button type="button" class="btn btn-secondary" id="phanbo-btn-download">Tải phanbo.json</button>
               <button type="button" class="btn btn-secondary" id="phanbo-btn-copy">Copy JSON</button>
               <button type="button" class="btn btn-secondary" id="phanbo-btn-excel">Xuất Excel</button>
-              <button type="button" class="btn btn-secondary" id="phanbo-btn-discard" style="color:var(--warn)">Bỏ nháp</button>
+              <button type="button" class="btn btn-secondary btn-quiet" id="phanbo-btn-discard">Bỏ nháp</button>
             </div>
           </div>
 
@@ -1808,7 +1816,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
   var TOP_N_HANGMUC = 15;
 
   // Bảng màu tương phản tốt trên nền glass tối; giữ các trạng thái Hold dễ phân biệt.
-  var CAT_PALETTE = ['#50c5ff', '#6ee7b7', '#b99cff', '#ff9bc7', '#ffd37a', '#69a7ff'];
+  var CAT_PALETTE = ['#3ba7ff', '#22d3ee', '#7c9cff', '#2dd4bf', '#a9c6f0', '#1d7fd1'];
   var COLOR_ACCENT = '#35a4ff'; // xanh cyan — trạng thái Đã Hold / hành động chính
   var COLOR_WARN   = '#ffac5e'; // cam hổ phách — trạng thái Chưa Hold
 
@@ -1821,17 +1829,17 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       tipCss: 'border-radius:10px;box-shadow:0 16px 34px rgba(0,0,0,0.42),inset 0 1px 0 rgba(255,255,255,0.06);padding:10px 13px;backdrop-filter:blur(14px);',
       line: '#58c9ff', lineShadow: 'rgba(57,184,255,.5)', dot: '#81d8ff',
       areaTop: 'rgba(70,189,255,0.36)', areaBottom: 'rgba(38,125,245,0)',
-      palette: ['#50c5ff', '#6ee7b7', '#b99cff', '#ff9bc7', '#ffd37a', '#69a7ff'],
+      palette: ['#3ba7ff', '#22d3ee', '#7c9cff', '#2dd4bf', '#a9c6f0', '#1d7fd1'],
       accent: '#35a4ff', warn: '#ffac5e'
     },
     light: {
-      textPrimary: '#0e1b32', textSecondary: '#3d5375', axis: '#6a7f9f',
+      textPrimary: '#0e1b32', textSecondary: '#33496b', axis: '#4c6484',
       grid: 'rgba(30,74,140,0.12)', surface: 'rgba(255,255,255,0.94)',
       tipBg: 'rgba(255,255,255,0.97)', tipBorder: 'rgba(30,74,140,0.18)',
       tipCss: 'border-radius:10px;box-shadow:0 16px 34px rgba(16,32,64,0.16),inset 0 1px 0 #fff;padding:10px 13px;',
       line: '#1668d6', lineShadow: 'rgba(22,104,214,.30)', dot: '#0f5fc7',
       areaTop: 'rgba(22,104,214,0.26)', areaBottom: 'rgba(22,104,214,0)',
-      palette: ['#1f7fd4', '#129d78', '#7c5cd6', '#d94f8c', '#d69210', '#3b62c9'],
+      palette: ['#1668d6', '#0e8fa8', '#5b7fd4', '#0f8f7f', '#8fb0dd', '#0b4f9e'],
       accent: '#1668d6', warn: '#c2620d'
     }
   };
@@ -4066,7 +4074,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     chartTopHangMuc.setOption({
       backgroundColor: 'transparent',
       animationDuration: 550, animationEasing: 'cubicOut',
-      grid: { left: 190, right: 46, top: 8, bottom: 8, containLabel: true },
+      grid: { left: 190, right: 74, top: 8, bottom: 8, containLabel: true },
       tooltip: {
         trigger: 'axis', axisPointer: { type: 'shadow' },
         backgroundColor: tooltipStyle.backgroundColor, borderColor: tooltipStyle.borderColor,
@@ -4122,15 +4130,17 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
         formatter: function (p) { return '<b>' + p.name + '</b><br/>' + fmtTon.format(p.value) + ' tấn (' + p.percent + '%)'; }
       },
       legend: {
-        show: true, type: 'scroll', orient: 'vertical', left: '66%', right: 4, top: 'middle', bottom: 4,
+        show: true, type: 'scroll', orient: 'vertical', left: '54%', right: 4, top: 'middle', bottom: 4,
         textStyle: { color: TEXT_SECONDARY, fontSize: 11 }, itemWidth: 10, itemHeight: 10,
-        formatter: function (name) { return name.length > 24 ? name.slice(0, 22) + '…' : name; }
+        formatter: function (name) { return name.length > 34 ? name.slice(0, 32) + '…' : name; }
       },
       series: [{
-        type: 'pie', radius: ['50%', '72%'], center: ['30%', '50%'],
-        avoidLabelOverlap: true,
+        type: 'pie', radius: ['50%', '72%'], center: ['26%', '50%'],
+        avoidLabelOverlap: true, minAngle: 3,
         itemStyle: { borderColor: SURFACE_BG, borderWidth: 3, shadowBlur: 8, shadowColor: 'rgba(0,0,0,0.18)' },
-        label: { show: true, color: TEXT_SECONDARY, fontSize: 11, formatter: '{d}%' },
+        // Lát nhỏ (<4%) không gắn nhãn — trước đây 1,53% và 3,27% đè lên nhau; số vẫn xem được ở tooltip.
+        label: { show: true, color: TEXT_SECONDARY, fontSize: 11,
+          formatter: function (p) { return p.percent < 4 ? '' : p.percent + '%'; } },
         labelLine: { length: 8, length2: 8, lineStyle: { color: GRID_COLOR } },
         data: entries.map(function (e) {
           return { name: e.name, value: e.value, itemStyle: { color: state.projectColor.get(e.name) || AXIS_COLOR } };
@@ -4354,30 +4364,37 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       var tr = document.createElement('tr');
       var phDisplay = (r.phanBo == null) ? '—' : fmtTon.format(r.phanBo);
       var pctDisplay = (r.phanBo == null || r.phanBo === 0) ? '—' : (fmtPct.format(r.pctAchieved) + '%');
+      var pctCls = (r.phanBo == null || r.phanBo === 0) ? ''
+        : (r.pctAchieved >= 100 ? ' pct-over' : (r.pctAchieved < 60 ? ' pct-low' : ''));
       tr.innerHTML =
         '<td>' + escapeHtml(r.hang_muc) + '</td>' +
         '<td>' + escapeHtml(r.zone) + '</td>' +
         '<td class="num">' + fmtInt.format(r.count) + '</td>' +
         '<td class="num">' + fmtTon.format(r.ton) + '</td>' +
         '<td class="num">' + phDisplay + '</td>' +
-        '<td class="num">' + pctDisplay + '</td>' +
+        '<td class="num' + pctCls + '">' + pctDisplay + '</td>' +
         '<td class="num">' + fmtPct.format(r.pctHold) + '%</td>';
       frag.appendChild(tr);
     });
     // TỔNG only covers rows visible after the active text search and sort.
     var totalTon = 0, totalCK = 0, totalPB = 0, knownPB = false, totalHoldTon = 0;
+    var tonWithPB = 0, rowsNoPB = 0;   // % đạt chỉ so được trên phần CÓ phân bổ
     data.forEach(function (r) {
       totalTon += r.ton; totalCK += r.count; totalHoldTon += r.ton * (r.pctHold || 0) / 100;
-      if (r.phanBo != null) { totalPB += r.phanBo; knownPB = true; }
+      if (r.phanBo != null) { totalPB += r.phanBo; knownPB = true; tonWithPB += r.ton; }
+      else rowsNoPB++;
     });
-    var totalPct = knownPB && totalPB > 0 ? totalTon / totalPB * 100 : null;
+    // Mẫu số là tổng phân bổ, nên tử số phải là tấn của ĐÚNG những hạng mục có phân bổ.
+    // Lấy totalTon (gồm cả hạng mục chưa phân bổ) sẽ đẩy % lên vô lý, ví dụ 136,5%.
+    var totalPct = knownPB && totalPB > 0 ? tonWithPB / totalPB * 100 : null;
     var totalTr = document.createElement('tr');
     totalTr.className = 'total-row';
     totalTr.innerHTML = '<td colspan="2">TỔNG</td>' +
       '<td class="num">' + fmtInt.format(totalCK) + '</td>' +
       '<td class="num">' + fmtTon.format(totalTon) + '</td>' +
       '<td class="num">' + (knownPB ? fmtTon.format(totalPB) : '—') + '</td>' +
-      '<td class="num">' + (totalPct == null ? '—' : fmtPct.format(totalPct) + '%') + '</td>' +
+      '<td class="num"' + (rowsNoPB > 0 ? ' title="Chỉ tính trên ' + (data.length - rowsNoPB) + '/' + data.length + ' hạng mục đã có phân bổ"' : '') + '>' +
+        (totalPct == null ? '—' : fmtPct.format(totalPct) + '%' + (rowsNoPB > 0 ? ' *' : '')) + '</td>' +
       '<td class="num">' + (totalTon > 0 ? fmtPct.format(totalHoldTon / totalTon * 100) : '0') + '%</td>';
     frag.appendChild(totalTr);
     tbody.appendChild(frag);
@@ -4722,6 +4739,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       },
       yAxis: {
         type: 'value',
+        // Chỉ mở phần âm đúng bằng mức cần thiết, tránh trục tụt xuống -300 khi giá trị âm chỉ vài chục tấn.
+        min: function (v) { return v.min < 0 ? Math.floor(v.min * 1.25 / 10) * 10 : 0; },
         axisLabel: { color: AXIS_COLOR, formatter: function (v) { return fmtInt.format(v); } },
         splitLine: { lineStyle: { color: GRID_COLOR } }
       },
