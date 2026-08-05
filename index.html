@@ -1238,8 +1238,8 @@
     <div class="auth-steps" id="auth-steps">
       <div class="auth-step" data-step="1"><span class="auth-step-dot">1</span><span>Kết nối nguồn dữ liệu…</span></div>
       <div class="auth-step" data-step="2"><span class="auth-step-dot">2</span><span>Đọc report_data.json…</span></div>
-      <div class="auth-step" data-step="3"><span class="auth-step-dot">3</span><span>Đọc lịch sử &amp; phân bổ…</span></div>
-      <div class="auth-step" data-step="4"><span class="auth-step-dot">4</span><span>Dựng dashboard…</span></div>
+      <div class="auth-step" data-step="3"><span class="auth-step-dot">3</span><span>Dựng dashboard…</span></div>
+      <div class="auth-step" data-step="4"><span class="auth-step-dot">4</span><span>Đọc lịch sử &amp; phân bổ…</span></div>
     </div>
     <form id="auth-form" autocomplete="off" novalidate>
       <div class="auth-field">
@@ -1816,12 +1816,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
   function authMarkStep(name) {
     if (name === 'connect') { authSetStep(1, 'done'); authSetStep(2, 'active'); }
     else if (name === 'data') { AUTH_STEPS_DONE.data = true; authSetStep(2, 'done'); authSetStep(3, 'active'); }
-    else if (name === 'extra') {
-      AUTH_STEPS_DONE.extra = true; authSetStep(3, 'done');
-      var s4 = document.querySelector('#auth-steps [data-step="4"]');
-      if (!s4 || !s4.classList.contains('done')) authSetStep(4, 'active');
-    }
-    else if (name === 'render') { authSetStep(4, 'done'); }
+    else if (name === 'render') { authSetStep(3, 'done'); authSetStep(4, 'active'); }
+    else if (name === 'extra') { AUTH_STEPS_DONE.extra = true; authSetStep(4, 'done'); }
   }
 
   function authDigest(value) {
