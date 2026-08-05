@@ -71,10 +71,7 @@
     padding:14px 14px 12px;border-bottom:1px solid var(--border);
   }
   .sidebar-logo{
-    width:34px;height:34px;border-radius:8px;flex:none;
-    background:linear-gradient(135deg,#0b4fbf,#2b88d8);
-    display:flex;align-items:center;justify-content:center;
-    color:#fff;font-weight:800;font-size:12px;letter-spacing:.02em;
+    width:46px;height:auto;border-radius:6px;flex:none;display:block;
   }
   .sidebar-brand-text{min-width:0;}
   .sidebar-brand-title{font-size:14px;font-weight:700;color:var(--text-primary);line-height:1.1;}
@@ -508,7 +505,7 @@
 
   @media (max-width: 1100px){
     .sidebar{width:64px;}
-    .sidebar .nav-label,.sidebar .sidebar-group-title,.sidebar .collapse-label,.sidebar .sidebar-brand-text{display:none;}
+    .sidebar .nav-label,.sidebar .sidebar-group-title,.sidebar .collapse-label,.sidebar .sidebar-brand-text,.sidebar .sidebar-credit{display:none;}
     .sidebar .sidebar-brand{justify-content:center;padding:14px 0 12px;}
     .sidebar .nav-item{justify-content:center;padding:0;margin:2px 6px;width:auto;}
     .sidebar .sidebar-collapse{justify-content:center;padding:0;}
@@ -586,16 +583,24 @@
     backdrop-filter:blur(22px) saturate(135%);-webkit-backdrop-filter:blur(22px) saturate(135%);
   }
   .sidebar::after{content:"";position:absolute;right:-1px;top:24px;bottom:24px;width:1px;background:linear-gradient(transparent,rgba(111,196,255,.48),transparent);}
-  .sidebar-logo{
-    border-radius:11px;background:linear-gradient(135deg,#2069df 0%,#38bbff 55%,#b6ecff 160%);
-    box-shadow:0 8px 20px rgba(34,137,255,.35),inset 0 1px 1px rgba(255,255,255,.34);
-  }
+  .sidebar-logo{border-radius:6px;box-shadow:0 6px 16px rgba(0,0,0,.35);}
   .nav-item{border-radius:9px;transition:background .2s ease,color .2s ease,transform .2s ease;}
   .nav-item:hover{background:rgba(130,192,255,.09);transform:translateY(-1px);}
   .nav-item.active{background:linear-gradient(90deg,rgba(53,164,255,.16),rgba(53,164,255,.025));color:#e8f6ff;}
   .nav-item.active::before{left:0;top:8px;bottom:8px;width:3px;background:linear-gradient(#a6e0ff,#3aa7ff);box-shadow:0 0 12px rgba(72,181,255,.85);}
   .sidebar-collapse{color:#aac4e3;}
   .sidebar-version{font-size:10.5px;color:var(--text-muted);font-weight:600;text-align:center;padding:6px 0 2px;letter-spacing:.04em;}
+  /* Khối tác giả ở chân sidebar — đồng bộ với dashboard Phát hành Shop. */
+  .sidebar-credit{padding:10px 12px 8px;border-top:1px solid var(--border);text-align:center;}
+  .sidebar-credit .sc-label{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);opacity:.75;}
+  .sidebar-credit .sc-name{font-size:12px;font-weight:800;letter-spacing:.05em;color:var(--text-secondary);margin-top:2px;}
+  .sidebar-credit .sc-role{font-size:9.5px;color:var(--text-muted);margin:1px 0 7px;}
+  .sidebar-credit .sc-line{display:flex;align-items:center;gap:6px;justify-content:flex-start;
+    font-size:10px;color:var(--text-muted);text-decoration:none;padding:2px 0;transition:color .15s;}
+  .sidebar-credit a.sc-line:hover{color:var(--accent);}
+  .sidebar-credit .sc-line svg{width:11px;height:11px;flex:none;opacity:.8;}
+  .sidebar-credit .sc-line span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sidebar[data-state="collapsed"] .sidebar-credit{display:none;}
   .topbar{
     position:relative;z-index:1;background:rgba(8,14,29,.56);border-bottom-color:rgba(154,216,255,.12);
     backdrop-filter:blur(18px) saturate(125%);-webkit-backdrop-filter:blur(18px) saturate(125%);
@@ -760,10 +765,7 @@
     box-shadow:1px 0 0 rgba(16,32,64,.03);
   }
   html[data-theme="light"] .sidebar::after{background:linear-gradient(transparent,rgba(22,104,214,.28),transparent);}
-  html[data-theme="light"] .sidebar-logo{
-    background:linear-gradient(135deg,#0f5fc7 0%,#3596ee 55%,#7ec8ff 160%);
-    box-shadow:0 6px 16px rgba(22,104,214,.30),inset 0 1px 1px rgba(255,255,255,.5);
-  }
+  html[data-theme="light"] .sidebar-logo{box-shadow:0 4px 12px rgba(16,32,64,.18);}
   html[data-theme="light"] .nav-item:hover{background:rgba(22,104,214,.08);color:var(--text-primary);}
   html[data-theme="light"] .nav-item.active{
     background:linear-gradient(90deg,rgba(22,104,214,.13),rgba(22,104,214,.02));color:#0b3f8f;
@@ -1064,10 +1066,11 @@
   html[data-theme="light"] .zdp{box-shadow:0 2px 4px rgba(16,32,64,.06),0 18px 40px rgba(16,32,64,.12),inset 0 1px 0 #fff;}
   .filterbar{box-shadow:0 1px 2px var(--d-under-soft),0 8px 20px var(--d-under-soft),inset 0 1px 0 var(--d-rim);}
 
-  /* Sidebar logo & chip: khối 3D nhỏ */
-  .sidebar-logo,.chip-avatar,.auth-logo{
+  /* Chip avatar: khối 3D nhỏ. Logo là ảnh thật nên không dùng inset shadow (sẽ phủ mờ lên logo). */
+  .chip-avatar{
     box-shadow:0 6px 14px var(--d-under),inset 0 1px 1px var(--d-rim-strong),inset 0 -2px 4px rgba(0,0,0,.14);
   }
+  .sidebar-logo,.auth-logo-img{box-shadow:0 6px 14px var(--d-under);}
 
   /* Tôn trọng người tắt hiệu ứng chuyển động */
   @media (prefers-reduced-motion:reduce){
@@ -1274,7 +1277,7 @@
 
   <aside class="sidebar" id="sidebar" data-state="expanded">
     <div class="sidebar-brand">
-      <div class="sidebar-logo">SPM</div>
+      <img class="sidebar-logo" src="logo-dd.png" alt="Đại Dũng">
       <div class="sidebar-brand-text">
         <div class="sidebar-brand-title">SPM</div>
         <div class="sidebar-brand-sub">Tiến độ gia công</div>
@@ -1328,6 +1331,23 @@
         <svg class="chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
         <span class="collapse-label">Thu gọn</span>
       </button>
+      <div class="sidebar-credit">
+        <div class="sc-label">Designed &amp; developed by</div>
+        <div class="sc-name">LÊ VĂN THẢO</div>
+        <div class="sc-role">Head of Shop Drawing · Đại Dũng</div>
+        <a class="sc-line" href="mailto:thaolevan@daidung.vn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span>thaolevan@daidung.vn</span>
+        </a>
+        <a class="sc-line" href="tel:056666684 7">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg>
+          <span>05.666668.47</span>
+        </a>
+        <div class="sc-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <span>Zalo 0903.225.625</span>
+        </div>
+      </div>
       <div class="sidebar-version">v2 · 28.07.2026</div>
     </div>
   </aside>
