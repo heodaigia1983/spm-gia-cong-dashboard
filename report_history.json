@@ -388,5 +388,35 @@
     "soCK": 8127
    }
   ]
+ },
+ {
+  "date": "2026-08-05",
+  "byProject": [
+   {
+    "project": "10625-030 DGRP GA T2 CẢNG HÀNG KHÔNG QT PHÚ QUỐC",
+    "tan": 18747.62,
+    "soCK": 62715
+   },
+   {
+    "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
+    "tan": 28541.348,
+    "soCK": 111098
+   },
+   {
+    "project": "10626-010 DGRP FACADE SÂN BAY PHÚ QUỐC",
+    "tan": 2971.186,
+    "soCK": 10482
+   },
+   {
+    "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
+    "tan": 39220.245,
+    "soCK": 73823
+   },
+   {
+    "project": "10626-073 DG SÂN BAY PHÚ QUỐC SÀN THÉP",
+    "tan": 1387.687,
+    "soCK": 8127
+   }
+  ]
  }
 ]
