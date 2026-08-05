@@ -1980,7 +1980,12 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     }).then(function (data) {
       if (!Array.isArray(data) || !data.length) throw new Error('empty');
       state.historyData = data;
-      if (!document.getElementById('dashboard-content').hidden) renderHistoryChart();
+      if (!document.getElementById('dashboard-content').hidden) {
+        renderHistoryChart();
+        // History thường về SAU report_data.json -> chart "ban hành thêm mỗi ngày" đã render
+        // trước đó với historyData = null và kẹt ở thông báo "cần ít nhất 2 ngày". Vẽ lại.
+        if (chartDailyDelta) renderChartDailyDelta();
+      }
     }).catch(function () {
       state.historyData = null;
     });
