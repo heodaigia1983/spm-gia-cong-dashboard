@@ -1816,7 +1816,11 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
   function authMarkStep(name) {
     if (name === 'connect') { authSetStep(1, 'done'); authSetStep(2, 'active'); }
     else if (name === 'data') { AUTH_STEPS_DONE.data = true; authSetStep(2, 'done'); authSetStep(3, 'active'); }
-    else if (name === 'extra') { AUTH_STEPS_DONE.extra = true; authSetStep(3, 'done'); authSetStep(4, 'active'); }
+    else if (name === 'extra') {
+      AUTH_STEPS_DONE.extra = true; authSetStep(3, 'done');
+      var s4 = document.querySelector('#auth-steps [data-step="4"]');
+      if (!s4 || !s4.classList.contains('done')) authSetStep(4, 'active');
+    }
     else if (name === 'render') { authSetStep(4, 'done'); }
   }
 
