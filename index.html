@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SPM · Tổng quan tiến độ gia công</title>
 <link rel="icon" href="data:,">
+<script defer src="https://unpkg.com/lucide@1.29.0/dist/umd/lucide.min.js"></script>
 <script>
   /* Áp theme TRƯỚC khi trình duyệt vẽ, tránh nháy màu khi tải trang. */
   (function () {
@@ -693,6 +694,13 @@
   .auth-field{position:relative;margin-bottom:14px;}
   .auth-field-icon{position:absolute;top:21px;left:12px;width:17px;height:17px;color:#8aa3c3;pointer-events:none;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;}
   .auth-field-icon svg{display:block;}
+
+  /* ===== Kích thước icon Lucide (bù cho width/height cũ đặt thẳng trên <svg>) ===== */
+  i[data-lucide]{display:inline-block;width:1em;height:1em;flex:none;}   /* chỗ giữ trước khi lucide vẽ */
+  .auth-field-icon svg{width:17px;height:17px;}
+  .state-icon svg{width:26px;height:26px;}
+  .ms-trigger .chev{width:14px;height:14px;}
+  .sidebar-collapse svg{width:17px;height:17px;}
   .auth-field input[type="email"],.auth-field input[type="password"]{width:100%;padding:11px 14px 11px 36px;background:rgba(5,14,32,.58);border:1px solid rgba(154,216,255,.16);border-radius:10px;font-size:14px;color:#f4f8ff;outline:none;transition:border-color .18s,box-shadow .18s;box-sizing:border-box;}
   .auth-field input::placeholder{color:rgba(143,156,175,.55);}
   .auth-field input:focus{border-color:rgba(121,207,255,.55);box-shadow:0 0 0 3px rgba(53,164,255,.12);}
@@ -1239,6 +1247,42 @@
   .app-modal-actions .zdp-btn:hover{color:var(--text-primary);border-color:var(--accent);}
   .app-modal-actions .zdp-btn.go{background:var(--accent);border-color:var(--accent);color:#fff;}
 
+
+  /* ============ Điện thoại (≤680px) ============
+     Dưới 680px sidebar không còn là cột chiếm chỗ mà thành ngăn kéo trượt từ trái,
+     nhường trọn bề ngang cho nội dung. Selector dùng .sidebar[data-state] để thắng
+     .sidebar[data-state="collapsed"]{width:64px} của breakpoint 1100px. */
+  #btn-mobile-nav{display:none;padding:0 9px;}
+  .sidebar-backdrop{
+    position:fixed;inset:0;z-index:89;background:rgba(3,9,22,.62);
+    opacity:0;pointer-events:none;transition:opacity .24s ease;
+  }
+  .sidebar-backdrop.show{opacity:1;pointer-events:auto;}
+
+  @media (max-width:680px){
+    #btn-mobile-nav{display:inline-flex;}
+
+    .sidebar[data-state]{
+      position:fixed;top:0;bottom:0;left:0;z-index:90;width:252px;
+      transform:translateX(-100%);transition:transform .24s ease;
+      box-shadow:0 18px 50px rgba(0,0,0,.55);
+    }
+    .sidebar[data-mobile="open"]{transform:translateX(0);}
+
+    /* trả lại nhãn chữ mà breakpoint 1100px đã ẩn — trong ngăn kéo thì đủ chỗ hiển thị */
+    .sidebar .nav-label,
+    .sidebar .sidebar-group-title,
+    .sidebar .sidebar-brand-text{display:block;}
+    .sidebar .nav-item{justify-content:flex-start;padding:0 10px;margin:2px 0;width:100%;}
+    .sidebar .sidebar-brand{justify-content:flex-start;padding:14px 14px 12px;}
+    .sidebar .sidebar-collapse{display:none;}
+
+    .app-title{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .filterbar{padding:12px 14px;gap:12px;}
+    .filter-field{min-width:0;flex:1 1 100%;}
+    .kpi-grid{gap:10px;}
+    .table-scroll,.zone-detail-table-wrap,.phanbo-grid-wrap{-webkit-overflow-scrolling:touch;}
+  }
 </style>
 </head>
 <body>
@@ -1261,28 +1305,28 @@
       <div class="auth-field" id="auth-field-email">
         <span class="auth-field-icon">
           <!-- lucide: mail -->
-          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <i data-lucide="mail"></i>
         </span>
         <input type="email" id="auth-email" placeholder="email@congty.com" autocomplete="username" required aria-describedby="auth-email-hint">
         <div class="auth-hint" id="auth-email-hint">
           <!-- lucide: circle-alert -->
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+          <i data-lucide="circle-alert"></i>
           <span class="auth-hint-text"></span>
         </div>
       </div>
       <div class="auth-field" id="auth-field-pw">
         <span class="auth-field-icon">
           <!-- lucide: lock -->
-          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <i data-lucide="lock"></i>
         </span>
         <input type="password" id="auth-pw" placeholder="Mật khẩu" autocomplete="current-password" required aria-describedby="auth-pw-hint">
         <button type="button" class="auth-eye" id="auth-eye" aria-label="Hiện mật khẩu">
           <!-- lucide: eye -->
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+          <i data-lucide="eye"></i>
         </button>
         <div class="auth-hint" id="auth-pw-hint">
           <!-- lucide: circle-alert -->
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+          <i data-lucide="circle-alert"></i>
           <span class="auth-hint-text"></span>
         </div>
       </div>
@@ -1299,6 +1343,7 @@
 </div>
 <!-- [/V2] End auth gate overlay -->
 
+<div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
 <div class="shell">
 
   <aside class="sidebar" id="sidebar" data-state="expanded">
@@ -1314,19 +1359,19 @@
       <div class="sidebar-group">
         <div class="sidebar-group-title">Báo cáo</div>
         <button type="button" class="nav-item active" data-route="tong-quan" data-tooltip="Tổng quan">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <i data-lucide="layout-grid"></i>
           <span class="nav-label">Tổng quan</span>
         </button>
         <button type="button" class="nav-item" data-route="hang-muc" data-tooltip="Hạng mục &amp; Zone">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          <i data-lucide="layers"></i>
           <span class="nav-label">Hạng mục &amp; Zone</span>
         </button>
         <button type="button" class="nav-item" data-route="chi-tiet" data-tooltip="Chi tiết">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1.5"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg>
+          <i data-lucide="table"></i>
           <span class="nav-label">Chi tiết</span>
         </button>
         <button type="button" class="nav-item" data-route="lich-su" data-tooltip="Lịch sử">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+          <i data-lucide="clock"></i>
           <span class="nav-label">Lịch sử</span>
         </button>
       </div>
@@ -1341,8 +1386,8 @@
 
     <div class="sidebar-footer">
       <button type="button" class="sidebar-collapse" id="btn-sidebar-toggle" aria-label="Thu gọn thanh bên">
-        <svg class="chev-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        <svg class="chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <i data-lucide="chevron-left" class="chev-left"></i>
+        <i data-lucide="chevron-right" class="chev-right"></i>
         <span class="collapse-label">Thu gọn</span>
       </button>
       <div class="sidebar-credit">
@@ -1350,15 +1395,15 @@
         <div class="sc-name">LÊ VĂN THẢO</div>
         <div class="sc-role">Head of Shop Drawing · Đại Dũng</div>
         <a class="sc-line" href="mailto:thaolevan@daidung.vn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <i data-lucide="mail"></i>
           <span>thaolevan@daidung.vn</span>
         </a>
         <a class="sc-line" href="tel:056666684 7">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg>
+          <i data-lucide="phone"></i>
           <span>05.666668.47</span>
         </a>
         <div class="sc-line">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <i data-lucide="message-circle"></i>
           <span>Zalo 0903.225.625</span>
         </div>
       </div>
@@ -1368,6 +1413,9 @@
 
   <div class="app-main">
     <header class="topbar">
+      <button type="button" class="btn btn-secondary" id="btn-mobile-nav" aria-label="Mở menu" aria-expanded="false">
+        <i data-lucide="menu"></i>
+      </button>
       <div class="app-title">SPM · Tiến độ khối lượng gia công</div>
       <div class="topbar-status" id="topbar-status" hidden><span class="dot"></span><span id="topbar-status-text"></span></div>
       <div class="topbar-status phanbo-topbar-warning" id="topbar-phanbo-warning" hidden><span class="dot"></span><span>Chưa có dữ liệu phân bổ</span></div>
@@ -1380,8 +1428,8 @@
         </div>
       </div>
       <button type="button" class="btn btn-secondary theme-toggle" id="btn-theme" title="Chuyển giao diện Tối / Sáng" aria-label="Chuyển giao diện Tối / Sáng">
-        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <i data-lucide="moon" class="ico-moon"></i>
+        <i data-lucide="sun" class="ico-sun"></i>
         <span class="theme-label">Tối</span>
       </button>
     </header>
@@ -1399,7 +1447,7 @@
       <section class="section" id="error-state" hidden>
         <div class="state-card">
           <div class="state-icon err">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16.5" x2="12.01" y2="16.5"/></svg>
+            <i data-lucide="circle-alert"></i>
           </div>
           <h2>Không tải được dữ liệu</h2>
           <p id="error-message">Không đọc được report_data.json.</p>
@@ -1433,7 +1481,7 @@
           </div>
 
           <button type="button" class="btn btn-secondary btn-reset" id="btn-reset-filters">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            <i data-lucide="rotate-ccw"></i>
             Đặt lại bộ lọc
           </button>
         </section>
@@ -1912,8 +1960,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     // Tải song song ngay, không đợi đăng nhập — để 4 bước phản ánh tiến trình thật.
     authStartDashboard();
     // lucide: eye / eye-off
-    var AUTH_ICON_EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>';
-    var AUTH_ICON_EYE_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>';
+    var AUTH_ICON_EYE = '<i data-lucide="eye"></i>';
+    var AUTH_ICON_EYE_OFF = '<i data-lucide="eye-off"></i>';
     if (eye) eye.addEventListener('click', function () {
       var shown = password.type === 'text';
       password.type = shown ? 'password' : 'text';
@@ -3805,7 +3853,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       '<label>' + label + '</label>' +
       '<button type="button" class="ms-trigger" data-key="' + key + '">' +
         '<span class="ms-trigger-text">Tất cả</span>' +
-        '<svg class="chev" viewBox="0 0 24 24" width="14" height="14"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '<i data-lucide="chevron-down" class="chev"></i>' +
       '</button>' +
       '<div class="ms-panel" hidden>' +
         '<div class="ms-search"><input type="text" placeholder="Tìm..."></div>' +
@@ -5149,6 +5197,68 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
   });
 })();
 
+</script>
+<script>
+  /* ===== Ngăn kéo sidebar trên điện thoại ===== */
+  (function () {
+    var sidebar  = document.getElementById('sidebar');
+    var backdrop = document.getElementById('sidebar-backdrop');
+    var btn      = document.getElementById('btn-mobile-nav');
+    if (!sidebar || !backdrop || !btn) return;
+
+    function setOpen(open) {
+      if (open) sidebar.setAttribute('data-mobile', 'open');
+      else sidebar.removeAttribute('data-mobile');
+      backdrop.hidden = !open;
+      // hidden phải bỏ trước khi thêm .show, nếu không transition không chạy
+      if (open) requestAnimationFrame(function () { backdrop.classList.add('show'); });
+      else backdrop.classList.remove('show');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    btn.addEventListener('click', function () {
+      setOpen(sidebar.getAttribute('data-mobile') !== 'open');
+    });
+    backdrop.addEventListener('click', function () { setOpen(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+    // chọn một mục điều hướng thì đóng ngăn kéo lại
+    sidebar.addEventListener('click', function (e) {
+      if (e.target.closest('.nav-item')) setOpen(false);
+    });
+    // quay lại màn rộng thì reset trạng thái ngăn kéo
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 680) setOpen(false);
+    });
+  })();
+
+  /* ===== Lucide ===== */
+  /* Icon khai báo bằng thẻ <i> mang thuộc tính data-lucide; createIcons() thay nó thành <svg>.
+     MutationObserver bắt các icon do JS render sau (innerHTML) — không phải gọi thủ công
+     ở 36 chỗ render. Sau khi thay xong không còn [data-lucide] nên không lặp vô hạn. */
+  (function () {
+    function paint() {
+      // Chỉ quét khi còn thẻ <i> chưa vẽ. Lucide giữ lại data-lucide trên <svg> sau khi vẽ,
+      // nên nếu dò '[data-lucide]' thì lần nào cũng thấy và quét lại cả trang vô ích.
+      if (!window.lucide || !document.querySelector('i[data-lucide]')) return;
+      try { window.lucide.createIcons(); } catch (e) { console.warn('[lucide]', e); }
+    }
+    function start() {
+      if (!window.lucide) {
+        console.warn('[lucide] Không tải được thư viện icon (mạng chặn unpkg?) — icon sẽ trống.');
+        document.documentElement.setAttribute('data-lucide-failed', '1');
+        return;
+      }
+      paint();
+      var t = null;
+      new MutationObserver(function () {
+        clearTimeout(t);
+        t = setTimeout(paint, 16);
+      }).observe(document.body, { childList: true, subtree: true });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+    else start();
+  })();
 </script>
 </body>
 </html>
