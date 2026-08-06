@@ -1293,6 +1293,12 @@
     .filter-field{min-width:0;flex:1 1 100%;}
     .kpi-grid{gap:10px;}
     .table-scroll,.zone-detail-table-wrap,.phanbo-grid-wrap{-webkit-overflow-scrolling:touch;}
+
+    /* Bảng: thà cuộn ngang còn hơn để tên hạng mục xuống 5 dòng làm hàng cao lêu nghêu.
+       min-width ép bảng giữ bề rộng tự nhiên, wrapper .table-scroll lo phần cuộn. */
+    .table-scroll table{min-width:660px;}
+    .table-scroll tbody td,
+    .table-scroll thead th{white-space:nowrap;padding:9px 12px;}
   }
 </style>
 </head>
