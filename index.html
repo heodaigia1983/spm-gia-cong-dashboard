@@ -1262,22 +1262,33 @@
   @media (max-width:680px){
     #btn-mobile-nav{display:inline-flex;}
 
+    /* Selector nào cũng phải mang [data-state] để thắng khối .sidebar[data-state="collapsed"]
+       (JS ép collapsed dưới 1100px). Cùng độ ưu tiên thì khối này đứng sau nên thắng. */
     .sidebar[data-state]{
       position:fixed;top:0;bottom:0;left:0;z-index:90;width:252px;
       transform:translateX(-100%);transition:transform .24s ease;
       box-shadow:0 18px 50px rgba(0,0,0,.55);
     }
-    .sidebar[data-mobile="open"]{transform:translateX(0);}
+    .sidebar[data-state][data-mobile="open"]{transform:translateX(0);}
 
-    /* trả lại nhãn chữ mà breakpoint 1100px đã ẩn — trong ngăn kéo thì đủ chỗ hiển thị */
-    .sidebar .nav-label,
-    .sidebar .sidebar-group-title,
-    .sidebar .sidebar-brand-text{display:block;}
-    .sidebar .nav-item{justify-content:flex-start;padding:0 10px;margin:2px 0;width:100%;}
-    .sidebar .sidebar-brand{justify-content:flex-start;padding:14px 14px 12px;}
-    .sidebar .sidebar-collapse{display:none;}
+    /* trong ngăn kéo có đủ chỗ -> trả lại nhãn chữ, bỏ tooltip hover kiểu rail */
+    .sidebar[data-state] .nav-label,
+    .sidebar[data-state] .sidebar-group-title,
+    .sidebar[data-state] .sidebar-brand-text,
+    .sidebar[data-state] .sidebar-credit,
+    .sidebar[data-state] .sidebar-version{display:block;}
+    .sidebar[data-state] .nav-item::after{display:none;}
+    .sidebar[data-state] .nav-item{justify-content:flex-start;padding:0 12px;margin:2px 0;width:100%;}
+    .sidebar[data-state] .sidebar-brand{justify-content:flex-start;padding:14px 14px 12px;}
+    .sidebar[data-state] .sidebar-collapse{display:none;}
+    .sidebar[data-state] .sidebar-widgets{display:none;}
 
+    /* topbar hẹp: giữ avatar, bỏ chuỗi email dài để tiêu đề còn chỗ */
+    #auth-email-label{display:none;}
+    .auth-user-chip{padding:3px 4px;margin-right:4px;}
+    .topbar{gap:8px;padding:0 12px;}
     .app-title{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
     .filterbar{padding:12px 14px;gap:12px;}
     .filter-field{min-width:0;flex:1 1 100%;}
     .kpi-grid{gap:10px;}
