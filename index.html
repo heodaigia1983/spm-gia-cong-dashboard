@@ -4309,9 +4309,11 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
      Dưới 520px thì co vùng nhãn về 40% bề rộng và hạ cỡ chữ. */
   function hbarLayout(chart, left, right, labelW) {
     var w = (chart && chart.getWidth) ? chart.getWidth() : 0;
-    if (!w || w >= 520) return { left: left, right: right, labelW: labelW, fontSize: 12 };
-    var l = Math.round(w * 0.40);
-    return { left: l, right: 38, labelW: l - 10, fontSize: 10 };
+    if (!w || w >= 520) return { left: left, right: right, labelW: labelW, fontSize: 12, valueFontSize: 11 };
+    var l = Math.round(w * 0.38);
+    // right phải đủ chỗ cho nhãn giá trị kiểu "15.284,29" ở position:'right',
+    // không thì số bị cắt mất đuôi ở mép khung.
+    return { left: l, right: 58, labelW: l - 10, fontSize: 10, valueFontSize: 9 };
   }
 
   function reflowHbar(chart, left, right, labelW) {
@@ -4319,7 +4321,8 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     var LO = hbarLayout(chart, left, right, labelW);
     chart.setOption({
       grid:  { left: LO.left, right: LO.right },
-      yAxis: { axisLabel: { width: LO.labelW, fontSize: LO.fontSize } }
+      yAxis:  { axisLabel: { width: LO.labelW, fontSize: LO.fontSize } },
+      series: [{ label: { fontSize: LO.valueFontSize } }]
     });
   }
 
@@ -4367,7 +4370,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       series: [{
         type: 'bar', data: valData, barMaxWidth: 18,
         itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#207ce8' }, { offset: 1, color: '#64d2ff' }]), borderRadius: [0, 6, 6, 0], shadowBlur: 10, shadowColor: 'rgba(53,164,255,0.30)' },
-        label: { show: true, position: 'right', color: TEXT_PRIMARY, fontSize: 11, formatter: function (p) { return fmtTon.format(p.value); } }
+        label: { show: true, position: 'right', color: TEXT_PRIMARY, fontSize: LO.valueFontSize, formatter: function (p) { return fmtTon.format(p.value); } }
       }]
     });
     chartTopHangMuc.off('click');
@@ -4480,7 +4483,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       series: [
         { name: 'Chưa Hold', type: 'bar', stack: 'hold', data: uncheckedData, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#1f7feb' }, { offset: 1, color: '#59c8ff' }]), borderRadius: [5, 0, 0, 5] }, barMaxWidth: 16 },
         { name: 'Đã Hold', type: 'bar', stack: 'hold', data: checkedData, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#e8663d' }, { offset: 1, color: '#ffb066' }]), borderRadius: [0, 5, 5, 0] }, barMaxWidth: 16,
-          label: { show: true, position: 'right', color: TEXT_SECONDARY, fontSize: 10.5,
+          label: { show: true, position: 'right', color: TEXT_SECONDARY, fontSize: LO.valueFontSize,
             formatter: function (p) { var t = totalData[p.dataIndex]; return t > 0 ? fmtTon.format(t) : ''; } } }
       ]
     });
