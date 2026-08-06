@@ -4304,6 +4304,25 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
 
   // ===================== Bi���u đồ 1: Top hạng mục theo tấn =====================
   // Click-to-filter: chuyển dataIndex ngược (vì catData bị reverse trước khi setOption).
+  /* Bar ngang: grid.left cố định 190–230px là hợp lý trên PC, nhưng trên điện thoại
+     (canvas ~308px) nó nuốt gần hết bề ngang, thanh bar chỉ còn mẩu cụt ~44px.
+     Dưới 520px thì co vùng nhãn về 40% bề rộng và hạ cỡ chữ. */
+  function hbarLayout(chart, left, right, labelW) {
+    var w = (chart && chart.getWidth) ? chart.getWidth() : 0;
+    if (!w || w >= 520) return { left: left, right: right, labelW: labelW, fontSize: 12 };
+    var l = Math.round(w * 0.40);
+    return { left: l, right: 38, labelW: l - 10, fontSize: 10 };
+  }
+
+  function reflowHbar(chart, left, right, labelW) {
+    if (!chart) return;
+    var LO = hbarLayout(chart, left, right, labelW);
+    chart.setOption({
+      grid:  { left: LO.left, right: LO.right },
+      yAxis: { axisLabel: { width: LO.labelW, fontSize: LO.fontSize } }
+    });
+  }
+
   function renderChartTopHangMuc(facts) {
     var map = groupSum(facts, function (r) { return r.hangMuc; });
     var entries = Array.from(map.entries()).map(function (kv) {
@@ -4320,10 +4339,11 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     var valData = shown.map(function (e) { return e.ton; }).reverse();
     var countData = shown.map(function (e) { return e.count; }).reverse();
 
+    var LO = hbarLayout(chartTopHangMuc, 190, 74, 178);
     chartTopHangMuc.setOption({
       backgroundColor: 'transparent',
       animationDuration: 550, animationEasing: 'cubicOut',
-      grid: { left: 190, right: 74, top: 8, bottom: 8, containLabel: true },
+      grid: { left: LO.left, right: LO.right, top: 8, bottom: 8, containLabel: true },
       tooltip: {
         trigger: 'axis', axisPointer: { type: 'shadow' },
         backgroundColor: tooltipStyle.backgroundColor, borderColor: tooltipStyle.borderColor,
@@ -4342,7 +4362,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       yAxis: {
         type: 'category', data: catData,
         axisLine: { lineStyle: { color: GRID_COLOR } }, axisTick: { show: false },
-        axisLabel: { color: TEXT_SECONDARY, width: 178, overflow: 'truncate' }
+        axisLabel: { color: TEXT_SECONDARY, width: LO.labelW, overflow: 'truncate', fontSize: LO.fontSize }
       },
       series: [{
         type: 'bar', data: valData, barMaxWidth: 18,
@@ -4429,10 +4449,11 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
     bodyEl.style.height = h + 'px';
     chartZoneHold.resize();
 
+    var LO = hbarLayout(chartZoneHold, 230, 46, 218);
     chartZoneHold.setOption({
       backgroundColor: 'transparent',
       animationDuration: 550, animationEasing: 'cubicOut',
-      grid: { left: 230, right: 46, top: 8, bottom: 8, containLabel: true },
+      grid: { left: LO.left, right: LO.right, top: 8, bottom: 8, containLabel: true },
       tooltip: {
         trigger: 'axis', axisPointer: { type: 'shadow' },
         backgroundColor: tooltipStyle.backgroundColor, borderColor: tooltipStyle.borderColor,
@@ -4454,7 +4475,7 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       yAxis: {
         type: 'category', data: cats,
         axisLine: { lineStyle: { color: GRID_COLOR } }, axisTick: { show: false },
-        axisLabel: { color: TEXT_SECONDARY, width: 218, overflow: 'truncate' }
+        axisLabel: { color: TEXT_SECONDARY, width: LO.labelW, overflow: 'truncate', fontSize: LO.fontSize }
       },
       series: [
         { name: 'Chưa Hold', type: 'bar', stack: 'hold', data: uncheckedData, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#1f7feb' }, { offset: 1, color: '#59c8ff' }]), borderRadius: [5, 0, 0, 5] }, barMaxWidth: 16 },
@@ -4732,6 +4753,10 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
       if (chartTopHangMuc)  chartTopHangMuc.resize();
       if (chartDonutProject)chartDonutProject.resize();
       if (chartZoneHold)    chartZoneHold.resize();
+      // resize() không tính lại grid.left -> xoay ngang máy hoặc kéo cửa sổ qua mốc
+      // 520px thì vùng nhãn vẫn giữ số cũ. Trộn lại layout cho 2 bar ngang.
+      reflowHbar(chartTopHangMuc, 190, 74, 178);
+      reflowHbar(chartZoneHold,   230, 46, 218);
       if (chartHistory)     chartHistory.resize();
       if (chartPbVsShop)    chartPbVsShop.resize();
       if (chartDailyDelta)  chartDailyDelta.resize();
