@@ -688,5 +688,30 @@
     "soCK": 8127
    }
   ]
+ },
+ {
+  "date": "2026-08-15",
+  "byProject": [
+   {
+    "project": "10626-008 DG SÂN VẬN ĐỘNG PVF HƯNG YÊN",
+    "tan": 28780.221,
+    "soCK": 112926
+   },
+   {
+    "project": "10626-010 DGRP FACADE SÂN BAY PHÚ QUỐC",
+    "tan": 2998.689,
+    "soCK": 12743
+   },
+   {
+    "project": "10626-051 DG SÂN VẬN ĐỘNG HÙNG VƯƠNG",
+    "tan": 41210.326,
+    "soCK": 77864
+   },
+   {
+    "project": "10626-073 DG SÂN BAY PHÚ QUỐC SÀN THÉP",
+    "tan": 1387.687,
+    "soCK": 8127
+   }
+  ]
  }
 ]
