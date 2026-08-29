@@ -1,3 +1,8 @@
 push.log
 index.backup-*.html
 report_data.js
+# Dashboard đọc Firestore từ 29/08/2026. Ba file này chỉ là bước trung gian trên đĩa
+# cho day_len_firestore.py đọc — để trong repo là công khai toàn bộ số liệu cho ai có link.
+report_data.json
+report_history.json
+phanbo.json
